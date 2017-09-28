@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Web page PDF rendering done right. Packaged to an easy API.",
   "main": "src/index.js",
+  "engines": {
+    "node": "8.x.x"
+  },
   "scripts": {
     "start": "nodemon --watch ./src -e js src/index.js"
   },
