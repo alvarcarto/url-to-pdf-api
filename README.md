@@ -1,16 +1,16 @@
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/kimmobrunfeldt/url-to-pdf-api)
-
 # URL to PDF
 
 > Web page PDF rendering done right. Packaged to an easy API.
 
-A simple API which converts a given URL to a PDF. **Why is it "done right"?**
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/kimmobrunfeldt/url-to-pdf-api)
+
+**What does "done right" mean?**
 
 * Rendered with Headless Chrome, using [Puppeteer](https://github.com/GoogleChrome/puppeteer)
 * Sensible defaults but everything is configurable
 * Easy deployment to Heroku. I love Lambda but.. Deploy to Heroku button.
 
-Usage is as simple as https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com. There's also a POST /api/render if you prefer to send options in the body.
+Usage is as simple as https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com. There's also a `POST /api/render` if you prefer to send options in the body.
 
 **Shortcuts:**
 
