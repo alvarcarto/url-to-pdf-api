@@ -1,0 +1,17 @@
+{
+  "env": {
+      "browser":    true,
+      "amd":        true,
+      "node":       true,
+      "es6":        true
+  },
+  "extends": "airbnb-base",
+  "rules": {
+    "no-implicit-coercion": "error",
+    "no-process-env": "error",
+    "no-path-concat": "error",
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+    "no-use-before-define": ["error", { "functions": false }],
+    "no-underscore-dangle": "off"
+  }
+}

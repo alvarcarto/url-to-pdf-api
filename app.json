@@ -1,0 +1,27 @@
+{
+  "name": "url-to-pdf-api",
+  "description": "Web page PDF rendering done right. Packaged to an easy API.",
+  "keywords": [
+    "pdf",
+    "html",
+    "html to pdf",
+    "html 2 pdf",
+    "render"
+  ],
+  "website": "https://github.com/kimmobrunfeldt/url-to-pdf-api",
+  "repository": "https://github.com/kimmobrunfeldt/url-to-pdf-api",
+  "env": {
+    "ALLOW_HTTP": {
+      "description": "When set to \"true\", unsecure requests are allowed.",
+      "value": "false"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "https://github.com/jontewks/puppeteer-heroku-buildpack"
+    },
+    {
+      "url": "http://github.com/heroku/heroku-buildpack-nodejs.git"
+    }
+  ]
+}
