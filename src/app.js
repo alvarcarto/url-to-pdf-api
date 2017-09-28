@@ -5,7 +5,6 @@ const compression = require('compression');
 const cors = require('cors');
 const logger = require('./util/logger')(__filename);
 const errorResponder = require('./middleware/error-responder');
-const ipLogger = require('./middleware/ip-logger');
 const errorLogger = require('./middleware/error-logger');
 const requireHttps = require('./middleware/require-https');
 const createRouter = require('./router');
@@ -20,6 +19,13 @@ function createApp() {
 
   if (config.NODE_ENV !== 'production') {
     app.use(morgan('dev'));
+  }
+
+  if (!config.ALLOW_HTTP) {
+    logger.info('All requests require HTTPS.');
+    app.use(requireHttps());
+  } else {
+    logger.info('ALLOW_HTTP=true, unsafe requests are allowed. Don\'t use this in production.');
   }
 
   const corsOpts = {

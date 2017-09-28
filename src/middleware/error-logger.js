@@ -1,6 +1,8 @@
 const _ = require('lodash');
 const logger = require('../util/logger')(__filename);
 
+const SLICE_THRESHOLD = 1000;
+
 function createErrorLogger(opts) {
   opts = _.merge({
     logRequest: status => {
@@ -38,14 +40,14 @@ function getLogLevel(status) {
 function logRequestDetails(logLevel, req, status) {
   logger[logLevel]('Request headers:', deepSupressLongStrings(req.headers));
   logger[logLevel]('Request parameters:', deepSupressLongStrings(req.params));
-  logger.logEncrypted(logLevel, 'Request body:', req.body);
+  logger[logLevel]('Request body:', req.body);
 }
 
 function deepSupressLongStrings(obj) {
   let newObj = {};
   _.each(obj, (val, key) => {
-    if (_.isString(val) && val.length > 100) {
-      newObj[key] = val.slice(0, 100) + '... [CONTENT SLICED]';
+    if (_.isString(val) && val.length > SLICE_THRESHOLD) {
+      newObj[key] = val.slice(0, SLICE_THRESHOLD) + '... [CONTENT SLICED]';
     } else if (_.isPlainObject(val)) {
       return deepSupressLongStrings(val);
     } else {

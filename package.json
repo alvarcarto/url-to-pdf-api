@@ -4,7 +4,7 @@
   "description": "Web page PDF rendering done right. Packaged to an easy API.",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "nodemon --watch ./src -e js src/index.js"
   },
   "repository": {
     "type": "git",
@@ -29,5 +29,8 @@
     "puppeteer": "^0.11.0",
     "server-destroy": "^1.0.1",
     "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1"
   }
 }
