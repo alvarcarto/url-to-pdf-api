@@ -3,7 +3,7 @@ const Joi = require('joi');
 const renderQueryParams = Joi.object({
   url: Joi.string().min(0).max(50000),
   scrollPage: Joi.boolean(),
-  emulateMedia: Joi.boolean(),
+  emulateScreenMedia: Joi.boolean(),
   waitFor: Joi.alternatives([
     Joi.number().min(1).max(60000),
     Joi.string().min(1).max(2000),
@@ -35,7 +35,7 @@ const renderQueryParams = Joi.object({
 const renderBodyParams = Joi.object({
   url: Joi.string().min(0).max(50000),
   scrollPage: Joi.boolean(),
-  emulateMedia: Joi.boolean(),
+  emulateScreenMedia: Joi.boolean(),
   viewport: Joi.object({
     width: Joi.number().min(1).max(30000),
     height: Joi.number().min(1).max(30000),

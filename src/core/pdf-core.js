@@ -5,7 +5,7 @@ const _ = require('lodash');
 async function render(_opts = {}) {
   const opts = _.merge({
     scrollPage: false,
-    emulateMedia: true,
+    emulateScreenMedia: true,
     viewport: {
       width: 1600,
       height: 1200,
@@ -26,7 +26,7 @@ async function render(_opts = {}) {
   });
   const page = await browser.newPage();
   await page.setViewport(opts.viewport);
-  if (opts.emulateMedia) {
+  if (opts.emulateScreenMedia) {
     await page.emulateMedia('screen');
   }
 

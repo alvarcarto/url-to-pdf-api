@@ -6,7 +6,6 @@ const getRender = ex.createRoute((req, res) => {
     // TODO: add all params here
   };
 
-  console.log(req.query)
   return pdfCore.render(req.query)
     .then((data) => {
       res.set('content-type', 'application/pdf');
