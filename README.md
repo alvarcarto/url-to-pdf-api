@@ -36,15 +36,15 @@ and requests are direct connections to it.
 To understand the API options, you need to know how Puppeteer is internally used.
 This is the execution flow:
 
-1. `page.setViewport(options)` where options matches `viewport.*`.
-2. *Possibly* `page.emulateMedia('screen')` if `emulateScreenMedia=true` is set.
-3. *Possibly* `page.waitFor(numOrStr)` if e.g. `waitFor=1000` is set.
-4. `page.goto(url, options)` where options matches `goto.*`.
-5. *Possibly* Scroll the whole page to the end before rendering if e.g. `scrollPage=true` is set.
+1. **`page.setViewport(options)`** where options matches `viewport.*`.
+2. *Possibly* **`page.emulateMedia('screen')`** if `emulateScreenMedia=true` is set.
+3. *Possibly* **`page.waitFor(numOrStr)`** if e.g. `waitFor=1000` is set.
+4. **`page.goto(url, options)`** where options matches `goto.*`.
+5. *Possibly* **Scroll the whole page** to the end before rendering if e.g. `scrollPage=true` is set.
 
     This is useful if you want to render a page which lazy loads elements.
 
-6. `page.pdf(options)` where options matches `pdf.*`.
+6. **`page.pdf(options)`** where options matches `pdf.*`.
 
 This HTTP API exposes exactly the same options as Puppeteer provides, so you can always
 refer to their docs: https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md.
