@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const BPromise = require('bluebird');
 const _ = require('lodash');
+const logger = require('../util/logger')(__filename);
 
 async function render(_opts = {}) {
   const opts = _.merge({
@@ -25,6 +26,11 @@ async function render(_opts = {}) {
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
   const page = await browser.newPage();
+  page.on('error', (err) => {
+    logger.error(`Error in the page when rendering: ${err}`);
+    logger.error(err.stack);
+  });
+
   await page.setViewport(opts.viewport);
   if (opts.emulateScreenMedia) {
     await page.emulateMedia('screen');
