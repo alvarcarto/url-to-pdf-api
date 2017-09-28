@@ -5,7 +5,7 @@ const _ = require('lodash');
 async function render(_opts = {}) {
   const opts = _.merge({
     scrollPage: false,
-    emulateMedia: false,
+    emulateMedia: true,
     viewport: {
       width: 1600,
       height: 1200,
