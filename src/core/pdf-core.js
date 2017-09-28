@@ -19,8 +19,11 @@ async function render(_opts = {}) {
       printBackground: true,
     }
   }, _opts);
-  console.log(opts)
-  const browser = await puppeteer.launch({ headless: true });
+
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
   const page = await browser.newPage();
   await page.setViewport(opts.viewport);
   if (opts.emulateMedia) {
@@ -46,8 +49,8 @@ async function render(_opts = {}) {
 async function scrollPage(page) {
   // Scroll to page end to trigger "appear" when in viewport effects
   return await page.evaluate(() => {
-    const scrollInterval = 200;
-    const scrollStep = window.innerHeight - 400;
+    const scrollInterval = 100;
+    const scrollStep = Math.floor(window.innerHeight / 2);
     const bottomThreshold = 400;
 
     function bottomPos() {
