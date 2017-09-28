@@ -50,27 +50,58 @@ This HTTP API exposes exactly the same options as Puppeteer provides, so you can
 refer to their docs: https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md.
 
 
-### GET /api/render
-
-All options are passed as query parameters. Find all parameters in [src/validation.js](src/validation.js) in `renderQueryParams` object. Parameter names match Puppeteer options.
-
-These options are exactly the same as its `POST` counterpart, but options in an
-object tree are expressed with the dot notation. E.g. `?pdf.margin.top=10px`.
-
-**Example:**
-
-```bash
-curl -o google.pdf https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com
-```
-
 ### POST /api/render
 
-All options are passed in a JSON body object. Find all parameters in [src/validation.js](src/validation.js) in `renderBodyParams` object. Parameter names match Puppeteer options.
+All options are passed in a JSON body object. Find all parameters in [src/util/validation.js](src/util/validation.js) in `renderBodyParams` object. Parameter names match Puppeteer options.
+
+**Body**
+
+The only required parameter is `url`.
+
+```js
+{
+  // Url to render
+  url: "https://google.com",
+
+  // If we should emulate @media screen instead of print
+  emulateScreenMedia: true,
+
+  // If true, page is scrolled to the end before rendering
+  scrollPage: false,
+
+  // Passed to Puppeteer page.waitFor()
+  waitFor: null,
+
+  // Passed to Puppeteer page.setViewport()
+  viewport: { ... },
+
+  // Passed to Puppeteer page.goto() as the second argument after url
+  goto: { ... },
+
+  // Passed to Puppeteer page.pdf()
+  pdf: { ... }
+}
+```
 
 **Example:**
 
 ```bash
 curl -o google.pdf -XPOST -d'{"url": "http://google.com"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/render
+```
+
+### GET /api/render
+
+All options are passed as query parameters. Find all parameters in [src/util/validation.js](src/util/validation.js) in `renderQueryParams` object. Parameter names match Puppeteer options.
+
+These options are exactly the same as its `POST` counterpart, but options in an
+object tree are expressed with the dot notation. E.g. `?pdf.margin.top=10px`.
+
+The only required parameter is `url`.
+
+**Example:**
+
+```bash
+curl -o google.pdf https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com
 ```
 
 
