@@ -14,6 +14,7 @@ Usage is as simple as https://url-to-pdf-api.herokuapp.com/api/render?url=http:/
 
 **Shortcuts:**
 
+* [Examples](#examples)
 * [API](#api)
 * [I want to run this myself](#development)
 
@@ -43,7 +44,7 @@ https://url-to-pdf-api.herokuapp.com/api/render?url=http://www.andreaverlicchi.e
 
 **Render only the first page.**
 
-https://url-to-pdf-api.herokuapp.com/api/render?url=https://en.wikipedia.org/wiki/Portable_Document_Format&pageRanges=1
+https://url-to-pdf-api.herokuapp.com/api/render?url=https://en.wikipedia.org/wiki/Portable_Document_Format&pdf.pageRanges=1
 
 **Render A5-sized PDF in landscape.**
 
