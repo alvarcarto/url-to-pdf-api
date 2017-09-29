@@ -28,29 +28,41 @@ async function render(_opts = {}) {
   const page = await browser.newPage();
 
   page.on('error', (err) => {
-    logger.error(`Error in the page when rendering: ${err}`);
+    logger.error(`Error event emitted: ${err}`);
     logger.error(err.stack);
+    browser.close();
   });
 
   let data;
   try {
+    logger.info('Set browser viewport..');
     await page.setViewport(opts.viewport);
     if (opts.emulateScreenMedia) {
+      logger.info('Emulate @media screen..');
       await page.emulateMedia('screen');
     }
 
     if (_.isNumber(opts.waitFor) || _.isString(opts.waitFor)) {
+      logger.info(`Wait for ${opts.waitFor} ..`);
       await page.waitFor(opts.waitFor);
     }
 
+    logger.info(`Goto url ${opts.url} ..`);
     await page.goto(opts.url, opts.goto);
 
     if (opts.scrollPage) {
+      logger.info(`Scroll page ..`);
       await scrollPage(page);
     }
 
+    logger.info(`Render PDF ..`);
     data = await page.pdf(opts.pdf);
+  } catch (err) {
+    logger.error(`Error when rendering page: ${err}`);
+    logger.error(err.stack);
+    throw err;
   } finally {
+    logger.info('Closing browser..');
     await browser.close();
   }
 
