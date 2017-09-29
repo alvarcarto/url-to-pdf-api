@@ -7,6 +7,11 @@ const config = {
   NODE_ENV: process.env.NODE_ENV,
   LOG_LEVEL: process.env.LOG_LEVEL,
   ALLOW_HTTP: process.env.ALLOW_HTTP === 'true',
+  API_TOKENS: [],
 };
+
+if (process.env.API_TOKENS) {
+  config.API_TOKENS = process.env.API_TOKENS.split(',');
+}
 
 module.exports = config;
