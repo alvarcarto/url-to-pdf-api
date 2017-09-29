@@ -31,6 +31,37 @@ and requests are direct connections to it.
 * Chrome is launched with `--no-sandbox --disable-setuid-sandbox` flags to fix usage in Heroku. See [this issue](https://github.com/GoogleChrome/puppeteer/issues/290).
 
 
+## Examples
+
+**Use the default @media print instead of @media screen.**
+
+https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&emulateScreenMedia=false
+
+**Use scrollPage=true which tries to reveal all lazy loaded elements. Not perfect but better than without.**
+
+https://url-to-pdf-api.herokuapp.com/api/render?url=http://www.andreaverlicchi.eu/lazyload/demos/lazily_load_lazyLoad.html&scrollPage=true
+
+**Render only the first page.**
+
+https://url-to-pdf-api.herokuapp.com/api/render?url=https://en.wikipedia.org/wiki/Portable_Document_Format&pageRanges=1
+
+**Render A5-sized PDF in landscape.**
+
+https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&pdf.format=A5&pdf.landscape=true
+
+**Add 2cm margins to the PDF.**
+
+https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&pdf.margin.top=2cm&pdf.margin.right=2cm&pdf.margin.bottom=2cm&pdf.margin.left=2cm
+
+**Wait for extra 1000ms before render.**
+
+https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=1000
+
+**Wait for an element macthing the selector `input` appears.**
+
+https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=input
+
+
 ## API
 
 To understand the API options, you need to know how Puppeteer is internally used.
@@ -38,8 +69,8 @@ This is the execution flow:
 
 1. **`page.setViewport(options)`** where options matches `viewport.*`.
 2. *Possibly* **`page.emulateMedia('screen')`** if `emulateScreenMedia=true` is set.
-3. *Possibly* **`page.waitFor(numOrStr)`** if e.g. `waitFor=1000` is set.
-4. **`page.goto(url, options)`** where options matches `goto.*`.
+3. **`page.goto(url, options)`** where options matches `goto.*`.
+4. *Possibly* **`page.waitFor(numOrStr)`** if e.g. `waitFor=1000` is set.
 5. *Possibly* **Scroll the whole page** to the end before rendering if e.g. `scrollPage=true` is set.
 
     This is useful if you want to render a page which lazy loads elements.
