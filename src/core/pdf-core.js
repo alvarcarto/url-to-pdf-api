@@ -23,7 +23,7 @@ async function render(_opts = {}) {
 
   const browser = await puppeteer.launch({
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: ['--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'],
   });
   const page = await browser.newPage();
 
