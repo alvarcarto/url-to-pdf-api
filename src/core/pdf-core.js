@@ -27,6 +27,8 @@ async function render(_opts = {}) {
   });
   const page = await browser.newPage();
 
+  page.on('console', (...args) => logger.info('PAGE LOG:', ...args));
+
   page.on('error', (err) => {
     logger.error(`Error event emitted: ${err}`);
     logger.error(err.stack);
