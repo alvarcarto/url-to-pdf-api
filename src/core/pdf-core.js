@@ -26,34 +26,39 @@ async function render(_opts = {}) {
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
   const page = await browser.newPage();
+
   page.on('error', (err) => {
     logger.error(`Error in the page when rendering: ${err}`);
     logger.error(err.stack);
   });
 
-  await page.setViewport(opts.viewport);
-  if (opts.emulateScreenMedia) {
-    await page.emulateMedia('screen');
+  let data;
+  try {
+    await page.setViewport(opts.viewport);
+    if (opts.emulateScreenMedia) {
+      await page.emulateMedia('screen');
+    }
+
+    if (_.isNumber(opts.waitFor) || _.isString(opts.waitFor)) {
+      await page.waitFor(opts.waitFor);
+    }
+
+    await page.goto(opts.url, opts.goto);
+
+    if (opts.scrollPage) {
+      await scrollPage(page);
+    }
+
+    data = await page.pdf(opts.pdf);
+  } finally {
+    await browser.close();
   }
-
-  if (_.isNumber(opts.waitFor) || _.isString(opts.waitFor)) {
-    await page.waitFor(opts.waitFor);
-  }
-
-  await page.goto(opts.url, opts.goto);
-
-  if (opts.scrollPage) {
-    await scrollPage(page);
-  }
-
-  const data = await page.pdf(opts.pdf);
-  await browser.close();
 
   return data;
 }
 
 async function scrollPage(page) {
-  // Scroll to page end to trigger "appear" when in viewport effects
+  // Scroll to page end to trigger lazy loading elements
   return await page.evaluate(() => {
     const scrollInterval = 100;
     const scrollStep = Math.floor(window.innerHeight / 2);

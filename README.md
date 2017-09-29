@@ -67,6 +67,7 @@ The only required parameter is `url`.
   emulateScreenMedia: true,
 
   // If true, page is scrolled to the end before rendering
+  // Note: this makes rendering a bit slower
   scrollPage: false,
 
   // Passed to Puppeteer page.waitFor()
