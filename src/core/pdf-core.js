@@ -46,13 +46,13 @@ async function render(_opts = {}) {
       await page.emulateMedia('screen');
     }
 
+    logger.info(`Goto url ${opts.url} ..`);
+    await page.goto(opts.url, opts.goto);
+
     if (_.isNumber(opts.waitFor) || _.isString(opts.waitFor)) {
       logger.info(`Wait for ${opts.waitFor} ..`);
       await page.waitFor(opts.waitFor);
     }
-
-    logger.info(`Goto url ${opts.url} ..`);
-    await page.goto(opts.url, opts.goto);
 
     if (opts.scrollPage) {
       logger.info(`Scroll page ..`);
