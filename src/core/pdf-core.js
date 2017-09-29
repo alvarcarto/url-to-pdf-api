@@ -21,6 +21,8 @@ async function render(_opts = {}) {
     }
   }, _opts);
 
+  logger.info(`Rendering with opts: ${JSON.stringify(opts, null, 2)}`);
+
   const browser = await puppeteer.launch({
     headless: true,
     args: ['--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'],
