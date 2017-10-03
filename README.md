@@ -6,11 +6,7 @@
 
 **What does "done right" mean?**
 
-* Rendered with Headless Chrome, using [Puppeteer](https://github.com/GoogleChrome/puppeteer)
-
-    The PDF returned by this API should be a very close match to a one
-    generated with normal Chrome for desktop.
-
+* Rendered with Headless Chrome, using [Puppeteer](https://github.com/GoogleChrome/puppeteer). The PDFs should match to the ones generated with a desktop Chrome.
 * Waits until all network requests are finished before rendering
 * Sensible defaults but everything is configurable
 * Easy deployment to Heroku. I love Lambda but.. Deploy to Heroku button
