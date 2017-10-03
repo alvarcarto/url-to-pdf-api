@@ -7,7 +7,7 @@
 **What does "done right" mean?**
 
 * Rendered with Headless Chrome, using [Puppeteer](https://github.com/GoogleChrome/puppeteer). The PDFs should match to the ones generated with a desktop Chrome.
-* Waits until all network requests are finished before rendering
+* Single-page app (SPA) support. Waits until all network requests are finished before rendering. **A feature which even most of the paid services don't have.**
 * Sensible defaults but everything is configurable
 * Easy deployment to Heroku. I love Lambda but.. Deploy to Heroku button
 * Support to render lazy loaded elements correctly *(scrollPage option)*
