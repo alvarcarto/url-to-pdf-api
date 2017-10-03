@@ -1,6 +1,6 @@
 # URL to PDF
 
-> Web page PDF rendering done right. Packaged to an easy API.
+> Web page PDF rendering done right. Packaged to an easy API. Great for rendering receipts, invoices, or any content.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/kimmobrunfeldt/url-to-pdf-api)
 
