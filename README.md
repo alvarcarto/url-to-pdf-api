@@ -7,8 +7,14 @@
 **What does "done right" mean?**
 
 * Rendered with Headless Chrome, using [Puppeteer](https://github.com/GoogleChrome/puppeteer)
+
+    The PDF returned by this API should be a very close match to a one
+    generated with normal Chrome for desktop.
+
+* Waits until all network requests are finished before rendering
 * Sensible defaults but everything is configurable
-* Easy deployment to Heroku. I love Lambda but.. Deploy to Heroku button.
+* Easy deployment to Heroku. I love Lambda but.. Deploy to Heroku button
+* Support to render lazy loaded elements correctly *(scrollPage option)*
 
 Usage is as simple as https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com. There's also a `POST /api/render` if you prefer to send options in the body.
 
@@ -27,12 +33,17 @@ and requests are direct connections to it.
 
 ### Good to know
 
-* By default, we set Chrome to emulate `screen` media. To change this behaviour, try adding `&emulateScreenMedia=true`. See more at [Puppeteer API docs](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagepdfoptions).
+* **By default, page's `@media print` CSS rules are ignored**. We set Chrome to emulate `@media screen` to make the default PDFs look more like actual sites. To get results closer to desktop Chrome, add `&emulateScreenMedia=false` query parameter. See more at [Puppeteer API docs](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagepdfoptions).
 
 * Chrome is launched with `--no-sandbox --disable-setuid-sandbox` flags to fix usage in Heroku. See [this issue](https://github.com/GoogleChrome/puppeteer/issues/290).
 
+* Heavy pages may cause Chrome to crash if the server doesn't have enough RAM
+
 
 ## Examples
+
+*Note: the demo Heroku app runs on a free dyno which sleep after idle.
+A request to sleeping dyno may take even 30 seconds.*
 
 **Use the default @media print instead of @media screen.**
 
@@ -145,6 +156,11 @@ To get this thing running, you have two options: run it in Heroku, or locally.
 **Remember, the code requires Node 8+ (async, await).**
 
 #### 1. Heroku deployment
+
+**WARNING:** Heroku dynos have a very low amount of RAM. Rendering heavy pages
+may cause Chrome instance to crash inside Heroku dyno. 512MB should be
+enough for most real-life use cases such as receipts. Some news sites may need
+even 2GB of RAM.
 
 Scroll this readme up to the Deploy to Heroku -button. Click it and follow
 instructions.
