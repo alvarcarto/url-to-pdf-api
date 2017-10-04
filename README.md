@@ -9,7 +9,7 @@
 * Rendered with Headless Chrome, using [Puppeteer](https://github.com/GoogleChrome/puppeteer). The PDFs should match to the ones generated with a desktop Chrome.
 * Single-page app (SPA) support. Waits until all network requests are finished before rendering. **A feature which even most of the paid services don't have.**
 * Sensible defaults but everything is configurable
-* Easy deployment to Heroku. I love Lambda but.. Deploy to Heroku button
+* Easy deployment to Heroku. We love Lambda but.. Deploy to Heroku button
 * Support to render lazy loaded elements correctly *(scrollPage option)*
 
 Usage is as simple as https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com. There's also a `POST /api/render` if you prefer to send options in the body.
