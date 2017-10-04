@@ -1,6 +1,6 @@
-# URL → PDF
-
 ![Logo](docs/logo.png)
+
+# URL → PDF
 
 > Web page PDF rendering done right. Packaged to an easy API. Great for rendering receipts, invoices, or any content.
 
