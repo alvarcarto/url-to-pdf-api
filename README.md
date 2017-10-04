@@ -72,8 +72,8 @@ https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=in
 
 ## API
 
-To understand the API options, you need to know how Puppeteer is internally used.
-This is the execution flow:
+To understand the API options, you need to know how [Puppeteer](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md)
+is internally used. This is the execution flow:
 
 1. **`page.setViewport(options)`** where options matches `viewport.*`.
 2. *Possibly* **`page.emulateMedia('screen')`** if `emulateScreenMedia=true` is set.
@@ -81,17 +81,64 @@ This is the execution flow:
 4. *Possibly* **`page.waitFor(numOrStr)`** if e.g. `waitFor=1000` is set.
 5. *Possibly* **Scroll the whole page** to the end before rendering if e.g. `scrollPage=true` is set.
 
-    This is useful if you want to render a page which lazy loads elements.
+    Useful if you want to render a page which lazy loads elements.
 
 6. **`page.pdf(options)`** where options matches `pdf.*`.
 
-This HTTP API exposes exactly the same options as Puppeteer provides, so you can always
-refer to their docs: https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md.
+
+### GET /api/render
+
+All options are passed as query parameters.
+Parameter names match [Puppeteer options](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md).
+
+These options are exactly the same as its `POST` counterpart, but options are
+expressed with the dot notation. E.g. `?pdf.scale=2` instead of `{ pdf: { scale: 2 }}`.
+
+The only required parameter is `url`.
+
+Parameter | Type | Default | Description
+----------|------|---------|------------
+url | string | - | URL to render as PDF.
+scrollPage | boolean | `false` | Scroll page down before rendering to trigger lazy loading elements.
+emulateScreenMedia | boolean | `true` | Emulates `@media screen` when rendering the PDF.
+waitFor | number or string | - | Number in ms to wait before render or selector element to wait before render.
+viewport.width | number | `1600` | Viewport width.
+viewport.height | number | `1200` | Viewport height.
+viewport.deviceScaleFactor | number | `1` | Device scale factor (could be thought of as dpr).
+viewport.isMobile | boolean | `false` | Whether the meta viewport tag is taken into account.
+viewport.hasTouch | boolean | `false` | Specifies if viewport supports touch events.
+viewport.isLandscape | boolean | `false` | Specifies if viewport is in landscape mode.
+goto.timeout | number | `30000` |  Maximum navigation time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+goto.waitUntil | string | `networkidle` | When to consider navigation succeeded. Options: `load`, `networkidle`. `load` = consider navigation to be finished when the load event is fired. `networkidle` = consider navigation to be finished when the network activity stays "idle" for at least `goto.networkIdleTimeout` ms.
+goto.networkIdleInflight | number | `2` | Maximum amount of inflight requests which are considered "idle". Takes effect only with `goto.waitUntil`: 'networkidle' parameter.
+goto.networkIdleTimeout | number | `2000` | A timeout to wait before completing navigation. Takes effect only with waitUntil: 'networkidle' parameter.
+pdf.scale | number | `1` | Scale of the webpage rendering.
+pdf.printBackground | boolean | `false`| Print background graphics.
+pdf.displayHeaderFooter | boolean | `false` | Display header and footer.
+pdf.landscape | boolean | `false` | Paper orientation.
+pdf.pageRanges | string | - | Paper ranges to print, e.g., '1-5, 8, 11-13'. Defaults to the empty string, which means print all pages.
+pdf.format | string | `A4` | Paper format. If set, takes priority over width or height options.
+pdf.width | string | - | Paper width, accepts values labeled with units.
+pdf.height | string | - | Paper height, accepts values labeled with units.
+pdf.margin.top | string | - | Top margin, accepts values labeled with units.
+pdf.margin.right | string | - | Right margin, accepts values labeled with units.
+pdf.margin.bottom | string | - | Bottom margin, accepts values labeled with units.
+pdf.margin.left | string | - | Left margin, accepts values labeled with units.
+
+
+**Example:**
+
+```bash
+curl -o google.pdf https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com
+```
 
 
 ### POST /api/render
 
-All options are passed in a JSON body object. Find all parameters in [src/util/validation.js](src/util/validation.js) in `renderBodyParams` object. Parameter names match Puppeteer options.
+All options are passed in a JSON body object.
+Parameter names match [Puppeteer options](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md).
+
+These options are exactly the same as its `GET` counterpart.
 
 **Body**
 
@@ -128,22 +175,6 @@ The only required parameter is `url`.
 ```bash
 curl -o google.pdf -XPOST -d'{"url": "http://google.com"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/render
 ```
-
-### GET /api/render
-
-All options are passed as query parameters. Find all parameters in [src/util/validation.js](src/util/validation.js) in `renderQueryParams` object. Parameter names match Puppeteer options.
-
-These options are exactly the same as its `POST` counterpart, but options in an
-object tree are expressed with the dot notation. E.g. `?pdf.margin.top=10px`.
-
-The only required parameter is `url`.
-
-**Example:**
-
-```bash
-curl -o google.pdf https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com
-```
-
 
 ## Development
 
