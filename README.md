@@ -72,8 +72,9 @@ https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=in
 
 ## API
 
-To understand the API options, you need to know how [Puppeteer](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md)
-is internally used. This is the execution flow:
+To understand the API options, it's useful to know how [Puppeteer](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md)
+is internally used by this API. The [render code](https://github.com/alvarcarto/url-to-pdf-api/blob/master/src/core/pdf-core.js#L26)
+is really simple, check it out. Render flow:
 
 1. **`page.setViewport(options)`** where options matches `viewport.*`.
 2. *Possibly* **`page.emulateMedia('screen')`** if `emulateScreenMedia=true` is set.
