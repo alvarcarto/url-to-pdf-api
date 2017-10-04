@@ -149,17 +149,18 @@ curl -o google.pdf https://url-to-pdf-api.herokuapp.com/api/render?url=http://go
 
 To get this thing running, you have two options: run it in Heroku, or locally.
 
-**Remember, the code requires Node 8+ (async, await).**
+The code requires Node 8+ (async, await).
 
 #### 1. Heroku deployment
 
-**WARNING:** Heroku dynos have a very low amount of RAM. Rendering heavy pages
-may cause Chrome instance to crash inside Heroku dyno. 512MB should be
-enough for most real-life use cases such as receipts. Some news sites may need
-even 2GB of RAM.
-
 Scroll this readme up to the Deploy to Heroku -button. Click it and follow
 instructions.
+
+**WARNING:** *Heroku dynos have a very low amount of RAM. Rendering heavy pages
+may cause Chrome instance to crash inside Heroku dyno. 512MB should be
+enough for most real-life use cases such as receipts. Some news sites may need
+even 2GB of RAM.*
+
 
 #### 2. Local development
 
