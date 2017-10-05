@@ -6,6 +6,10 @@
 
 ![Logo](docs/logo.png)
 
+**WARNING:** *Don't serve this API publicly in the internet unless you are aware of the
+risks. It allows API users to run any JavaScript code inside a Chrome in the server.
+It's fairly easy to expose content of files in the server. You have been warned!*
+
 **⭐️ Features:**
 
 * Rendered with Headless Chrome, using [Puppeteer](https://github.com/GoogleChrome/puppeteer). The PDFs should match to the ones generated with a desktop Chrome.
