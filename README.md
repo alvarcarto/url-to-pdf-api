@@ -1,10 +1,19 @@
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/kimmobrunfeldt/url-to-pdf-api)
 
-# URL to PDF
+# URL to PDF Microservice
 
-> Web page PDF rendering done right. Packaged to an easy API. Great for rendering receipts, invoices, or any content.
+> Web page PDF rendering done right. Microservice for rendering receipts, invoices, or any content. Packaged to an easy API.
 
 ![Logo](docs/logo.png)
+
+**🔍 Why?**
+
+This microservice is useful when you need to automatically produce PDF files
+for whatever reason. The files could be receipts, weekly reports, invoices,
+or any content.
+
+PDFs can be generated in many ways, but one of them is to convert HTML+CSS
+content to a PDF. This API does just that.
 
 **⭐️ Features:**
 
