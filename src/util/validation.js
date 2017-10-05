@@ -1,7 +1,14 @@
 const Joi = require('joi');
 
+const urlSchema = Joi.string().uri({
+  scheme: [
+    'http',
+    'https',
+  ],
+});
+
 const renderQueryParams = Joi.object({
-  url: Joi.string().min(0).max(50000),
+  url: urlSchema,
   scrollPage: Joi.boolean(),
   emulateScreenMedia: Joi.boolean(),
   waitFor: Joi.alternatives([
@@ -33,7 +40,7 @@ const renderQueryParams = Joi.object({
 });
 
 const renderBodyParams = Joi.object({
-  url: Joi.string().min(0).max(50000),
+  url: urlSchema,
   scrollPage: Joi.boolean(),
   emulateScreenMedia: Joi.boolean(),
   viewport: Joi.object({
