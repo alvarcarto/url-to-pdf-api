@@ -210,7 +210,14 @@ enough for most real-life use cases such as receipts. Some news sites may need
 even 2GB of RAM.*
 
 
-#### 2. Local development
+#### 2. Run in Docker
+
+* `docker build -t example/url-to-pdf .`
+* `docker run -it --env-file ./.env.sample -p 9000:9000 example/url-to-pdf`
+
+* You can now access the service at http://localhost:9000
+
+#### 3. Local development
 
 First, clone the repository and cd into it.
 
