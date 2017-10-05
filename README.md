@@ -6,15 +6,6 @@
 
 ![Logo](docs/logo.png)
 
-**🔍 Why?**
-
-This microservice is useful when you need to automatically produce PDF files
-for whatever reason. The files could be receipts, weekly reports, invoices,
-or any content.
-
-PDFs can be generated in many ways, but one of them is to convert HTML+CSS
-content to a PDF. This API does just that.
-
 **⭐️ Features:**
 
 * Rendered with Headless Chrome, using [Puppeteer](https://github.com/GoogleChrome/puppeteer). The PDFs should match to the ones generated with a desktop Chrome.
@@ -25,6 +16,15 @@ content to a PDF. This API does just that.
 * Supports optional `x-api-key` authentication. *(`API_TOKENS` env var)*
 
 Usage is as simple as https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com. There's also a `POST /api/render` if you prefer to send options in the body.
+
+**🔍 Why?**
+
+This microservice is useful when you need to automatically produce PDF files
+for whatever reason. The files could be receipts, weekly reports, invoices,
+or any content.
+
+PDFs can be generated in many ways, but one of them is to convert HTML+CSS
+content to a PDF. This API does just that.
 
 **🚀 Shortcuts:**
 
