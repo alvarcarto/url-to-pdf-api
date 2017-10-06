@@ -1,4 +1,5 @@
 const express = require('express');
+const promBundle = require("express-prom-bundle");
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const compression = require('compression');
@@ -27,6 +28,12 @@ function createApp() {
   } else {
     logger.info('ALLOW_HTTP=true, unsafe requests are allowed. Don\'t use this in production.');
   }
+
+  app.use(promBundle({
+    includeMethod: true,
+    // We can detect error rates by looking at status codes > 500.
+    includeStatusCode: true,
+  }));
 
   const corsOpts = {
     origin: config.CORS_ORIGIN,
