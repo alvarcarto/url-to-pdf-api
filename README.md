@@ -85,6 +85,8 @@ https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=10
 
 https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=input
 
+**Render this page.**
+https://url-to-pdf-api.herokuapp.com/api/render?url=https://github.com/alvarcarto/url-to-pdf-api
 
 ## API
 
