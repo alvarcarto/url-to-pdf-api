@@ -8,6 +8,7 @@ const config = {
   LOG_LEVEL: process.env.LOG_LEVEL,
   ALLOW_HTTP: process.env.ALLOW_HTTP === 'true',
   API_TOKENS: [],
+  CORS_ORIGIN: process.env.CORS_ORIGIN,
 };
 
 if (process.env.API_TOKENS) {
