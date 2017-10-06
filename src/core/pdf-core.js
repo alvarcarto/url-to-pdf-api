@@ -21,6 +21,12 @@ async function render(_opts = {}) {
     }
   }, _opts);
 
+  if (_.get(_opts, 'pdf.width') && _.get(_opts, 'pdf.height')) {
+    // pdf.format always overrides width and height, so we must delete it
+    // when user explicitly wants to set width and height
+    opts.pdf.format = undefined;
+  }
+
   logger.info(`Rendering with opts: ${JSON.stringify(opts, null, 2)}`);
 
   const browser = await puppeteer.launch({
