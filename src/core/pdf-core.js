@@ -5,6 +5,7 @@ const logger = require('../util/logger')(__filename);
 
 async function render(_opts = {}) {
   const opts = _.merge({
+    cookies: [],
     scrollPage: false,
     emulateScreenMedia: true,
     viewport: {
@@ -52,8 +53,14 @@ async function render(_opts = {}) {
       await page.emulateMedia('screen');
     }
 
+    logger.info('Setting cookies..');
+    opts.cookies.map(async (cookie) => {
+      await page.setCookie(cookie)
+    });
+
     logger.info(`Goto url ${opts.url} ..`);
     await page.goto(opts.url, opts.goto);
+
 
     if (_.isNumber(opts.waitFor) || _.isString(opts.waitFor)) {
       logger.info(`Wait for ${opts.waitFor} ..`);

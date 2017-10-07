@@ -7,6 +7,7 @@ const getRender = ex.createRoute((req, res) => {
     scrollPage: req.query.scrollPage,
     emulateScreenMedia: req.query.emulateScreenMedia,
     waitFor: req.query.waitFor,
+    cookies: req.query.cookies,
     viewport: {
       width: req.query['viewport.width'],
       height: req.query['viewport.height'],
