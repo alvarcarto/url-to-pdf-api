@@ -13,10 +13,10 @@ It's fairly easy to expose content of files in the server. You have been warned!
 **⭐️ Features:**
 
 * Rendered with Headless Chrome, using [Puppeteer](https://github.com/GoogleChrome/puppeteer). The PDFs should match to the ones generated with a desktop Chrome.
-* Sensible defaults but everything is configurable
+* Sensible defaults but everything is configurable.
 * Single-page app (SPA) support. Waits until all network requests are finished before rendering. **A feature which even most of the paid services don't have.**
-* Easy deployment to Heroku. We love Lambda but.. Deploy to Heroku button
-* Renders lazy loaded elements *(scrollPage option)*
+* Easy deployment to Heroku. We love Lambda but...Deploy to Heroku button.
+* Renders lazy loaded elements. *(scrollPage option)*
 * Supports optional `x-api-key` authentication. *(`API_TOKENS` env var)*
 
 Usage is as simple as https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com. There's also a `POST /api/render` if you prefer to send options in the body.
@@ -49,7 +49,7 @@ and requests are direct connections to it.
 
 * Chrome is launched with `--no-sandbox --disable-setuid-sandbox` flags to fix usage in Heroku. See [this issue](https://github.com/GoogleChrome/puppeteer/issues/290).
 
-* Heavy pages may cause Chrome to crash if the server doesn't have enough RAM
+* Heavy pages may cause Chrome to crash if the server doesn't have enough RAM.
 
 
 ## Examples
@@ -115,7 +115,7 @@ The only required parameter is `url`.
 
 Parameter | Type | Default | Description
 ----------|------|---------|------------
-url | string | - | URL to render as PDF.
+url | string | - | URL to render as PDF. (required)
 scrollPage | boolean | `false` | Scroll page down before rendering to trigger lazy loading elements.
 emulateScreenMedia | boolean | `true` | Emulates `@media screen` when rendering the PDF.
 waitFor | number or string | - | Number in ms to wait before render or selector element to wait before render.
