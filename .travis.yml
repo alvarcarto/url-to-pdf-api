@@ -12,4 +12,4 @@ before_script:
   - npm i
 
 script:
-  - eslint .
+  - $(npm bin)/eslint .
