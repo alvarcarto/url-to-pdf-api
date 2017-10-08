@@ -8,7 +8,7 @@ const urlSchema = Joi.string().uri({
 });
 
 const renderQueryParams = Joi.object({
-  url: urlSchema,
+  url: urlSchema.required(),
   scrollPage: Joi.boolean(),
   emulateScreenMedia: Joi.boolean(),
   waitFor: Joi.alternatives([
@@ -40,7 +40,7 @@ const renderQueryParams = Joi.object({
 });
 
 const renderBodyParams = Joi.object({
-  url: urlSchema,
+  url: urlSchema.required(),
   scrollPage: Joi.boolean(),
   emulateScreenMedia: Joi.boolean(),
   viewport: Joi.object({
