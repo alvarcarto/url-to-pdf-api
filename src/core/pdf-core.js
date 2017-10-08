@@ -3,6 +3,22 @@ const BPromise = require('bluebird');
 const _ = require('lodash');
 const logger = require('../util/logger')(__filename);
 
+// Initialize a Chrome instance
+let browser;
+
+(async () => {
+  browser = await puppeteer.launch({
+    headless: true,
+    args: ['--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'],
+  });
+})();
+
+process.on("exit", () => browser.close()); // Safe-guard to kill the Chrome instance
+
+// Initialize the Pool array
+const PagePool = [];
+const MAX_POOL_SIZE = process.env.MAX_POOL_SIZE || 4; // Defaults to 4
+
 async function render(_opts = {}) {
   const opts = _.merge({
     scrollPage: false,
@@ -29,11 +45,11 @@ async function render(_opts = {}) {
 
   logger.info(`Rendering with opts: ${JSON.stringify(opts, null, 2)}`);
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'],
-  });
-  const page = await browser.newPage();
+  let page = pool_getConnection(); // page = Page instance OR null
+  
+  if(!page){
+    page = await pool_addConnection();
+  }
 
   page.on('console', (...args) => logger.info('PAGE LOG:', ...args));
 
@@ -71,11 +87,9 @@ async function render(_opts = {}) {
     logger.error(`Error when rendering page: ${err}`);
     logger.error(err.stack);
     throw err;
-  } finally {
-    logger.info('Closing browser..');
-    await browser.close();
   }
 
+  pool_toggleAvailability(page.pool.id);
   return data;
 }
 
@@ -108,6 +122,44 @@ async function scrollPage(page) {
     });
   });
 }
+
+function pool_getConnection(){
+  let returnValue;
+
+  for(let i = 0; i < PagePool.length; i++){
+    if(PagePool[i].pool.available === true){
+      returnValue = PagePool[i];
+      PagePool[i].pool.available = false; // Set to false so cannot be accessed by others
+    }
+  }
+
+  return returnValue || null;
+};
+
+async function pool_addConnection(){
+  // Check so adding wont surpass limit
+	if(PagePool.length + 1 > MAX_POOL_SIZE) throw new Error("Surpassing maximum pool size limit");
+  
+    // Create the new tab
+    const newPage = await browser.newPage();
+    newPage.pool = {
+      id: PagePool.length + 1,
+      available: false
+    };
+  
+    // Add to the pool
+    PagePool.push(newPage);
+  
+    return newPage;
+};
+
+function pool_toggleAvailability(id){
+  for(let i = 0; i < PagePool.length; i++){
+		if(PagePool[i].pool.id === id){
+			PagePool[i].pool.available = !PagePool[i].pool.available
+		}
+	}
+};
 
 module.exports = {
   render,
