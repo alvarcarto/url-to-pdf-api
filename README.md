@@ -115,7 +115,7 @@ The only required parameter is `url`.
 
 Parameter | Type | Default | Description
 ----------|------|---------|------------
-url | string | - | URL to render as PDF.
+url | string | - | URL to render as PDF. (required)
 scrollPage | boolean | `false` | Scroll page down before rendering to trigger lazy loading elements.
 emulateScreenMedia | boolean | `true` | Emulates `@media screen` when rendering the PDF.
 waitFor | number or string | - | Number in ms to wait before render or selector element to wait before render.
