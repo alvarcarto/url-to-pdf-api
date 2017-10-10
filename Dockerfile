@@ -8,4 +8,4 @@ RUN npm install --production
 # Bundle app source
 COPY . .
 EXPOSE 9000
-CMD [ "npm", "start" ]
+CMD [ "node", "src/index.js" ]
