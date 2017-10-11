@@ -4,16 +4,16 @@ const _ = require('lodash');
 // This reponder is assuming that all <500 errors are safe to be responded
 // with their .message attribute.
 // DO NOT write sensitive data into error messages.
-function createErrorResponder(opts) {
-  opts = _.merge({
-    isErrorSafeToRespond: function(status) {
-      return status < 500;
-    },
-  }, opts);
+function createErrorResponder(_opts) {
+  const opts = _.merge({
+    isErrorSafeToRespond: status => status < 500,
+  }, _opts);
 
+  // 4 params needed for Express to know it's a error handler middleware
+  // eslint-disable-next-line
   return function errorResponder(err, req, res, next) {
-    var message;
-    var status = err.status ? err.status : 500;
+    let message;
+    let status = err.status ? err.status : 500;
     switch (err.type) {
       case 'StripeCardError':
         // A declined card error
@@ -32,8 +32,9 @@ function createErrorResponder(opts) {
         break;
     }
 
-    var httpMessage = http.STATUS_CODES[status];
+    const httpMessage = http.STATUS_CODES[status];
     if (opts.isErrorSafeToRespond(status)) {
+      // eslint-disable-next-line
       message = err.message;
     } else {
       message = httpMessage;
