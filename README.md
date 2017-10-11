@@ -224,8 +224,8 @@ paremeter.
 **Example:**
 
 ```bash
-curl -o google.html https://google.com
-curl -o html.pdf -XPOST -d@google.html -H"content-type: text/html" https://url-to-pdf-api.herokuapp.com/api/render?pdf.scale=1
+curl -o receipt.html https://rawgit.com/wildbit/postmark-templates/master/templates_inlined/receipt.html
+curl -o html.pdf -XPOST -d@recipt.html -H"content-type: text/html" https://url-to-pdf-api.herokuapp.com/api/render?pdf.scale=1
 ```
 
 ## Development
