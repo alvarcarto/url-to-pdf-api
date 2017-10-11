@@ -12,6 +12,7 @@ It's fairly easy to expose content of files in the server. You have been warned!
 
 **⭐️ Features:**
 
+* Converts any URL or HTML content to a PDF file
 * Rendered with Headless Chrome, using [Puppeteer](https://github.com/GoogleChrome/puppeteer). The PDFs should match to the ones generated with a desktop Chrome.
 * Sensible defaults but everything is configurable.
 * Single-page app (SPA) support. Waits until all network requests are finished before rendering. **A feature which even most of the paid services don't have.**
@@ -220,6 +221,8 @@ curl -o html.pdf -XPOST -d'{"html": "<body>test</body>"}' -H"content-type: appli
 HTML to render is sent in body. All options are passed in query parameters.
 Supports exactly the same query parameters as `GET /api/render`, except `url`
 paremeter.
+
+*Remember that relative links do not work.*
 
 **Example:**
 
