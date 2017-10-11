@@ -85,10 +85,16 @@ https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=10
 
 https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=input
 
-**Render HTML from input**
+**Render HTML sent in JSON body**
 
 ```bash
 curl -o html.pdf -XPOST -d'{"html": "<body>test</body>"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/render
+```
+
+**Render HTML sent as text body**
+
+```bash
+curl -o html.pdf -XPOST -d@page.html -H"content-type: text/html" https://url-to-pdf-api.herokuapp.com/api/render
 ```
 
 ## API
@@ -159,7 +165,7 @@ curl -o google.pdf https://url-to-pdf-api.herokuapp.com/api/render?url=http://go
 ```
 
 
-### POST /api/render
+### POST /api/render - (JSON)
 
 All options are passed in a JSON body object.
 Parameter names match [Puppeteer options](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md).
@@ -207,6 +213,19 @@ curl -o google.pdf -XPOST -d'{"url": "http://google.com"}' -H"content-type: appl
 
 ```bash
 curl -o html.pdf -XPOST -d'{"html": "<body>test</body>"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/render
+```
+
+### POST /api/render - (HTML)
+
+HTML to render is sent in body. All options are passed in query parameters.
+Supports exactly the same query parameters as `GET /api/render`, except `url`
+paremeter.
+
+**Example:**
+
+```bash
+curl -o google.html https://google.com
+curl -o html.pdf -XPOST -d@google.html -H"content-type: text/html" https://url-to-pdf-api.herokuapp.com/api/render?pdf.scale=1
 ```
 
 ## Development
