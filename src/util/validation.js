@@ -7,8 +7,7 @@ const urlSchema = Joi.string().uri({
   ],
 });
 
-const renderQueryParams = Joi.object({
-  url: urlSchema.required(),
+const sharedQuerySchema = Joi.object({
   scrollPage: Joi.boolean(),
   emulateScreenMedia: Joi.boolean(),
   waitFor: Joi.alternatives([
@@ -39,7 +38,11 @@ const renderQueryParams = Joi.object({
   'pdf.printBackground': Joi.boolean(),
 });
 
-const renderBodyParams = Joi.object({
+const renderQuerySchema = Joi.object({
+  url: urlSchema.required(),
+}).concat(sharedQuerySchema);
+
+const renderBodyObject = Joi.object({
   url: urlSchema,
   html: Joi.string(),
   scrollPage: Joi.boolean(),
@@ -78,9 +81,15 @@ const renderBodyParams = Joi.object({
     }),
     printBackground: Joi.boolean(),
   }),
-}).xor('url', 'html');
+});
+
+const renderBodySchema = Joi.alternatives([
+  Joi.string(),
+  renderBodyObject,
+]);
 
 module.exports = {
-  renderQueryParams,
-  renderBodyParams,
+  renderQuerySchema,
+  renderBodySchema,
+  sharedQuerySchema,
 };

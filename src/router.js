@@ -1,11 +1,10 @@
 const _ = require('lodash');
-const Joi = require('joi');
 const validate = require('express-validation');
 const express = require('express');
 const pdf = require('./http/pdf-http');
 const config = require('./config');
 const logger = require('./util/logger')(__filename);
-const { renderQueryParams, renderBodyParams } = require('./util/validation');
+const { renderQuerySchema, renderBodySchema, sharedQuerySchema } = require('./util/validation');
 
 function createRouter() {
   const router = express.Router();
@@ -15,7 +14,7 @@ function createRouter() {
 
     router.use('/*', (req, res, next) => {
       const userToken = req.headers['x-api-key'];
-      if (!_.includes(validTokens, userToken)) {
+      if (!_.includes(config.API_TOKENS, userToken)) {
         const err = new Error('Invalid API token in x-api-key header.');
         err.status = 401;
         return next(err);
@@ -28,7 +27,7 @@ function createRouter() {
   }
 
   const getRenderSchema = {
-    query: renderQueryParams,
+    query: renderQuerySchema,
     options: {
       allowUnknownBody: false,
       allowUnknownQuery: false,
@@ -37,10 +36,15 @@ function createRouter() {
   router.get('/api/render', validate(getRenderSchema), pdf.getRender);
 
   const postRenderSchema = {
-    body: renderBodyParams,
+    body: renderBodySchema,
+    query: sharedQuerySchema,
     options: {
       allowUnknownBody: false,
       allowUnknownQuery: false,
+
+      // Without this option, text body causes an error
+      // https://github.com/AndrewKeig/express-validation/issues/36
+      contextRequest: true,
     },
   };
   router.post('/api/render', validate(postRenderSchema), pdf.postRender);
