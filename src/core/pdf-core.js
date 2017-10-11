@@ -7,6 +7,7 @@ async function render(_opts = {}) {
   const opts = _.merge({
     scrollPage: false,
     emulateScreenMedia: true,
+    html: null,
     viewport: {
       width: 1600,
       height: 1200,
@@ -18,7 +19,7 @@ async function render(_opts = {}) {
     pdf: {
       format: 'A4',
       printBackground: true,
-    }
+    },
   }, _opts);
 
   if (_.get(_opts, 'pdf.width') && _.get(_opts, 'pdf.height')) {
@@ -52,8 +53,13 @@ async function render(_opts = {}) {
       await page.emulateMedia('screen');
     }
 
-    logger.info(`Goto url ${opts.url} ..`);
-    await page.goto(opts.url, opts.goto);
+    if (opts.html) {
+      logger.info(`Set HTML ..`);
+      await page.setContent(opts.html);
+    } else {
+      logger.info(`Goto url ${opts.url} ..`);
+      await page.goto(opts.url, opts.goto);
+    }
 
     if (_.isNumber(opts.waitFor) || _.isString(opts.waitFor)) {
       logger.info(`Wait for ${opts.waitFor} ..`);
