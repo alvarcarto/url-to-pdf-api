@@ -40,7 +40,8 @@ const renderQueryParams = Joi.object({
 });
 
 const renderBodyParams = Joi.object({
-  url: urlSchema.required(),
+  url: urlSchema,
+  html: Joi.string(),
   scrollPage: Joi.boolean(),
   emulateScreenMedia: Joi.boolean(),
   viewport: Joi.object({
@@ -77,7 +78,7 @@ const renderBodyParams = Joi.object({
     }),
     printBackground: Joi.boolean(),
   }),
-});
+}).xor('url', 'html');
 
 module.exports = {
   renderQueryParams,

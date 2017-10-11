@@ -85,6 +85,11 @@ https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=10
 
 https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=input
 
+**Render HTML from input**
+
+```bash
+curl -o html.pdf -XPOST -d'{"html": "<body>test</body>"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/render
+```
 
 ## API
 
@@ -94,7 +99,11 @@ is really simple, check it out. Render flow:
 
 1. **`page.setViewport(options)`** where options matches `viewport.*`.
 2. *Possibly* **`page.emulateMedia('screen')`** if `emulateScreenMedia=true` is set.
-3. **`page.goto(url, options)`** where options matches `goto.*`.
+3. Render url **or** html.
+
+    If `url` is defined, **`page.goto(url, options)`** is called and options match `goto.*`.
+    Otherwise **`page.setContent(html)`** is called where html is taken from request body.
+
 4. *Possibly* **`page.waitFor(numOrStr)`** if e.g. `waitFor=1000` is set.
 5. *Possibly* **Scroll the whole page** to the end before rendering if e.g. `scrollPage=true` is set.
 
@@ -163,8 +172,11 @@ The only required parameter is `url`.
 
 ```js
 {
-  // Url to render
+  // Url to render. Either url or html is required
   url: "https://google.com",
+
+  // HTML content to render. Either url or html is required
+  html: "<html><head></head><body>Your content</body></html>",
 
   // If we should emulate @media screen instead of print
   emulateScreenMedia: true,
@@ -191,6 +203,10 @@ The only required parameter is `url`.
 
 ```bash
 curl -o google.pdf -XPOST -d'{"url": "http://google.com"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/render
+```
+
+```bash
+curl -o html.pdf -XPOST -d'{"html": "<body>test</body>"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/render
 ```
 
 ## Development
