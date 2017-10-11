@@ -81,4 +81,5 @@ const renderBodyParams = Joi.object({
 
 module.exports = {
   renderQueryParams,
+  renderBodyParams,
 };
