@@ -225,7 +225,7 @@ paremeter.
 
 ```bash
 curl -o receipt.html https://rawgit.com/wildbit/postmark-templates/master/templates_inlined/receipt.html
-curl -o html.pdf -XPOST -d@recipt.html -H"content-type: text/html" https://url-to-pdf-api.herokuapp.com/api/render?pdf.scale=1
+curl -o html.pdf -XPOST -d@receipt.html -H"content-type: text/html" https://url-to-pdf-api.herokuapp.com/api/render?pdf.scale=1
 ```
 
 ## Development
