@@ -12,6 +12,14 @@
     "no-path-concat": "error",
     "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
     "no-use-before-define": ["error", { "functions": false }],
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "comma-dangle": ["error", {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
+        "functions": "ignore"
+    }],
+    "function-paren-newline": "off"
   }
 }

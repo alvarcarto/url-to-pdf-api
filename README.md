@@ -1,5 +1,7 @@
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/kimmobrunfeldt/url-to-pdf-api)
 
+[![Build Status](https://travis-ci.org/alvarcarto/url-to-pdf-api.svg?branch=master)](https://travis-ci.org/alvarcarto/url-to-pdf-api)
+
 # URL to PDF Microservice
 
 > Web page PDF rendering done right. Microservice for rendering receipts, invoices, or any content. Packaged to an easy API.
@@ -12,11 +14,12 @@ It's fairly easy to expose content of files in the server. You have been warned!
 
 **⭐️ Features:**
 
+* Converts any URL or HTML content to a PDF file
 * Rendered with Headless Chrome, using [Puppeteer](https://github.com/GoogleChrome/puppeteer). The PDFs should match to the ones generated with a desktop Chrome.
-* Sensible defaults but everything is configurable
+* Sensible defaults but everything is configurable.
 * Single-page app (SPA) support. Waits until all network requests are finished before rendering. **A feature which even most of the paid services don't have.**
-* Easy deployment to Heroku. We love Lambda but.. Deploy to Heroku button
-* Renders lazy loaded elements *(scrollPage option)*
+* Easy deployment to Heroku. We love Lambda but...Deploy to Heroku button.
+* Renders lazy loaded elements. *(scrollPage option)*
 * Supports optional `x-api-key` authentication. *(`API_TOKENS` env var)*
 
 Usage is as simple as https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com. There's also a `POST /api/render` if you prefer to send options in the body.
@@ -49,7 +52,7 @@ and requests are direct connections to it.
 
 * Chrome is launched with `--no-sandbox --disable-setuid-sandbox` flags to fix usage in Heroku. See [this issue](https://github.com/GoogleChrome/puppeteer/issues/290).
 
-* Heavy pages may cause Chrome to crash if the server doesn't have enough RAM
+* Heavy pages may cause Chrome to crash if the server doesn't have enough RAM.
 
 
 ## Examples
@@ -85,6 +88,17 @@ https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=10
 
 https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=input
 
+**Render HTML sent in JSON body**
+
+```bash
+curl -o html.pdf -XPOST -d'{"html": "<body>test</body>"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/render
+```
+
+**Render HTML sent as text body**
+
+```bash
+curl -o html.pdf -XPOST -d@page.html -H"content-type: text/html" https://url-to-pdf-api.herokuapp.com/api/render
+```
 
 ## API
 
@@ -94,7 +108,11 @@ is really simple, check it out. Render flow:
 
 1. **`page.setViewport(options)`** where options matches `viewport.*`.
 2. *Possibly* **`page.emulateMedia('screen')`** if `emulateScreenMedia=true` is set.
-3. **`page.goto(url, options)`** where options matches `goto.*`.
+3. Render url **or** html.
+
+    If `url` is defined, **`page.goto(url, options)`** is called and options match `goto.*`.
+    Otherwise **`page.setContent(html)`** is called where html is taken from request body.
+
 4. *Possibly* **`page.waitFor(numOrStr)`** if e.g. `waitFor=1000` is set.
 5. *Possibly* **Scroll the whole page** to the end before rendering if e.g. `scrollPage=true` is set.
 
@@ -115,7 +133,7 @@ The only required parameter is `url`.
 
 Parameter | Type | Default | Description
 ----------|------|---------|------------
-url | string | - | URL to render as PDF.
+url | string | - | URL to render as PDF. (required)
 scrollPage | boolean | `false` | Scroll page down before rendering to trigger lazy loading elements.
 emulateScreenMedia | boolean | `true` | Emulates `@media screen` when rendering the PDF.
 waitFor | number or string | - | Number in ms to wait before render or selector element to wait before render.
@@ -159,7 +177,7 @@ curl -o google.pdf https://url-to-pdf-api.herokuapp.com/api/render?url=http://go
 ```
 
 
-### POST /api/render
+### POST /api/render - (JSON)
 
 All options are passed in a JSON body object.
 Parameter names match [Puppeteer options](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md).
@@ -172,8 +190,11 @@ The only required parameter is `url`.
 
 ```js
 {
-  // Url to render
+  // Url to render. Either url or html is required
   url: "https://google.com",
+
+  // HTML content to render. Either url or html is required
+  html: "<html><head></head><body>Your content</body></html>",
 
   // If we should emulate @media screen instead of print
   emulateScreenMedia: true,
@@ -203,6 +224,25 @@ The only required parameter is `url`.
 
 ```bash
 curl -o google.pdf -XPOST -d'{"url": "http://google.com"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/render
+```
+
+```bash
+curl -o html.pdf -XPOST -d'{"html": "<body>test</body>"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/render
+```
+
+### POST /api/render - (HTML)
+
+HTML to render is sent in body. All options are passed in query parameters.
+Supports exactly the same query parameters as `GET /api/render`, except `url`
+paremeter.
+
+*Remember that relative links do not work.*
+
+**Example:**
+
+```bash
+curl -o receipt.html https://rawgit.com/wildbit/postmark-templates/master/templates_inlined/receipt.html
+curl -o html.pdf -XPOST -d@receipt.html -H"content-type: text/html" https://url-to-pdf-api.herokuapp.com/api/render?pdf.scale=1
 ```
 
 ## Development

@@ -1,5 +1,4 @@
 /* eslint-disable no-process-env */
-const requireEnvs = require('./util/require-envs');
 
 // Env vars should be casted to correct types
 const config = {

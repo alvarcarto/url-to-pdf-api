@@ -17,10 +17,9 @@ const cookieSchema = Joi.object({
   httpOnly: Joi.boolean(),
   secure: Joi.boolean(),
   sameSite: Joi.string().regex(/^(Strict|Lax)$/),
-})
+});
 
-const renderQueryParams = Joi.object({
-  url: urlSchema,
+const sharedQuerySchema = Joi.object({
   scrollPage: Joi.boolean(),
   emulateScreenMedia: Joi.boolean(),
   waitFor: Joi.alternatives([
@@ -52,8 +51,13 @@ const renderQueryParams = Joi.object({
   'pdf.printBackground': Joi.boolean(),
 });
 
-const renderBodyParams = Joi.object({
+const renderQuerySchema = Joi.object({
+  url: urlSchema.required(),
+}).concat(sharedQuerySchema);
+
+const renderBodyObject = Joi.object({
   url: urlSchema,
+  html: Joi.string(),
   scrollPage: Joi.boolean(),
   emulateScreenMedia: Joi.boolean(),
   cookies: Joi.array().items(cookieSchema),
@@ -93,6 +97,13 @@ const renderBodyParams = Joi.object({
   }),
 });
 
+const renderBodySchema = Joi.alternatives([
+  Joi.string(),
+  renderBodyObject,
+]);
+
 module.exports = {
-  renderQueryParams,
+  renderQuerySchema,
+  renderBodySchema,
+  sharedQuerySchema,
 };
