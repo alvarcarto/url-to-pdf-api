@@ -11,6 +11,25 @@ describe('GET /api/render', () => {
   it('request must have "url" query parameter', () =>
     request(app).get('/api/render').expect(400)
   );
+
+  it('invalid cert should cause an error', () =>
+    request(app)
+      .get('/api/render')
+      .query({
+        url: 'https://self-signed.badssl.com/',
+      })
+      .expect(500)
+  );
+
+  it('invalid cert should not cause an error when ignoreHttpsErrors=true', () =>
+    request(app)
+      .get('/api/render')
+      .query({
+        url: 'https://self-signed.badssl.com/',
+        ignoreHttpsErrors: true,
+      })
+      .expect(200)
+  );
 });
 
 describe('POST /api/render', () => {

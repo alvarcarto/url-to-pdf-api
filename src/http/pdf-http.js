@@ -42,6 +42,7 @@ function getOptsFromQuery(query) {
     url: query.url,
     scrollPage: query.scrollPage,
     emulateScreenMedia: query.emulateScreenMedia,
+    ignoreHttpsErrors: query.ignoreHttpsErrors,
     waitFor: query.waitFor,
     viewport: {
       width: query['viewport.width'],
