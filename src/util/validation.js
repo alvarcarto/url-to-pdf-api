@@ -7,6 +7,18 @@ const urlSchema = Joi.string().uri({
   ],
 });
 
+const cookieSchema = Joi.object({
+  name: Joi.string().required(),
+  value: Joi.string().required(),
+  url: Joi.string(),
+  domain: Joi.string(),
+  path: Joi.string(),
+  expires: Joi.number().min(1),
+  httpOnly: Joi.boolean(),
+  secure: Joi.boolean(),
+  sameSite: Joi.string().regex(/^(Strict|Lax)$/),
+});
+
 const sharedQuerySchema = Joi.object({
   scrollPage: Joi.boolean(),
   emulateScreenMedia: Joi.boolean(),
@@ -14,6 +26,7 @@ const sharedQuerySchema = Joi.object({
     Joi.number().min(1).max(60000),
     Joi.string().min(1).max(2000),
   ]),
+  cookies: Joi.array().items(cookieSchema),
   'viewport.width': Joi.number().min(1).max(30000),
   'viewport.height': Joi.number().min(1).max(30000),
   'viewport.deviceScaleFactor': Joi.number().min(0).max(100),
@@ -47,6 +60,7 @@ const renderBodyObject = Joi.object({
   html: Joi.string(),
   scrollPage: Joi.boolean(),
   emulateScreenMedia: Joi.boolean(),
+  cookies: Joi.array().items(cookieSchema),
   viewport: Joi.object({
     width: Joi.number().min(1).max(30000),
     height: Joi.number().min(1).max(30000),

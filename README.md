@@ -143,6 +143,15 @@ viewport.deviceScaleFactor | number | `1` | Device scale factor (could be though
 viewport.isMobile | boolean | `false` | Whether the meta viewport tag is taken into account.
 viewport.hasTouch | boolean | `false` | Specifies if viewport supports touch events.
 viewport.isLandscape | boolean | `false` | Specifies if viewport is in landscape mode.
+cookies[0][name] | string | - | Cookie name (required)
+cookies[0][value] | string | - | Cookie value (required)
+cookies[0][url] | string | - | Cookie url
+cookies[0][domain] | string | - | Cookie domain
+cookies[0][path] | string | - | Cookie path
+cookies[0][expires] | number | - | Cookie expiry in unix time
+cookies[0][httpOnly] | boolean | - | Cookie httpOnly
+cookies[0][secure] | boolean | - | Cookie secure
+cookies[0][sameSite] | string | - | `Strict` or `Lax`
 goto.timeout | number | `30000` |  Maximum navigation time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
 goto.waitUntil | string | `networkidle` | When to consider navigation succeeded. Options: `load`, `networkidle`. `load` = consider navigation to be finished when the load event is fired. `networkidle` = consider navigation to be finished when the network activity stays "idle" for at least `goto.networkIdleTimeout` ms.
 goto.networkIdleInflight | number | `2` | Maximum amount of inflight requests which are considered "idle". Takes effect only with `goto.waitUntil`: 'networkidle' parameter.
@@ -196,6 +205,9 @@ The only required parameter is `url`.
 
   // Passed to Puppeteer page.waitFor()
   waitFor: null,
+
+  // Passsed to Puppeteer page.setCookies()
+  cookies: [{ ... }]
 
   // Passed to Puppeteer page.setViewport()
   viewport: { ... },
