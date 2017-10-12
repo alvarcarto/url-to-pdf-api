@@ -7,6 +7,7 @@ async function render(_opts = {}) {
     cookies: [],
     scrollPage: false,
     emulateScreenMedia: true,
+    ignoreHttpsErrors: false,
     html: null,
     viewport: {
       width: 1600,
@@ -32,6 +33,7 @@ async function render(_opts = {}) {
 
   const browser = await puppeteer.launch({
     headless: true,
+    ignoreHTTPSErrors: opts.ignoreHttpsErrors,
     args: ['--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'],
   });
   const page = await browser.newPage();

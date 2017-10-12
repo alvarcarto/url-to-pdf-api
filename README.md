@@ -134,8 +134,9 @@ The only required parameter is `url`.
 Parameter | Type | Default | Description
 ----------|------|---------|------------
 url | string | - | URL to render as PDF. (required)
-scrollPage | boolean | `false` | Scroll page down before rendering to trigger lazy loading elements.
 emulateScreenMedia | boolean | `true` | Emulates `@media screen` when rendering the PDF.
+ignoreHttpsErrors | boolean | `false` | Ignores possible HTTPS errors when navigating to a page.
+scrollPage | boolean | `false` | Scroll page down before rendering to trigger lazy loading elements.
 waitFor | number or string | - | Number in ms to wait before render or selector element to wait before render.
 viewport.width | number | `1600` | Viewport width.
 viewport.height | number | `1200` | Viewport height.
@@ -198,6 +199,9 @@ The only required parameter is `url`.
 
   // If we should emulate @media screen instead of print
   emulateScreenMedia: true,
+
+  // If we should ignore HTTPS errors
+  ignoreHttpsErrors: false,
 
   // If true, page is scrolled to the end before rendering
   // Note: this makes rendering a bit slower
