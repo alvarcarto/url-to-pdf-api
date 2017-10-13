@@ -8,8 +8,8 @@
     "html 2 pdf",
     "render"
   ],
-  "website": "https://github.com/kimmobrunfeldt/url-to-pdf-api",
-  "repository": "https://github.com/kimmobrunfeldt/url-to-pdf-api",
+  "website": "https://github.com/alvarcarto/url-to-pdf-api",
+  "repository": "https://github.com/alvarcarto/url-to-pdf-api",
   "env": {
     "ALLOW_HTTP": {
       "description": "When set to \"true\", unsecure requests are allowed.",
