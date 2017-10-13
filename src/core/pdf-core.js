@@ -62,7 +62,8 @@ async function render(_opts = {}) {
 
     if (opts.html) {
       logger.info('Set HTML ..');
-      await page.setContent(opts.html);
+      // https://github.com/GoogleChrome/puppeteer/issues/728
+      await page.goto(`data:text/html,${opts.html}`, opts.goto);
     } else {
       logger.info(`Goto url ${opts.url} ..`);
       await page.goto(opts.url, opts.goto);
