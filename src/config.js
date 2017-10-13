@@ -6,6 +6,7 @@ const config = {
   NODE_ENV: process.env.NODE_ENV,
   LOG_LEVEL: process.env.LOG_LEVEL,
   ALLOW_HTTP: process.env.ALLOW_HTTP === 'true',
+  HEADED: process.env.HEADED === 'true',
   API_TOKENS: [],
 };
 
