@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kimmobrunfeldt/url-to-pdf-api.git"
+    "url": "git+https://github.com/alvarcarto/url-to-pdf-api.git"
   },
   "author": "Kimmo Brunfeldt",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kimmobrunfeldt/url-to-pdf-api/issues"
+    "url": "https://github.com/alvarcarto/url-to-pdf-api/issues"
   },
-  "homepage": "https://github.com/kimmobrunfeldt/url-to-pdf-api#readme",
+  "homepage": "https://github.com/alvarcarto/url-to-pdf-api#readme",
   "dependencies": {
     "bluebird": "^3.5.0",
     "body-parser": "^1.18.2",
