@@ -1,12 +1,14 @@
 const puppeteer = require('puppeteer');
-const BPromise = require('bluebird');
 const _ = require('lodash');
+const config = require('../config');
 const logger = require('../util/logger')(__filename);
 
 async function render(_opts = {}) {
   const opts = _.merge({
+    cookies: [],
     scrollPage: false,
     emulateScreenMedia: true,
+    ignoreHttpsErrors: false,
     html: null,
     viewport: {
       width: 1600,
@@ -28,11 +30,13 @@ async function render(_opts = {}) {
     opts.pdf.format = undefined;
   }
 
-  logger.info(`Rendering with opts: ${JSON.stringify(opts, null, 2)}`);
+  logOpts(opts);
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: !config.DEBUG_MODE,
+    ignoreHTTPSErrors: opts.ignoreHttpsErrors,
     args: ['--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'],
+    sloMo: config.DEBUG_MODE ? 250 : undefined,
   });
   const page = await browser.newPage();
 
@@ -53,9 +57,15 @@ async function render(_opts = {}) {
       await page.emulateMedia('screen');
     }
 
+    logger.info('Setting cookies..');
+    opts.cookies.map(async (cookie) => {
+      await page.setCookie(cookie);
+    });
+
     if (opts.html) {
-      logger.info(`Set HTML ..`);
-      await page.setContent(opts.html);
+      logger.info('Set HTML ..');
+      // https://github.com/GoogleChrome/puppeteer/issues/728
+      await page.goto(`data:text/html,${opts.html}`, opts.goto);
     } else {
       logger.info(`Goto url ${opts.url} ..`);
       await page.goto(opts.url, opts.goto);
@@ -67,11 +77,20 @@ async function render(_opts = {}) {
     }
 
     if (opts.scrollPage) {
-      logger.info(`Scroll page ..`);
+      logger.info('Scroll page ..');
       await scrollPage(page);
     }
 
-    logger.info(`Render PDF ..`);
+    logger.info('Render PDF ..');
+    if (config.DEBUG_MODE) {
+      const msg = `\n\n---------------------------------\n
+        Chrome does not support PDF rendering in "headed" mode.
+        See this issue: https://github.com/GoogleChrome/puppeteer/issues/576
+        \n---------------------------------\n\n
+      `;
+      throw new Error(msg);
+    }
+
     data = await page.pdf(opts.pdf);
   } catch (err) {
     logger.error(`Error when rendering page: ${err}`);
@@ -79,7 +98,9 @@ async function render(_opts = {}) {
     throw err;
   } finally {
     logger.info('Closing browser..');
-    await browser.close();
+    if (!config.DEBUG_MODE) {
+      await browser.close();
+    }
   }
 
   return data;
@@ -87,7 +108,7 @@ async function render(_opts = {}) {
 
 async function scrollPage(page) {
   // Scroll to page end to trigger lazy loading elements
-  return await page.evaluate(() => {
+  await page.evaluate(() => {
     const scrollInterval = 100;
     const scrollStep = Math.floor(window.innerHeight / 2);
     const bottomThreshold = 400;
@@ -113,6 +134,15 @@ async function scrollPage(page) {
       scrollDown();
     });
   });
+}
+
+function logOpts(opts) {
+  const supressedOpts = _.cloneDeep(opts);
+  if (opts.html) {
+    supressedOpts.html = '...';
+  }
+
+  logger.info(`Rendering with opts: ${JSON.stringify(supressedOpts, null, 2)}`);
 }
 
 module.exports = {

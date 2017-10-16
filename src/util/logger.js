@@ -21,7 +21,8 @@ function createLogger(filePath) {
 }
 
 function _setLevelForTransports(logger, level) {
-  _.each(logger.transports, function(transport) {
+  _.each(logger.transports, (transport) => {
+    // eslint-disable-next-line
     transport.level = level;
   });
 }

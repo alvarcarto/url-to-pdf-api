@@ -1,4 +1,6 @@
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/kimmobrunfeldt/url-to-pdf-api)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/alvarcarto/url-to-pdf-api)
+
+[![Build Status](https://travis-ci.org/alvarcarto/url-to-pdf-api.svg?branch=master)](https://travis-ci.org/alvarcarto/url-to-pdf-api)
 
 # URL to PDF Microservice
 
@@ -6,12 +8,13 @@
 
 ![Logo](docs/logo.png)
 
-**WARNING:** *Don't serve this API publicly in the internet unless you are aware of the
-risks. It allows API users to run any JavaScript code inside a Chrome in the server.
-It's fairly easy to expose content of files in the server. You have been warned!*
+**WARNING:** *Don't serve this API publicly to the internet unless you are aware of the
+risks. It allows API users to run any JavaScript code inside a Chrome session on the server.
+It's fairly easy to expose the contents of files on the server. You have been warned!*
 
 **⭐️ Features:**
 
+* Converts any URL or HTML content to a PDF file
 * Rendered with Headless Chrome, using [Puppeteer](https://github.com/GoogleChrome/puppeteer). The PDFs should match to the ones generated with a desktop Chrome.
 * Sensible defaults but everything is configurable.
 * Single-page app (SPA) support. Waits until all network requests are finished before rendering. **A feature which even most of the paid services don't have.**
@@ -85,10 +88,16 @@ https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=10
 
 https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=input
 
-**Render HTML from input**
+**Render HTML sent in JSON body**
 
 ```bash
 curl -o html.pdf -XPOST -d'{"html": "<body>test</body>"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/render
+```
+
+**Render HTML sent as text body**
+
+```bash
+curl -o html.pdf -XPOST -d@page.html -H"content-type: text/html" https://url-to-pdf-api.herokuapp.com/api/render
 ```
 
 ## API
@@ -102,7 +111,7 @@ is really simple, check it out. Render flow:
 3. Render url **or** html.
 
     If `url` is defined, **`page.goto(url, options)`** is called and options match `goto.*`.
-    Otherwise **`page.setContent(html)`** is called where html is taken from request body.
+    Otherwise **`page.goto(\\`data:text/html,${html}\\`, options)`** is called where html is taken from request body. This workaround was found from [Puppeteer issue](https://github.com/GoogleChrome/puppeteer/issues/728).
 
 4. *Possibly* **`page.waitFor(numOrStr)`** if e.g. `waitFor=1000` is set.
 5. *Possibly* **Scroll the whole page** to the end before rendering if e.g. `scrollPage=true` is set.
@@ -125,8 +134,9 @@ The only required parameter is `url`.
 Parameter | Type | Default | Description
 ----------|------|---------|------------
 url | string | - | URL to render as PDF. (required)
-scrollPage | boolean | `false` | Scroll page down before rendering to trigger lazy loading elements.
 emulateScreenMedia | boolean | `true` | Emulates `@media screen` when rendering the PDF.
+ignoreHttpsErrors | boolean | `false` | Ignores possible HTTPS errors when navigating to a page.
+scrollPage | boolean | `false` | Scroll page down before rendering to trigger lazy loading elements.
 waitFor | number or string | - | Number in ms to wait before render or selector element to wait before render.
 viewport.width | number | `1600` | Viewport width.
 viewport.height | number | `1200` | Viewport height.
@@ -134,6 +144,15 @@ viewport.deviceScaleFactor | number | `1` | Device scale factor (could be though
 viewport.isMobile | boolean | `false` | Whether the meta viewport tag is taken into account.
 viewport.hasTouch | boolean | `false` | Specifies if viewport supports touch events.
 viewport.isLandscape | boolean | `false` | Specifies if viewport is in landscape mode.
+cookies[0][name] | string | - | Cookie name (required)
+cookies[0][value] | string | - | Cookie value (required)
+cookies[0][url] | string | - | Cookie url
+cookies[0][domain] | string | - | Cookie domain
+cookies[0][path] | string | - | Cookie path
+cookies[0][expires] | number | - | Cookie expiry in unix time
+cookies[0][httpOnly] | boolean | - | Cookie httpOnly
+cookies[0][secure] | boolean | - | Cookie secure
+cookies[0][sameSite] | string | - | `Strict` or `Lax`
 goto.timeout | number | `30000` |  Maximum navigation time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
 goto.waitUntil | string | `networkidle` | When to consider navigation succeeded. Options: `load`, `networkidle`. `load` = consider navigation to be finished when the load event is fired. `networkidle` = consider navigation to be finished when the network activity stays "idle" for at least `goto.networkIdleTimeout` ms.
 goto.networkIdleInflight | number | `2` | Maximum amount of inflight requests which are considered "idle". Takes effect only with `goto.waitUntil`: 'networkidle' parameter.
@@ -159,7 +178,7 @@ curl -o google.pdf https://url-to-pdf-api.herokuapp.com/api/render?url=http://go
 ```
 
 
-### POST /api/render
+### POST /api/render - (JSON)
 
 All options are passed in a JSON body object.
 Parameter names match [Puppeteer options](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md).
@@ -181,12 +200,18 @@ The only required parameter is `url`.
   // If we should emulate @media screen instead of print
   emulateScreenMedia: true,
 
+  // If we should ignore HTTPS errors
+  ignoreHttpsErrors: false,
+
   // If true, page is scrolled to the end before rendering
   // Note: this makes rendering a bit slower
   scrollPage: false,
 
   // Passed to Puppeteer page.waitFor()
   waitFor: null,
+
+  // Passsed to Puppeteer page.setCookies()
+  cookies: [{ ... }]
 
   // Passed to Puppeteer page.setViewport()
   viewport: { ... },
@@ -207,6 +232,21 @@ curl -o google.pdf -XPOST -d'{"url": "http://google.com"}' -H"content-type: appl
 
 ```bash
 curl -o html.pdf -XPOST -d'{"html": "<body>test</body>"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/render
+```
+
+### POST /api/render - (HTML)
+
+HTML to render is sent in body. All options are passed in query parameters.
+Supports exactly the same query parameters as `GET /api/render`, except `url`
+paremeter.
+
+*Remember that relative links do not work.*
+
+**Example:**
+
+```bash
+curl -o receipt.html https://rawgit.com/wildbit/postmark-templates/master/templates_inlined/receipt.html
+curl -o html.pdf -XPOST -d@receipt.html -H"content-type: text/html" https://url-to-pdf-api.herokuapp.com/api/render?pdf.scale=1
 ```
 
 ## Development
