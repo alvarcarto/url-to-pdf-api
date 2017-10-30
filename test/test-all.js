@@ -69,6 +69,32 @@ describe('POST /api/render', () => {
       })
   );
 
+  it('rendering large html should succeed', () =>
+    request(app)
+      .post('/api/render')
+      .send(getResource('large.html'))
+      .set('content-type', 'text/html')
+      .expect(200)
+      .expect('content-type', 'application/pdf')
+      .then((response) => {
+        const length = Number(response.headers['content-length']);
+        chai.expect(length).to.be.above(1024 * 1024 * 1);
+      })
+  );
+
+  it('rendering html with large linked images should succeed', () =>
+    request(app)
+      .post('/api/render')
+      .send(getResource('large-linked.html'))
+      .set('content-type', 'text/html')
+      .expect(200)
+      .expect('content-type', 'application/pdf')
+      .then((response) => {
+        const length = Number(response.headers['content-length']);
+        chai.expect(length).to.be.above(1024 * 1024 * 1);
+      })
+  );
+
   it('html as text body should succeed', () =>
     request(app)
       .post('/api/render')

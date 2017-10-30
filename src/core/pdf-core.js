@@ -15,8 +15,8 @@ async function render(_opts = {}) {
       height: 1200,
     },
     goto: {
-      waitUntil: 'networkidle',
-      networkIdleTimeout: 2000,
+      waitUntil: 'networkidle0',
+      timeout: 2000,
     },
     pdf: {
       format: 'A4',
@@ -65,7 +65,7 @@ async function render(_opts = {}) {
     if (opts.html) {
       logger.info('Set HTML ..');
       // https://github.com/GoogleChrome/puppeteer/issues/728
-      await page.goto(`data:text/html,${opts.html}`, opts.goto);
+      await page.setContent(opts.html, opts.goto);
     } else {
       logger.info(`Goto url ${opts.url} ..`);
       await page.goto(opts.url, opts.goto);
