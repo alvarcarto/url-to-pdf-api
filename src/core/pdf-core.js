@@ -91,6 +91,7 @@ async function render(_opts = {}) {
       throw new Error(msg);
     }
 
+    opts.pdf.height = await page.evaluate(() => document.body.offsetHeight) + 'px';
     data = await page.pdf(opts.pdf);
   } catch (err) {
     logger.error(`Error when rendering page: ${err}`);
