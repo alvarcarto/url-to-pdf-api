@@ -91,7 +91,25 @@ async function render(_opts = {}) {
       throw new Error(msg);
     }
 
-    opts.pdf.height = await page.evaluate(() => document.body.offsetHeight) + 'px';
+    console.log('-------------');
+    let reportPagesCount = 1, reportCountPrev;
+    let count = 0;
+    while(reportPagesCount > 0) {
+        reportCountPrev = reportPagesCount;
+        reportPagesCount = await page.evaluate(() => Object.keys(reportGenerateHelper.reportPages).length);
+        if(reportCountPrev === reportPagesCount) {//IF we stack on reports drawing, count tries
+          count = count + 1;
+        } else {
+          count = 0;
+        }
+        if(count > 10) {//If stack tries more then 10 then stop with error
+            logger.error(`Error when rendering page: Cannot finish ${reportPagesCount} reports drawing.`);
+          break;
+        }
+    }
+    opts.pdf.height = await page.evaluate(() =>  document.body.offsetHeight) + 'px';
+    console.log('PDF calculated Height: ' + opts.pdf.height);
+    console.log('-------------');
     data = await page.pdf(opts.pdf);
   } catch (err) {
     logger.error(`Error when rendering page: ${err}`);
