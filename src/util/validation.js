@@ -50,6 +50,13 @@ const sharedQuerySchema = Joi.object({
   'pdf.margin.bottom': Joi.string().min(1).max(2000),
   'pdf.margin.left': Joi.string().min(1).max(2000),
   'pdf.printBackground': Joi.boolean(),
+  'image.type': Joi.string().min(0).max(1000),
+  'image.quality': Joi.number().min(0).max(100),
+  'image.fullPage': Joi.boolean(),
+  'image.clip.x': Joi.number().min(0).max(30000),
+  'image.clip.y': Joi.number().min(0).max(30000),
+  'image.clip.width': Joi.number().min(0).max(30000),
+  'image.clip.height': Joi.number().min(0).max(30000),
 });
 
 const renderQuerySchema = Joi.object({
@@ -96,6 +103,17 @@ const renderBodyObject = Joi.object({
       left: Joi.string().min(1).max(2000),
     }),
     printBackground: Joi.boolean(),
+  }),
+  image: Joi.object({
+    type: Joi.string().min(0).max(1000),
+    quality: Joi.number().min(0).max(100),
+    fullPage: Joi.boolean(),
+    clip: Joi.object({
+      x: Joi.number().min(0).max(30000),
+      y: Joi.number().min(0).max(30000),
+      width: Joi.number().min(0).max(30000),
+      height: Joi.number().min(0).max(30000),
+    }),
   }),
 });
 

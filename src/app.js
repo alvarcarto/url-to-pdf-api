@@ -21,12 +21,12 @@ function createApp() {
     app.use(morgan('dev'));
   }
 
-  if (!config.ALLOW_HTTP) {
-    logger.info('All requests require HTTPS.');
-    app.use(requireHttps());
-  } else {
+//  if (!config.ALLOW_HTTP) {
+//    logger.info('All requests require HTTPS.');
+//    app.use(requireHttps());
+//  } else {
     logger.info('ALLOW_HTTP=true, unsafe requests are allowed. Don\'t use this in production.');
-  }
+//  }
 
   const corsOpts = {
     origin: config.CORS_ORIGIN,

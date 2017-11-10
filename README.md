@@ -22,7 +22,7 @@ It's fairly easy to expose the contents of files on the server. You have been wa
 * Renders lazy loaded elements. *(scrollPage option)*
 * Supports optional `x-api-key` authentication. *(`API_TOKENS` env var)*
 
-Usage is as simple as https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com. There's also a `POST /api/render` if you prefer to send options in the body.
+Usage is as simple as https://url-to-pdf-api.herokuapp.com/api/pdf/render?url=http://google.com. There's also a `POST /api/pdf/render` if you prefer to send options in the body.
 
 **🔍 Why?**
 
@@ -62,42 +62,42 @@ A request to sleeping dyno may take even 30 seconds.*
 
 **Use the default @media print instead of @media screen.**
 
-https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&emulateScreenMedia=false
+https://url-to-pdf-api.herokuapp.com/api/pdf/render?url=http://google.com&emulateScreenMedia=false
 
 **Use scrollPage=true which tries to reveal all lazy loaded elements. Not perfect but better than without.**
 
-https://url-to-pdf-api.herokuapp.com/api/render?url=http://www.andreaverlicchi.eu/lazyload/demos/lazily_load_lazyLoad.html&scrollPage=true
+https://url-to-pdf-api.herokuapp.com/api/pdf/render?url=http://www.andreaverlicchi.eu/lazyload/demos/lazily_load_lazyLoad.html&scrollPage=true
 
 **Render only the first page.**
 
-https://url-to-pdf-api.herokuapp.com/api/render?url=https://en.wikipedia.org/wiki/Portable_Document_Format&pdf.pageRanges=1
+https://url-to-pdf-api.herokuapp.com/api/pdf/render?url=https://en.wikipedia.org/wiki/Portable_Document_Format&pdf.pageRanges=1
 
 **Render A5-sized PDF in landscape.**
 
-https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&pdf.format=A5&pdf.landscape=true
+https://url-to-pdf-api.herokuapp.com/api/pdf/render?url=http://google.com&pdf.format=A5&pdf.landscape=true
 
 **Add 2cm margins to the PDF.**
 
-https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&pdf.margin.top=2cm&pdf.margin.right=2cm&pdf.margin.bottom=2cm&pdf.margin.left=2cm
+https://url-to-pdf-api.herokuapp.com/api/pdf/render?url=http://google.com&pdf.margin.top=2cm&pdf.margin.right=2cm&pdf.margin.bottom=2cm&pdf.margin.left=2cm
 
 **Wait for extra 1000ms before render.**
 
-https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=1000
+https://url-to-pdf-api.herokuapp.com/api/pdf/render?url=http://google.com&waitFor=1000
 
 **Wait for an element macthing the selector `input` appears.**
 
-https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=input
+https://url-to-pdf-api.herokuapp.com/api/pdf/render?url=http://google.com&waitFor=input
 
 **Render HTML sent in JSON body**
 
 ```bash
-curl -o html.pdf -XPOST -d'{"html": "<body>test</body>"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/render
+curl -o html.pdf -XPOST -d'{"html": "<body>test</body>"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/pdf/render
 ```
 
 **Render HTML sent as text body**
 
 ```bash
-curl -o html.pdf -XPOST -d@page.html -H"content-type: text/html" https://url-to-pdf-api.herokuapp.com/api/render
+curl -o html.pdf -XPOST -d@page.html -H"content-type: text/html" https://url-to-pdf-api.herokuapp.com/api/pdf/render
 ```
 
 ## API
@@ -121,7 +121,7 @@ is really simple, check it out. Render flow:
 6. **`page.pdf(options)`** where options matches `pdf.*`.
 
 
-### GET /api/render
+### GET /api/pdf/render
 
 All options are passed as query parameters.
 Parameter names match [Puppeteer options](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md).
@@ -174,11 +174,11 @@ pdf.margin.left | string | - | Left margin, accepts values labeled with units.
 **Example:**
 
 ```bash
-curl -o google.pdf https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com
+curl -o google.pdf https://url-to-pdf-api.herokuapp.com/api/pdf/render?url=http://google.com
 ```
 
 
-### POST /api/render - (JSON)
+### POST /api/pdf/render - (JSON)
 
 All options are passed in a JSON body object.
 Parameter names match [Puppeteer options](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md).
@@ -227,17 +227,17 @@ The only required parameter is `url`.
 **Example:**
 
 ```bash
-curl -o google.pdf -XPOST -d'{"url": "http://google.com"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/render
+curl -o google.pdf -XPOST -d'{"url": "http://google.com"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/pdf/render
 ```
 
 ```bash
-curl -o html.pdf -XPOST -d'{"html": "<body>test</body>"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/render
+curl -o html.pdf -XPOST -d'{"html": "<body>test</body>"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/pdf/render
 ```
 
-### POST /api/render - (HTML)
+### POST /api/pdf/render - (HTML)
 
 HTML to render is sent in body. All options are passed in query parameters.
-Supports exactly the same query parameters as `GET /api/render`, except `url`
+Supports exactly the same query parameters as `GET /api/pdf/render`, except `url`
 paremeter.
 
 *Remember that relative links do not work.*
@@ -246,7 +246,7 @@ paremeter.
 
 ```bash
 curl -o receipt.html https://rawgit.com/wildbit/postmark-templates/master/templates_inlined/receipt.html
-curl -o html.pdf -XPOST -d@receipt.html -H"content-type: text/html" https://url-to-pdf-api.herokuapp.com/api/render?pdf.scale=1
+curl -o html.pdf -XPOST -d@receipt.html -H"content-type: text/html" https://url-to-pdf-api.herokuapp.com/api/pdf/render?pdf.scale=1
 ```
 
 ## Development

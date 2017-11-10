@@ -2,6 +2,7 @@ const _ = require('lodash');
 const validate = require('express-validation');
 const express = require('express');
 const pdf = require('./http/pdf-http');
+const image = require('./http/image-http');
 const config = require('./config');
 const logger = require('./util/logger')(__filename);
 const { renderQuerySchema, renderBodySchema, sharedQuerySchema } = require('./util/validation');
@@ -33,7 +34,8 @@ function createRouter() {
       allowUnknownQuery: false,
     },
   };
-  router.get('/api/render', validate(getRenderSchema), pdf.getRender);
+  router.get('/api/pdf/render', validate(getRenderSchema), pdf.getRender);
+  router.get('/api/image/render', validate(getRenderSchema), image.getRender);
 
   const postRenderSchema = {
     body: renderBodySchema,
@@ -47,7 +49,8 @@ function createRouter() {
       contextRequest: true,
     },
   };
-  router.post('/api/render', validate(postRenderSchema), pdf.postRender);
+  router.post('/api/pdf/render', validate(postRenderSchema), pdf.postRender);
+  router.post('/api/image/render', validate(postRenderSchema), image.postRender);
 
   return router;
 }
