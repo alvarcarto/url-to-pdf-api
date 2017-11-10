@@ -7,14 +7,14 @@ const createApp = require('../src/app');
 
 const app = createApp();
 
-describe('GET /api/render', () => {
+describe('GET /api/pdf/render', () => {
   it('request must have "url" query parameter', () =>
-    request(app).get('/api/render').expect(400)
+    request(app).get('/api/pdf/render').expect(400)
   );
 
   it('invalid cert should cause an error', () =>
     request(app)
-      .get('/api/render')
+      .get('/api/pdf/render')
       .query({
         url: 'https://self-signed.badssl.com/',
       })
@@ -23,7 +23,7 @@ describe('GET /api/render', () => {
 
   it('invalid cert should not cause an error when ignoreHttpsErrors=true', () =>
     request(app)
-      .get('/api/render')
+      .get('/api/pdf/render')
       .query({
         url: 'https://self-signed.badssl.com/',
         ignoreHttpsErrors: true,
@@ -32,10 +32,10 @@ describe('GET /api/render', () => {
   );
 });
 
-describe('POST /api/render', () => {
+describe('POST /api/pdf/render', () => {
   it('body must have "url" attribute', () =>
     request(app)
-      .post('/api/render')
+      .post('/api/pdf/render')
       .send({
         pdf: { scale: 2 },
       })
@@ -45,7 +45,7 @@ describe('POST /api/render', () => {
 
   it('render google.com should succeed', () =>
     request(app)
-      .post('/api/render')
+      .post('/api/pdf/render')
       .send({ url: 'https://google.com' })
       .set('content-type', 'application/json')
       .expect(200)
@@ -58,7 +58,7 @@ describe('POST /api/render', () => {
 
   it('html in json body should succeed', () =>
     request(app)
-      .post('/api/render')
+      .post('/api/pdf/render')
       .send({ html: getResource('postmark-receipt.html') })
       .set('content-type', 'application/json')
       .expect(200)
@@ -71,7 +71,7 @@ describe('POST /api/render', () => {
 
   it('html as text body should succeed', () =>
     request(app)
-      .post('/api/render')
+      .post('/api/pdf/render')
       .send(getResource('postmark-receipt.html'))
       .set('content-type', 'text/html')
       .expect(200)
