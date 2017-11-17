@@ -6,7 +6,9 @@ const getRender = ex.createRoute((req, res) => {
   const opts = getOptsFromQuery(req.query);
   return pdfCore.render(opts)
     .then((data) => {
-      opts.attachmentName && res.attachment(opts.attachmentName);
+      if (opts.attachmentName) {
+        res.attachment(opts.attachmentName);
+      }
       res.set('content-type', 'application/pdf');
       res.send(data);
     });
@@ -33,7 +35,9 @@ const postRender = ex.createRoute((req, res) => {
 
   return pdfCore.render(opts)
     .then((data) => {
-      opts.attachmentName && res.attachment(opts.attachmentName);
+      if (opts.attachmentName) {
+        res.attachment(opts.attachmentName);
+      }
       res.set('content-type', 'application/pdf');
       res.send(data);
     });
