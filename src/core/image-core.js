@@ -24,6 +24,10 @@ async function render(_opts = {}) {
     },
   }, _opts);
 
+  if (_.isEmpty(_.pickBy(opts.image.clip))) {
+    opts.image.clip = undefined;
+  }
+
   logOpts(opts);
 
   const browser = await puppeteer.launch({
