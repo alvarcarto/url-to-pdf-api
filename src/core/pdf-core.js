@@ -3,6 +3,12 @@ const _ = require('lodash');
 const config = require('../config');
 const logger = require('../util/logger')(__filename);
 
+function sleep(ms){
+    return new Promise(resolve=>{
+        setTimeout(resolve,ms)
+    })
+}
+
 async function render(_opts = {}) {
   const opts = _.merge({
     cookies: [],
@@ -93,19 +99,25 @@ async function render(_opts = {}) {
 
     console.log('-------------');
     let reportPagesCount = 1, reportCountPrev;
-    let count = 0;
+    let currentTime = new Date().getTime();
+    let timeDif = 0;
     while(reportPagesCount > 0) {
         reportCountPrev = reportPagesCount;
-        reportPagesCount = await page.evaluate(() => Object.keys(reportGenerateHelper.reportPages).length);
-        if(reportCountPrev === reportPagesCount) {//IF we stack on reports drawing, count tries
-          count = count + 1;
-        } else {
-          count = 0;
+        reportPagesCount = await page.evaluate(function() {
+          if(reportGenerateHelper){
+              return Object.keys(reportGenerateHelper.reportPages).length;
+          } else {
+              return 0;
+          }
+        });
+        if(reportCountPrev === reportPagesCount) {//IF we stack on reports drawing, check time
+            timeDif = new Date().getTime() - currentTime;
+            if(timeDif > 30 * 1000) {
+                logger.error(`Error when rendering page: Cannot finish ${reportPagesCount} reports drawing.`);
+                break;
+            }
         }
-        if(count > 10) {//If stack tries more then 10 then stop with error
-            logger.error(`Error when rendering page: Cannot finish ${reportPagesCount} reports drawing.`);
-          break;
-        }
+        await sleep(1000);
     }
     opts.pdf.height = await page.evaluate(() =>  document.body.offsetHeight) + 'px';
     console.log('PDF calculated Height: ' + opts.pdf.height);
