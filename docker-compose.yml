@@ -1,0 +1,11 @@
+app:
+  build: .
+  ports:
+    - "9000:9000"
+  environment:
+    - NODE_ENV=production # set to development in order to refresh the server on file changes
+    - ALLOW_HTTP=false # Set this to true for development
+    # Uncomment the next line if you want to add support to tokens
+    # - API_TOKENS=
+  volumes:
+    - .:/usr/src/app
