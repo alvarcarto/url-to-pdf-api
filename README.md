@@ -280,6 +280,10 @@ First, clone the repository and cd into it.
 * `npm start` Start express server locally
 * Server runs at http://localhost:9000 or what `$PORT` env defines
 
+#### 3. Running with docker-compose
+* Edit docker-compose.yml file setting the environment variables.
+* run `docker-compose up`.
+* Server runs at http://localhost:9000 or what `PORT` env defines in (docker-compose.yml
 
 ### Techstack
 

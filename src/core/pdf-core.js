@@ -31,13 +31,18 @@ async function render(_opts = {}) {
   }
 
   logOpts(opts);
-
-  const browser = await puppeteer.launch({
+  const puppeterOptions = {
     headless: !config.DEBUG_MODE,
     ignoreHTTPSErrors: opts.ignoreHttpsErrors,
     args: ['--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'],
     sloMo: config.DEBUG_MODE ? 250 : undefined,
-  });
+    executablePath: 'google-chrome-unstable',
+  };
+
+  if (config.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD === 'false') {
+    puppeterOptions.executablePath = 'google-chrome-unstable';
+  }
+  const browser = await puppeteer.launch(puppeterOptions);
   const page = await browser.newPage();
 
   page.on('console', (...args) => logger.info('PAGE LOG:', ...args));
