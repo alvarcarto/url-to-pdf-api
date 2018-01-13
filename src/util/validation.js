@@ -20,6 +20,7 @@ const cookieSchema = Joi.object({
 });
 
 const sharedQuerySchema = Joi.object({
+  attachmentName: Joi.string(),
   scrollPage: Joi.boolean(),
   emulateScreenMedia: Joi.boolean(),
   ignoreHttpsErrors: Joi.boolean(),
@@ -66,6 +67,7 @@ const renderQuerySchema = Joi.object({
 const renderBodyObject = Joi.object({
   url: urlSchema,
   html: Joi.string(),
+  attachmentName: Joi.string(),
   scrollPage: Joi.boolean(),
   ignoreHttpsErrors: Joi.boolean(),
   emulateScreenMedia: Joi.boolean(),
