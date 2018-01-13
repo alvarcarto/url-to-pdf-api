@@ -5,10 +5,13 @@ const imageCore = require('../core/image-core');
 const getRender = ex.createRoute((req, res) => {
   const opts = getOptsFromQuery(req.query);
   return imageCore.render(opts)
-  .then((data) => {
-    res.set('content-type', 'image/' + (!opts.image.type ? 'png' : opts.image.type));
-    res.send(data);
-  });
+    .then((data) => {
+      if (opts.attachmentName) {
+        res.attachment(opts.attachmentName);
+      }
+      res.set('content-type', 'image/' + (!opts.image.type ? 'png' : opts.image.type));
+      res.send(data);
+    });
 });
 
 const postRender = ex.createRoute((req, res) => {
@@ -31,15 +34,19 @@ const postRender = ex.createRoute((req, res) => {
   }
 
   return imageCore.render(opts)
-  .then((data) => {
-    res.set('content-type', 'image/' + (!opts.image.type ? 'png' : opts.image.type));
-    res.send(data);
-  });
+    .then((data) => {
+      if (opts.attachmentName) {
+        res.attachment(opts.attachmentName);
+      }
+      res.set('content-type', 'image/' + (!opts.image.type ? 'png' : opts.image.type));
+      res.send(data);
+    });
 });
 
 function getOptsFromQuery(query) {
   const opts = {
     url: query.url,
+    attachmentName: query.attachmentName,
     scrollPage: query.scrollPage,
     emulateScreenMedia: query.emulateScreenMedia,
     ignoreHttpsErrors: query.ignoreHttpsErrors,
