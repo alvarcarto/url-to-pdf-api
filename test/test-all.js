@@ -52,7 +52,7 @@ describe('POST /api/render', () => {
       .expect('content-type', 'application/pdf')
       .then((response) => {
         const length = Number(response.headers['content-length']);
-        chai.expect(length).to.be.above(1024 * 50);
+        chai.expect(length).to.be.above(1024 * 40);
       })
   );
 
