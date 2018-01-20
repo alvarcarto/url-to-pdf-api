@@ -7,6 +7,11 @@ const urlSchema = Joi.string().uri({
   ],
 });
 
+const waitUntilSchema = Joi.alternatives([
+  Joi.string().min(1).max(2000),
+  Joi.array().items(Joi.string().min(1).max(2000)),
+]);
+
 const cookieSchema = Joi.object({
   name: Joi.string().required(),
   value: Joi.string().required(),
@@ -36,11 +41,11 @@ const sharedQuerySchema = Joi.object({
   'viewport.hasTouch': Joi.boolean(),
   'viewport.isLandscape': Joi.boolean(),
   'goto.timeout': Joi.number().min(0).max(60000),
-  'goto.waitUntil': Joi.string().min(1).max(2000),
-  'goto.networkIdleInflight': Joi.number().min(0).max(1000),
-  'goto.networkIdleTimeout': Joi.number().min(0).max(1000),
+  'goto.waitUntil': waitUntilSchema,
   'pdf.scale': Joi.number().min(0).max(1000),
   'pdf.displayHeaderFooter': Joi.boolean(),
+  'pdf.headerTemplate': Joi.string(),
+  'pdf.footerTemplate': Joi.string(),
   'pdf.landscape': Joi.boolean(),
   'pdf.pageRanges': Joi.string().min(1).max(2000),
   'pdf.format': Joi.string().min(1).max(2000),
@@ -79,13 +84,13 @@ const renderBodyObject = Joi.object({
   ]),
   goto: Joi.object({
     timeout: Joi.number().min(0).max(60000),
-    waitUntil: Joi.string().min(1).max(2000),
-    networkIdleInflight: Joi.number().min(0).max(1000),
-    networkIdleTimeout: Joi.number().min(0).max(1000),
+    waitUntil: waitUntilSchema,
   }),
   pdf: Joi.object({
     scale: Joi.number().min(0).max(1000),
     displayHeaderFooter: Joi.boolean(),
+    headerTemplate: Joi.string(),
+    footerTemplate: Joi.string(),
     landscape: Joi.boolean(),
     pageRanges: Joi.string().min(1).max(2000),
     format: Joi.string().min(1).max(2000),

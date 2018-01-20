@@ -154,12 +154,12 @@ cookies[0][httpOnly] | boolean | - | Cookie httpOnly
 cookies[0][secure] | boolean | - | Cookie secure
 cookies[0][sameSite] | string | - | `Strict` or `Lax`
 goto.timeout | number | `30000` |  Maximum navigation time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
-goto.waitUntil | string | `networkidle` | When to consider navigation succeeded. Options: `load`, `networkidle`. `load` = consider navigation to be finished when the load event is fired. `networkidle` = consider navigation to be finished when the network activity stays "idle" for at least `goto.networkIdleTimeout` ms.
-goto.networkIdleInflight | number | `2` | Maximum amount of inflight requests which are considered "idle". Takes effect only with `goto.waitUntil`: 'networkidle' parameter.
-goto.networkIdleTimeout | number | `2000` | A timeout to wait before completing navigation. Takes effect only with waitUntil: 'networkidle' parameter.
+goto.waitUntil | array or string | `networkidle0` | When to consider navigation succeeded. Options: `load`, `domcontentloaded`, `networkidle0`, `networkidle2`. `load` = consider navigation to be finished when the load event is fired. `domcontentloaded` = consider navigation to be finished when the DOMContentLoaded event is fired. `networkidle0` = consider navigation to be finished when there are no more than 0 network connections for at least 500 ms. `networkidle2` = consider navigation to be finished when there are no more than 2 network connections for at least 500 ms.
 pdf.scale | number | `1` | Scale of the webpage rendering.
 pdf.printBackground | boolean | `false`| Print background graphics.
 pdf.displayHeaderFooter | boolean | `false` | Display header and footer.
+pdf.headerTemplate | string | HTML template for the print header. Should be valid HTML markup following classes used to inject printing values into them. [List of classes](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagepdfoptions).
+pdf.footerTemplate | string | HTML template for the print footer. Should be valid HTML markup following classes used to inject printing values into them. [List of classes](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagepdfoptions).
 pdf.landscape | boolean | `false` | Paper orientation.
 pdf.pageRanges | string | - | Paper ranges to print, e.g., '1-5, 8, 11-13'. Defaults to the empty string, which means print all pages.
 pdf.format | string | `A4` | Paper format. If set, takes priority over width or height options.
