@@ -16,7 +16,7 @@ async function render(_opts = {}) {
     },
     goto: {
       waitUntil: 'networkidle0',
-      timeout: 2000,
+      timeout: 5000,
     },
     pdf: {
       format: 'A4',
@@ -140,6 +140,10 @@ function logOpts(opts) {
   const supressedOpts = _.cloneDeep(opts);
   if (opts.html) {
     supressedOpts.html = '...';
+  }
+
+  if (opts.url && opts.url.length > 1024) {
+    supressedOpts.url = opts.url.slice(0, 300);
   }
 
   logger.info(`Rendering with opts: ${JSON.stringify(supressedOpts, null, 2)}`);
