@@ -20,6 +20,7 @@
       "required": false
     }
   },
+  "success_url": "/api/render?url=https://github.com/alvarcarto/url-to-pdf-api/blob/master/README.md",
   "buildpacks": [
     {
       "url": "https://github.com/jontewks/puppeteer-heroku-buildpack"
