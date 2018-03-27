@@ -13,6 +13,7 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 WORKDIR /usr/src/app
 COPY package.json .
 ENV NODE_ENV production
+ENV CHROME_PATH /usr/bin/chromium-browser
 ENV ALLOW_HTTP true
 ENV HOST 0.0.0.0
 RUN npm install

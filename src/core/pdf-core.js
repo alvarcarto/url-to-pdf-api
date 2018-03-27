@@ -32,13 +32,19 @@ async function render(_opts = {}) {
 
   logOpts(opts);
 
-  const browser = await puppeteer.launch({
+  const puppeterOptions = {
     headless: !config.DEBUG_MODE,
     ignoreHTTPSErrors: opts.ignoreHttpsErrors,
-    executablePath: '/usr/bin/chromium-browser',
     args: ['--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'],
     sloMo: config.DEBUG_MODE ? 250 : undefined,
-  });
+  };
+
+  if ( typeof process.env.CHROME_PATH !== 'undefined' && process.env.CHROME_PATH ) {
+    puppeterOptions.executablePath = process.env.CHROME_PATH ;
+  }
+
+  const browser = await puppeteer.launch(puppeterOptions);
+
   const page = await browser.newPage();
 
   page.on('console', (...args) => logger.info('PAGE LOG:', ...args));

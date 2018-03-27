@@ -9,6 +9,7 @@ RUN apk update && apk upgrade && \
 
 # Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+ENV CHROME_PATH /usr/bin/chromium-browser
 ENV HOST 0.0.0.0
 WORKDIR /usr/src/app
 COPY package.json .
