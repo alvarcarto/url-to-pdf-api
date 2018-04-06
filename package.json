@@ -31,7 +31,7 @@
     "joi": "^11.1.1",
     "lodash": "^4.17.4",
     "morgan": "^1.9.0",
-    "puppeteer": "^0.11.0",
+    "puppeteer": "^1.2.0",
     "server-destroy": "^1.0.1",
     "winston": "^2.3.1"
   },
