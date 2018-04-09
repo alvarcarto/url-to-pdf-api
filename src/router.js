@@ -33,6 +33,11 @@ function createRouter() {
       allowUnknownQuery: false,
     },
   };
+
+  router.get('/ht/', (req, res) => {
+    res.send({ response: 200, data: 'it works!' })
+  })
+
   router.get('/api/render', validate(getRenderSchema), pdf.getRender);
 
   const postRenderSchema = {
