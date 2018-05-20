@@ -60,6 +60,10 @@ and requests are direct connections to it.
 *Note: the demo Heroku app runs on a free dyno which sleep after idle.
 A request to sleeping dyno may take even 30 seconds.*
 
+**The most minimal example, render google.com**
+
+https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com
+
 **Use the default @media print instead of @media screen.**
 
 https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&emulateScreenMedia=false
