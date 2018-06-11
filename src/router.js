@@ -53,6 +53,8 @@ function createRouter() {
     res.send('OK')
   })
 
+  router.use('/tmp', express.static(config.TMP_PATH));
+
   return router;
 }
 
