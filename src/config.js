@@ -8,7 +8,7 @@ const config = {
   LOG_LEVEL: process.env.LOG_LEVEL,
   ALLOW_HTTP: process.env.ALLOW_HTTP === 'true',
   DEBUG_MODE: process.env.DEBUG_MODE === 'true',
-  TMP_PATH: process.env.TMP_PATH || (process.env.PWD + '/tmp'),
+  TMP_PATH: process.env.TMP_PATH || '/tmp',
   API_TOKENS: [],
 };
 
