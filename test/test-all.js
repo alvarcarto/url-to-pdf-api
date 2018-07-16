@@ -1,19 +1,21 @@
 /* eslint-env mocha */
 
 const chai = require('chai');
-const request = require('supertest');
+const supertest = require('supertest');
 const { getResource } = require('./util');
 const createApp = require('../src/app');
 
 const app = createApp();
 
+const request = supertest(app);
+
 describe('GET /api/render', () => {
   it('request must have "url" query parameter', () =>
-    request(app).get('/api/render').expect(400)
+    request.get('/api/render').expect(400)
   );
 
   it('invalid cert should cause an error', () =>
-    request(app)
+    request
       .get('/api/render')
       .query({
         url: 'https://self-signed.badssl.com/',
@@ -22,7 +24,7 @@ describe('GET /api/render', () => {
   );
 
   it('invalid cert should not cause an error when ignoreHttpsErrors=true', () =>
-    request(app)
+    request
       .get('/api/render')
       .query({
         url: 'https://self-signed.badssl.com/',
@@ -34,7 +36,7 @@ describe('GET /api/render', () => {
 
 describe('POST /api/render', () => {
   it('body must have "url" attribute', () =>
-    request(app)
+    request
       .post('/api/render')
       .send({
         pdf: { scale: 2 },
@@ -44,7 +46,7 @@ describe('POST /api/render', () => {
   );
 
   it('render google.com should succeed', () =>
-    request(app)
+    request
       .post('/api/render')
       .send({ url: 'https://google.com' })
       .set('content-type', 'application/json')
@@ -57,7 +59,7 @@ describe('POST /api/render', () => {
   );
 
   it('html in json body should succeed', () =>
-    request(app)
+    request
       .post('/api/render')
       .send({ html: getResource('postmark-receipt.html') })
       .set('content-type', 'application/json')
@@ -70,7 +72,7 @@ describe('POST /api/render', () => {
   );
 
   it('html as text body should succeed', () =>
-    request(app)
+    request
       .post('/api/render')
       .send(getResource('postmark-receipt.html'))
       .set('content-type', 'text/html')
