@@ -43,10 +43,10 @@ describe('POST /api/render', () => {
       .expect(400)
   );
 
-  it('render google.com should succeed', () =>
+  it('render github.com should succeed', () =>
     request(app)
       .post('/api/render')
-      .send({ url: 'https://google.com' })
+      .send({ url: 'https://github.com' })
       .set('content-type', 'application/json')
       .expect(200)
       .expect('content-type', 'application/pdf')
