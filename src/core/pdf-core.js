@@ -147,3 +147,4 @@ function logOpts(opts) {
 module.exports = {
   render,
 };
+
