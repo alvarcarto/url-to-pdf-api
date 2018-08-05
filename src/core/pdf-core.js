@@ -22,6 +22,7 @@ async function render(_opts = {}) {
       format: 'A4',
       printBackground: true,
     },
+    failEarly: false,
   }, _opts);
 
   if (_.get(_opts, 'pdf.width') && _.get(_opts, 'pdf.height')) {
@@ -46,6 +47,25 @@ async function render(_opts = {}) {
     logger.error(`Error event emitted: ${err}`);
     logger.error(err.stack);
     browser.close();
+  });
+
+
+  this.failedResponses = [];
+  page.on('requestfailed', (request) => {
+    this.failedResponses.push(request);
+    if (request.url === opts.url) {
+      this.mainUrlResponse = request;
+    }
+  });
+
+  page.on('response', (response) => {
+    if (response.status >= 400) {
+      this.failedResponses.push(response);
+    }
+
+    if (response.url === opts.url) {
+      this.mainUrlResponse = response;
+    }
   });
 
   let data;
@@ -79,6 +99,25 @@ async function render(_opts = {}) {
     if (opts.scrollPage) {
       logger.info('Scroll page ..');
       await scrollPage(page);
+    }
+
+    if (this.failedResponses.length) {
+      logger.warn(`Number of failed requests: ${this.failedResponses.length}`);
+      this.failedResponses.forEach((response) => {
+        logger.warn(`${response.status} ${response.url}`);
+      });
+
+      if (opts.failEarly === 'all') {
+        const err = new Error(`${this.failedResponses.length} requests have failed. See server log for more details.`);
+        err.status = 412;
+        throw err;
+      }
+    }
+    if (opts.failEarly === 'page' && this.mainUrlResponse.status !== 200) {
+      const msg = `Request for ${opts.url} did not directly succeed and returned status ${this.mainUrlResponse.status}`;
+      const err = new Error(msg);
+      err.status = 412;
+      throw err;
     }
 
     logger.info('Render PDF ..');

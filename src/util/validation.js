@@ -99,6 +99,7 @@ const renderBodyObject = Joi.object({
     }),
     printBackground: Joi.boolean(),
   }),
+  failEarly: Joi.string(),
 });
 
 const renderBodySchema = Joi.alternatives([
