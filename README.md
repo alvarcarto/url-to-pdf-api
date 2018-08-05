@@ -8,7 +8,7 @@
 
 ![Logo](docs/logo.png)
 
-**WARNING:** *Don't serve this API publicly to the internet unless you are aware of the
+**⚠️ WARNING ⚠️** *Don't serve this API publicly to the internet unless you are aware of the
 risks. It allows API users to run any JavaScript code inside a Chrome session on the server.
 It's fairly easy to expose the contents of files on the server. You have been warned!. See https://github.com/alvarcarto/url-to-pdf-api/issues/12 for background.*
 
