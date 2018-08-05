@@ -2,6 +2,9 @@ const puppeteer = require('puppeteer');
 const _ = require('lodash');
 const config = require('../config');
 const logger = require('../util/logger')(__filename);
+const uuid = require('uuid/v4');
+const fs = require('fs')
+
 
 async function render(_opts = {}) {
   const opts = _.merge({
@@ -15,8 +18,8 @@ async function render(_opts = {}) {
       height: 1200,
     },
     goto: {
-      waitUntil: 'networkidle',
-      networkIdleTimeout: 2000,
+      waitUntil: 'networkidle2',
+      timeout: 5000,
     },
     pdf: {
       format: 'A4',
@@ -33,12 +36,19 @@ async function render(_opts = {}) {
 
   logOpts(opts);
 
-  const browser = await puppeteer.launch({
+  const puppeterOptions = {
     headless: !config.DEBUG_MODE,
     ignoreHTTPSErrors: opts.ignoreHttpsErrors,
     args: ['--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'],
     sloMo: config.DEBUG_MODE ? 250 : undefined,
-  });
+  };
+
+  if ( typeof process.env.CHROME_PATH !== 'undefined' && process.env.CHROME_PATH ) {
+    puppeterOptions.executablePath = process.env.CHROME_PATH ;
+  }
+
+  const browser = await puppeteer.launch(puppeterOptions);
+
   const page = await browser.newPage();
 
   page.on('console', (...args) => logger.info('PAGE LOG:', ...args));
@@ -48,6 +58,7 @@ async function render(_opts = {}) {
     logger.error(err.stack);
     browser.close();
   });
+  var request_id = uuid();
 
 
   this.failedResponses = [];
@@ -85,7 +96,8 @@ async function render(_opts = {}) {
     if (opts.html) {
       logger.info('Set HTML ..');
       // https://github.com/GoogleChrome/puppeteer/issues/728
-      await page.goto(`data:text/html,${opts.html}`, opts.goto);
+      fs.appendFileSync(config.TMP_PATH + `/${request_id}.html`, opts.html)
+      await page.goto(`http://127.0.0.1:${config.PORT}/tmp/${request_id}.html`, opts.goto);
     } else {
       logger.info(`Goto url ${opts.url} ..`);
       await page.goto(opts.url, opts.goto);
@@ -139,6 +151,7 @@ async function render(_opts = {}) {
     logger.info('Closing browser..');
     if (!config.DEBUG_MODE) {
       await browser.close();
+      await fs.unlink(config.TMP_PATH + `/${request_id}.html`, (error) => { });
     }
   }
 

@@ -33,7 +33,7 @@ function createRouter() {
       allowUnknownQuery: false,
     },
   };
-  router.get('/api/render', validate(getRenderSchema), pdf.getRender);
+  router.get('/', validate(getRenderSchema), pdf.getRender);
 
   const postRenderSchema = {
     body: renderBodySchema,
@@ -47,7 +47,13 @@ function createRouter() {
       contextRequest: true,
     },
   };
-  router.post('/api/render', validate(postRenderSchema), pdf.postRender);
+  router.post('/', validate(postRenderSchema), pdf.postRender);
+
+  router.get('/health', function (req, res) {
+    res.send('OK')
+  })
+
+  router.use('/tmp', express.static(config.TMP_PATH));
 
   return router;
 }

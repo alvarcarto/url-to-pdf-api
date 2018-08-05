@@ -284,6 +284,17 @@ First, clone the repository and cd into it.
 * `npm start` Start express server locally
 * Server runs at http://localhost:9000 or what `$PORT` env defines
 
+#### 3. Local development with docker
+
+* `docker-compose up`
+
+Server runs at http://localhost:9000 
+
+#### 4. Docker deployment (production)
+
+* `docker build -f Dockerfile.production .`
+
+NOTE: By default it will listen to all interfaces without authentification
 
 ### Techstack
 

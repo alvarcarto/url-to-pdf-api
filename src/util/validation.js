@@ -37,8 +37,6 @@ const sharedQuerySchema = Joi.object({
   'viewport.isLandscape': Joi.boolean(),
   'goto.timeout': Joi.number().min(0).max(60000),
   'goto.waitUntil': Joi.string().min(1).max(2000),
-  'goto.networkIdleInflight': Joi.number().min(0).max(1000),
-  'goto.networkIdleTimeout': Joi.number().min(0).max(1000),
   'pdf.scale': Joi.number().min(0).max(1000),
   'pdf.displayHeaderFooter': Joi.boolean(),
   'pdf.landscape': Joi.boolean(),
@@ -80,8 +78,6 @@ const renderBodyObject = Joi.object({
   goto: Joi.object({
     timeout: Joi.number().min(0).max(60000),
     waitUntil: Joi.string().min(1).max(2000),
-    networkIdleInflight: Joi.number().min(0).max(1000),
-    networkIdleTimeout: Joi.number().min(0).max(1000),
   }),
   pdf: Joi.object({
     scale: Joi.number().min(0).max(1000),

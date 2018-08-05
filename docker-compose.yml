@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    environment:
+      - NODE_ENV=development
+      - ALLOW_HTTP=true
+    ports:
+      - '9000:9000'
+    volumes:
+    - .:/usr/src/app
+    - node_modules:/usr/src/app/node_modules
+volumes:
+  app:
+  node_modules:
