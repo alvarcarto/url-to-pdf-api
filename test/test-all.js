@@ -43,11 +43,12 @@ describe('POST /api/render', () => {
       .expect(400)
   );
 
-  it('render google.com should succeed', () =>
+  it('render github.com should succeed', () =>
     request(app)
       .post('/api/render')
-      .send({ url: 'https://google.com' })
+      .send({ url: 'https://github.com' })
       .set('content-type', 'application/json')
+      .set('Connection', 'keep-alive')
       .expect(200)
       .expect('content-type', 'application/pdf')
       .then((response) => {
@@ -60,6 +61,7 @@ describe('POST /api/render', () => {
     request(app)
       .post('/api/render')
       .send({ html: getResource('postmark-receipt.html') })
+      .set('Connection', 'keep-alive')
       .set('content-type', 'application/json')
       .expect(200)
       .expect('content-type', 'application/pdf')
@@ -73,6 +75,7 @@ describe('POST /api/render', () => {
     request(app)
       .post('/api/render')
       .send(getResource('postmark-receipt.html'))
+      .set('Connection', 'keep-alive')
       .set('content-type', 'text/html')
       .expect(200)
       .expect('content-type', 'application/pdf')
