@@ -46,6 +46,8 @@ const sharedQuerySchema = Joi.object({
   'pdf.format': Joi.string().min(1).max(2000),
   'pdf.width': Joi.string().min(1).max(2000),
   'pdf.height': Joi.string().min(1).max(2000),
+  'pdf.footerTemplate': Joi.string(),
+  'pdf.headerTemplate': Joi.string(),
   'pdf.margin.top': Joi.string().min(1).max(2000),
   'pdf.margin.right': Joi.string().min(1).max(2000),
   'pdf.margin.bottom': Joi.string().min(1).max(2000),
@@ -91,6 +93,8 @@ const renderBodyObject = Joi.object({
     format: Joi.string().min(1).max(2000),
     width: Joi.string().min(1).max(2000),
     height: Joi.string().min(1).max(2000),
+    footerTemplate: Joi.string(),
+    headerTemplate: Joi.string(),
     margin: Joi.object({
       top: Joi.string().min(1).max(2000),
       right: Joi.string().min(1).max(2000),
@@ -112,3 +116,4 @@ module.exports = {
   renderBodySchema,
   sharedQuerySchema,
 };
+
