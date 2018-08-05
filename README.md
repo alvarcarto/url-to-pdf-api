@@ -17,7 +17,7 @@ It's fairly easy to expose the contents of files on the server. You have been wa
 * Converts any URL or HTML content to a PDF file
 * Rendered with Headless Chrome, using [Puppeteer](https://github.com/GoogleChrome/puppeteer). The PDFs should match to the ones generated with a desktop Chrome.
 * Sensible defaults but everything is configurable.
-* Single-page app (SPA) support. Waits until all network requests are finished before rendering. **A feature which even most of the paid services don't have.**
+* Single-page app (SPA) support. Waits until all network requests are finished before rendering.
 * Easy deployment to Heroku. We love Lambda but...Deploy to Heroku button.
 * Renders lazy loaded elements. *(scrollPage option)*
 * Supports optional `x-api-key` authentication. *(`API_TOKENS` env var)*
@@ -164,6 +164,8 @@ goto.networkIdleTimeout | number | `2000` | A timeout to wait before completing 
 pdf.scale | number | `1` | Scale of the webpage rendering.
 pdf.printBackground | boolean | `false`| Print background graphics.
 pdf.displayHeaderFooter | boolean | `false` | Display header and footer.
+pdf.headerTemplate | string | - | HTML template to use as the header of each page in the PDF. **You must use margins and CSS to make the header appear!** See https://github.com/GoogleChrome/puppeteer/issues/1853.
+pdf.footerTemplate | string | - | HTML template to use as the footer of each page in the PDF. **You must use margins and CSS to make the header appear!** See https://github.com/GoogleChrome/puppeteer/issues/1853.
 pdf.landscape | boolean | `false` | Paper orientation.
 pdf.pageRanges | string | - | Paper ranges to print, e.g., '1-5, 8, 11-13'. Defaults to the empty string, which means print all pages.
 pdf.format | string | `A4` | Paper format. If set, takes priority over width or height options.
@@ -173,6 +175,7 @@ pdf.margin.top | string | - | Top margin, accepts values labeled with units.
 pdf.margin.right | string | - | Right margin, accepts values labeled with units.
 pdf.margin.bottom | string | - | Bottom margin, accepts values labeled with units.
 pdf.margin.left | string | - | Left margin, accepts values labeled with units.
+
 
 
 **Example:**
