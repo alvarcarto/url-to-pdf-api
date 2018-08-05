@@ -68,6 +68,8 @@ function getOptsFromQuery(query) {
     pdf: {
       scale: query['pdf.scale'],
       displayHeaderFooter: query['pdf.displayHeaderFooter'],
+      footerTemplate: query['pdf.footerTemplate'],
+      headerTemplate: query['pdf.headerTemplate'],
       landscape: query['pdf.landscape'],
       pageRanges: query['pdf.pageRanges'],
       format: query['pdf.format'],
