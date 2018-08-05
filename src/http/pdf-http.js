@@ -15,7 +15,7 @@ const getRender = ex.createRoute((req, res) => {
 });
 
 const postRender = ex.createRoute((req, res) => {
-  const isBodyJson = req.headers['content-type'] === 'application/json';
+  const isBodyJson = req.headers['content-type'].includes('application/json');
   if (isBodyJson) {
     const hasContent = _.isString(_.get(req.body, 'url')) || _.isString(_.get(req.body, 'html'));
     if (!hasContent) {
