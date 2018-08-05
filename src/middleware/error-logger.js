@@ -35,14 +35,14 @@ function getLogLevel(status) {
 function logRequestDetails(logLevel, req) {
   logger[logLevel]('Request headers:', deepSupressLongStrings(req.headers));
   logger[logLevel]('Request parameters:', deepSupressLongStrings(req.params));
-  logger[logLevel]('Request body:', req.body);
+  logger[logLevel]('Request body:', surpressLongString(req.body));
 }
 
 function deepSupressLongStrings(obj) {
   const newObj = {};
   _.each(obj, (val, key) => {
     if (_.isString(val) && val.length > SLICE_THRESHOLD) {
-      newObj[key] = `${val.slice(0, SLICE_THRESHOLD)} ... [CONTENT SLICED]`;
+      newObj[key] = surpressLongString(val);
     } else if (_.isPlainObject(val)) {
       deepSupressLongStrings(val);
     } else {
@@ -51,6 +51,14 @@ function deepSupressLongStrings(obj) {
   });
 
   return newObj;
+}
+
+function surpressLongString(val) {
+  if (_.isString(val) && val.length > SLICE_THRESHOLD) {
+    return `${val.slice(0, SLICE_THRESHOLD)} ... [CONTENT SLICED]`;
+  }
+
+  return val;
 }
 
 module.exports = createErrorLogger;

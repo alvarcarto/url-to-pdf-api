@@ -1,9 +1,14 @@
 /* eslint-env mocha */
 
 const chai = require('chai');
+const BPromise = require('bluebird');
 const request = require('supertest');
 const { getResource } = require('./util');
 const createApp = require('../src/app');
+
+BPromise.config({
+  longStackTraces: true,
+});
 
 const app = createApp();
 
@@ -68,6 +73,42 @@ describe('POST /api/render', () => {
       .then((response) => {
         const length = Number(response.headers['content-length']);
         chai.expect(length).to.be.above(1024 * 40);
+      })
+  );
+
+  /*
+  Disabled until we get the setContent API working with waitFor parameters
+
+
+  it('rendering large html should succeed', () =>
+    request(app)
+      .post('/api/render')
+      .send(getResource('large.html'))
+      .set('content-type', 'text/html')
+      .expect(200)
+      .expect('content-type', 'application/pdf')
+      .then((response) => {
+        const length = Number(response.headers['content-length']);
+        chai.expect(length).to.be.above(1024 * 1024 * 1);
+      })
+  );
+  */
+
+  it('rendering html with large linked images should succeed', () =>
+    request(app)
+      .post('/api/render')
+      .send(getResource('large-linked.html'))
+      .set('content-type', 'text/html')
+      .expect(200)
+      .expect('content-type', 'application/pdf')
+      .then((response) => {
+        console.log(response.headers)
+        console.log(response.body)
+        require('fs').writeFileSync('out.pdf', response.body, { encoding: null });
+
+        const length = Number(response.headers['content-length']);
+        chai.expect(length).to.be.above(1024 * 1024 * 1);
+
       })
   );
 
