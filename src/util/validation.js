@@ -53,6 +53,7 @@ const sharedQuerySchema = Joi.object({
   'pdf.margin.bottom': Joi.string().min(1).max(2000),
   'pdf.margin.left': Joi.string().min(1).max(2000),
   'pdf.printBackground': Joi.boolean(),
+  setExtraHTTPHeaders: Joi.object(),
 });
 
 const renderQuerySchema = Joi.object({
@@ -104,6 +105,7 @@ const renderBodyObject = Joi.object({
     printBackground: Joi.boolean(),
   }),
   failEarly: Joi.string(),
+  setExtraHTTPHeaders: Joi.object(),
 });
 
 const renderBodySchema = Joi.alternatives([

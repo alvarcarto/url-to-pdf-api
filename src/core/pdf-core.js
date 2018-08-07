@@ -22,6 +22,7 @@ async function render(_opts = {}) {
       printBackground: true,
     },
     failEarly: false,
+	setExtraHTTPHeaders: {},
   }, _opts);
 
   if (_.get(_opts, 'pdf.width') && _.get(_opts, 'pdf.height')) {
@@ -80,6 +81,9 @@ async function render(_opts = {}) {
     opts.cookies.map(async (cookie) => {
       await page.setCookie(cookie);
     });
+	
+	logger.info('Setting headers...');
+	await page.setExtraHTTPHeaders(opts.setExtraHTTPHeaders);
 
     if (opts.html) {
       logger.info('Set HTML ..');

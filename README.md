@@ -217,7 +217,7 @@ The only required parameter is `url`.
   // Passed to Puppeteer page.waitFor()
   waitFor: null,
 
-  // Passsed to Puppeteer page.setCookies()
+  // Passed to Puppeteer page.setCookies()
   cookies: [{ ... }]
 
   // Passed to Puppeteer page.setViewport()
@@ -228,6 +228,9 @@ The only required parameter is `url`.
 
   // Passed to Puppeteer page.pdf()
   pdf: { ... }
+  
+  // Passed to Puppeteer page.setExtraHTTPHeaders()
+  setExtraHTTPHeaders: { "key": "value" }
 }
 ```
 
