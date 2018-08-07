@@ -22,7 +22,7 @@ async function render(_opts = {}) {
       printBackground: true,
     },
     failEarly: false,
-	setExtraHTTPHeaders: {},
+    setExtraHTTPHeaders: {},
   }, _opts);
 
   if (_.get(_opts, 'pdf.width') && _.get(_opts, 'pdf.height')) {
