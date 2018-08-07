@@ -82,8 +82,8 @@ async function render(_opts = {}) {
       await page.setCookie(cookie);
     });
 	
-	logger.info('Setting headers...');
-	await page.setExtraHTTPHeaders(opts.setExtraHTTPHeaders);
+    logger.info('Setting headers...');
+    await page.setExtraHTTPHeaders(opts.setExtraHTTPHeaders);
 
     if (opts.html) {
       logger.info('Set HTML ..');
