@@ -287,6 +287,11 @@ First, clone the repository and cd into it.
 * `npm start` Start express server locally
 * Server runs at http://localhost:9000 or what `$PORT` env defines
 
+#### 3. Docker
+* `docker build .`
+* Run docker by command `docker run -p 9000:9000 --env-file .env url-to-pdf-api:latest`
+* Enjoy
+
 
 ### Techstack
 
