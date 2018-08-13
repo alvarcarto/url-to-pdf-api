@@ -1,7 +1,6 @@
 .env
 .DS_Store
 .idea
-package-lock.json
 
 # Logs
 logs
