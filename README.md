@@ -14,7 +14,7 @@ It's fairly easy to expose the contents of files on the server. You have been wa
 
 **⭐️ Features:**
 
-* Converts any URL or HTML content to a PDF file
+* Converts any URL or HTML content to a PDF file or an image (PNG/JPEG)
 * Rendered with Headless Chrome, using [Puppeteer](https://github.com/GoogleChrome/puppeteer). The PDFs should match to the ones generated with a desktop Chrome.
 * Sensible defaults but everything is configurable.
 * Single-page app (SPA) support. Waits until all network requests are finished before rendering.
@@ -63,6 +63,11 @@ A request to sleeping dyno may take even 30 seconds.*
 **The most minimal example, render google.com**
 
 https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com
+
+**The most minimal example, render google.com as PNG image**
+
+https://url-to-pdf-api.herokuapp.com/api/render?output=screenshot&url=http://google.com
+
 
 **Use the default @media print instead of @media screen.**
 
@@ -122,7 +127,10 @@ is really simple, check it out. Render flow:
 
     Useful if you want to render a page which lazy loads elements.
 
-6. **`page.pdf(options)`** where options matches `pdf.*`.
+6. Render the output
+
+  * If output is `pdf` rendering is done with **`page.pdf(options)`** where options matches `pdf.*`.
+  * Else if output is `screenshot` rendering is done with **`page.screenshot(options)`** where options matches `screenshot.*`.
 
 
 ### GET /api/render
@@ -138,6 +146,7 @@ The only required parameter is `url`.
 Parameter | Type | Default | Description
 ----------|------|---------|------------
 url | string | - | URL to render as PDF. (required)
+output | string | pdf | Specify the output format. Possible values: `pdf` or `screenshot`.
 emulateScreenMedia | boolean | `true` | Emulates `@media screen` when rendering the PDF.
 ignoreHttpsErrors | boolean | `false` | Ignores possible HTTPS errors when navigating to a page.
 scrollPage | boolean | `false` | Scroll page down before rendering to trigger lazy loading elements.
@@ -175,7 +184,14 @@ pdf.margin.top | string | - | Top margin, accepts values labeled with units.
 pdf.margin.right | string | - | Right margin, accepts values labeled with units.
 pdf.margin.bottom | string | - | Bottom margin, accepts values labeled with units.
 pdf.margin.left | string | - | Left margin, accepts values labeled with units.
-
+screenshot.fullPage | boolean | `true` | When true, takes a screenshot of the full scrollable page.
+screenshot.type | string | `png` | Screenshot image type. Possible values: `png`, `jpeg`
+screenshot.quality | number | - | The quality of the JPEG image, between 0-100. Only applies when `screenshot.type` is `jpeg`.
+screenshot.omitBackground | boolean | `false` | Hides default white background and allows capturing screenshots with transparency.
+screenshot.clip.x | number | - | Specifies x-coordinate of top-left corner of clipping region of the page.
+screenshot.clip.y | number | - | Specifies y-coordinate of top-left corner of clipping region of the page.
+screenshot.clip.width | number | - | Specifies width of clipping region of the page.
+screenshot.clip.height | number | - | Specifies height of clipping region of the page.
 
 
 **Example:**
@@ -200,6 +216,9 @@ The only required parameter is `url`.
 {
   // Url to render. Either url or html is required
   url: "https://google.com",
+
+  // Either "pdf" or "screenshot"
+  output: "pdf",
 
   // HTML content to render. Either url or html is required
   html: "<html><head></head><body>Your content</body></html>",
@@ -227,7 +246,10 @@ The only required parameter is `url`.
   goto: { ... },
 
   // Passed to Puppeteer page.pdf()
-  pdf: { ... }
+  pdf: { ... },
+
+  // Passed to Puppeteer page.screenshot()
+  screenshot: { ... },
 }
 ```
 
