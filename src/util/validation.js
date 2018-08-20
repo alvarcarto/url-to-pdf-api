@@ -29,6 +29,7 @@ const sharedQuerySchema = Joi.object({
     Joi.string().min(1).max(2000),
   ]),
   cookies: Joi.array().items(cookieSchema),
+  output: Joi.string().valid(['pdf', 'screenshot']),
   'viewport.width': Joi.number().min(1).max(30000),
   'viewport.height': Joi.number().min(1).max(30000),
   'viewport.deviceScaleFactor': Joi.number().min(0).max(100),
@@ -53,6 +54,14 @@ const sharedQuerySchema = Joi.object({
   'pdf.margin.bottom': Joi.string().min(1).max(2000),
   'pdf.margin.left': Joi.string().min(1).max(2000),
   'pdf.printBackground': Joi.boolean(),
+  'screenshot.fullPage': Joi.boolean(),
+  'screenshot.quality': Joi.number().integer().min(0).max(100),
+  'screenshot.type': Joi.string().valid(['png', 'jpeg']),
+  'screenshot.clip.x': Joi.number(),
+  'screenshot.clip.y': Joi.number(),
+  'screenshot.clip.width': Joi.number(),
+  'screenshot.clip.height': Joi.number(),
+  'screenshot.omitBackground': Joi.boolean(),
 });
 
 const renderQuerySchema = Joi.object({
@@ -67,6 +76,7 @@ const renderBodyObject = Joi.object({
   ignoreHttpsErrors: Joi.boolean(),
   emulateScreenMedia: Joi.boolean(),
   cookies: Joi.array().items(cookieSchema),
+  output: Joi.string().valid(['pdf', 'screenshot']),
   viewport: Joi.object({
     width: Joi.number().min(1).max(30000),
     height: Joi.number().min(1).max(30000),
@@ -102,6 +112,18 @@ const renderBodyObject = Joi.object({
       left: Joi.string().min(1).max(2000),
     }),
     printBackground: Joi.boolean(),
+  }),
+  screenshot: Joi.object({
+    fullPage: Joi.boolean(),
+    quality: Joi.number().integer().min(0).max(100),
+    type: Joi.string().valid(['png', 'jpeg']),
+    clip: {
+      x: Joi.number(),
+      y: Joi.number(),
+      width: Joi.number(),
+      height: Joi.number(),
+    },
+    omitBackground: Joi.boolean(),
   }),
   failEarly: Joi.string(),
 });

@@ -17,9 +17,14 @@ async function render(_opts = {}) {
     goto: {
       waitUntil: 'networkidle2',
     },
+    output: 'pdf',
     pdf: {
       format: 'A4',
       printBackground: true,
+    },
+    screenshot: {
+      type: 'png',
+      fullPage: true,
     },
     failEarly: false,
   }, _opts);
@@ -119,17 +124,30 @@ async function render(_opts = {}) {
       throw err;
     }
 
-    logger.info('Render PDF ..');
+    logger.info('Rendering ..');
     if (config.DEBUG_MODE) {
       const msg = `\n\n---------------------------------\n
-        Chrome does not support PDF rendering in "headed" mode.
+        Chrome does not support rendering in "headed" mode.
         See this issue: https://github.com/GoogleChrome/puppeteer/issues/576
         \n---------------------------------\n\n
       `;
       throw new Error(msg);
     }
 
-    data = await page.pdf(opts.pdf);
+    if (opts.output === 'pdf') {
+      data = await page.pdf(opts.pdf);
+    } else {
+      // This is done because puppeteer throws an error if fullPage and clip is used at the same
+      // time even though clip is just empty object {}
+      const screenshotOpts = _.cloneDeep(_.omit(opts.screenshot, ['clip']));
+      const clipContainsSomething = _.some(opts.screenshot.clip, val => !_.isUndefined(val));
+      if (clipContainsSomething) {
+        screenshotOpts.clip = opts.screenshot.clip
+      }
+
+      data = await page.screenshot(screenshotOpts);
+    }
+
   } catch (err) {
     logger.error(`Error when rendering page: ${err}`);
     logger.error(err.stack);

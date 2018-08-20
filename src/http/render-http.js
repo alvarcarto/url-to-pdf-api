@@ -1,15 +1,27 @@
 const _ = require('lodash');
 const ex = require('../util/express');
-const pdfCore = require('../core/pdf-core');
+const renderCore = require('../core/render-core');
+
+function getMimeType(opts) {
+  if (opts.output === 'pdf') {
+    return 'application/pdf';
+  }
+  const type = _.get(opts, 'screenshot.type');
+  switch (type) {
+    case 'png': return 'image/png';
+    case 'jpeg': return 'image/jpeg';
+    default: throw new Error(`Unknown screenshot type: ${type}`);
+  }
+}
 
 const getRender = ex.createRoute((req, res) => {
   const opts = getOptsFromQuery(req.query);
-  return pdfCore.render(opts)
+  return renderCore.render(opts)
     .then((data) => {
       if (opts.attachmentName) {
         res.attachment(opts.attachmentName);
       }
-      res.set('content-type', 'application/pdf');
+      res.set('content-type', getMimeType(opts));
       res.send(data);
     });
 });
@@ -27,18 +39,23 @@ const postRender = ex.createRoute((req, res) => {
 
   let opts;
   if (isBodyJson) {
-    opts = _.cloneDeep(req.body);
+    opts = _.merge({
+      output: 'pdf',
+      screenshot: {
+        type: 'png',
+      },
+    }, req.body);
   } else {
     opts = getOptsFromQuery(req.query);
     opts.html = req.body;
   }
 
-  return pdfCore.render(opts)
+  return renderCore.render(opts)
     .then((data) => {
       if (opts.attachmentName) {
         res.attachment(opts.attachmentName);
       }
-      res.set('content-type', 'application/pdf');
+      res.set('content-type', getMimeType(opts));
       res.send(data);
     });
 });
@@ -51,6 +68,7 @@ function getOptsFromQuery(query) {
     emulateScreenMedia: query.emulateScreenMedia,
     ignoreHttpsErrors: query.ignoreHttpsErrors,
     waitFor: query.waitFor,
+    output: query.output || 'pdf',
     viewport: {
       width: query['viewport.width'],
       height: query['viewport.height'],
@@ -82,6 +100,18 @@ function getOptsFromQuery(query) {
         left: query['pdf.margin.left'],
       },
       printBackground: query['pdf.printBackground'],
+    },
+    screenshot: {
+      fullPage: query['screenshot.fullPage'],
+      quality: query['screenshot.quality'],
+      type: query['screenshot.type'] || 'png',
+      clip: {
+        x: query['screenshot.clip.x'],
+        y: query['screenshot.clip.y'],
+        width: query['screenshot.clip.width'],
+        height: query['screenshot.clip.height'],
+      },
+      omitBackground: query['screenshot.omitBackground'],
     },
   };
   return opts;
