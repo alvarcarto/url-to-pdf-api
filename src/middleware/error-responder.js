@@ -13,24 +13,7 @@ function createErrorResponder(_opts) {
   // eslint-disable-next-line
   return function errorResponder(err, req, res, next) {
     let message;
-    let status = err.status ? err.status : 500;
-    switch (err.type) {
-      case 'StripeCardError':
-        // A declined card error
-        status = 402;
-        break;
-      case 'StripeInvalidRequestError':
-        status = 402;
-        break;
-      case 'StripeConnectionError':
-        status = 503;
-        break;
-      case 'StripeRateLimitError':
-        status = 429;
-        break;
-      default:
-        break;
-    }
+    const status = err.status ? err.status : 500;
 
     const httpMessage = http.STATUS_CODES[status];
     if (opts.isErrorSafeToRespond(status)) {
