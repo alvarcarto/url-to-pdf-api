@@ -8,16 +8,16 @@
 
 ![Logo](docs/logo.png)
 
-**WARNING:** *Don't serve this API publicly to the internet unless you are aware of the
+**⚠️ WARNING ⚠️** *Don't serve this API publicly to the internet unless you are aware of the
 risks. It allows API users to run any JavaScript code inside a Chrome session on the server.
-It's fairly easy to expose the contents of files on the server. You have been warned!*
+It's fairly easy to expose the contents of files on the server. You have been warned!. See https://github.com/alvarcarto/url-to-pdf-api/issues/12 for background.*
 
 **⭐️ Features:**
 
-* Converts any URL or HTML content to a PDF file
+* Converts any URL or HTML content to a PDF file or an image (PNG/JPEG)
 * Rendered with Headless Chrome, using [Puppeteer](https://github.com/GoogleChrome/puppeteer). The PDFs should match to the ones generated with a desktop Chrome.
 * Sensible defaults but everything is configurable.
-* Single-page app (SPA) support. Waits until all network requests are finished before rendering. **A feature which even most of the paid services don't have.**
+* Single-page app (SPA) support. Waits until all network requests are finished before rendering.
 * Easy deployment to Heroku. We love Lambda but...Deploy to Heroku button.
 * Renders lazy loaded elements. *(scrollPage option)*
 * Supports optional `x-api-key` authentication. *(`API_TOKENS` env var)*
@@ -59,6 +59,15 @@ and requests are direct connections to it.
 
 *Note: the demo Heroku app runs on a free dyno which sleep after idle.
 A request to sleeping dyno may take even 30 seconds.*
+
+**The most minimal example, render google.com**
+
+https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com
+
+**The most minimal example, render google.com as PNG image**
+
+https://url-to-pdf-api.herokuapp.com/api/render?output=screenshot&url=http://google.com
+
 
 **Use the default @media print instead of @media screen.**
 
@@ -111,14 +120,17 @@ is really simple, check it out. Render flow:
 3. Render url **or** html.
 
     If `url` is defined, **`page.goto(url, options)`** is called and options match `goto.*`.
-    Otherwise **`page.goto(\\`data:text/html,${html}\\`, options)`** is called where html is taken from request body. This workaround was found from [Puppeteer issue](https://github.com/GoogleChrome/puppeteer/issues/728).
+    Otherwise **``page.goto(`data:text/html,${html}`, options)``** is called where html is taken from request body. This workaround was found from [Puppeteer issue](https://github.com/GoogleChrome/puppeteer/issues/728).
 
 4. *Possibly* **`page.waitFor(numOrStr)`** if e.g. `waitFor=1000` is set.
 5. *Possibly* **Scroll the whole page** to the end before rendering if e.g. `scrollPage=true` is set.
 
     Useful if you want to render a page which lazy loads elements.
 
-6. **`page.pdf(options)`** where options matches `pdf.*`.
+6. Render the output
+
+  * If output is `pdf` rendering is done with **`page.pdf(options)`** where options matches `pdf.*`.
+  * Else if output is `screenshot` rendering is done with **`page.screenshot(options)`** where options matches `screenshot.*`.
 
 
 ### GET /api/render
@@ -134,6 +146,7 @@ The only required parameter is `url`.
 Parameter | Type | Default | Description
 ----------|------|---------|------------
 url | string | - | URL to render as PDF. (required)
+output | string | pdf | Specify the output format. Possible values: `pdf` or `screenshot`.
 emulateScreenMedia | boolean | `true` | Emulates `@media screen` when rendering the PDF.
 ignoreHttpsErrors | boolean | `false` | Ignores possible HTTPS errors when navigating to a page.
 scrollPage | boolean | `false` | Scroll page down before rendering to trigger lazy loading elements.
@@ -160,6 +173,8 @@ goto.networkIdleTimeout | number | `2000` | A timeout to wait before completing 
 pdf.scale | number | `1` | Scale of the webpage rendering.
 pdf.printBackground | boolean | `false`| Print background graphics.
 pdf.displayHeaderFooter | boolean | `false` | Display header and footer.
+pdf.headerTemplate | string | - | HTML template to use as the header of each page in the PDF. **Currently Puppeteer basically only supports a single line of text and you must use pdf.margins+CSS to make the header appear!** See https://github.com/alvarcarto/url-to-pdf-api/issues/77.
+pdf.footerTemplate | string | - | HTML template to use as the footer of each page in the PDF. **Currently Puppeteer basically only supports a single line of text and you must use pdf.margins+CSS to make the footer appear!** See https://github.com/alvarcarto/url-to-pdf-api/issues/77.
 pdf.landscape | boolean | `false` | Paper orientation.
 pdf.pageRanges | string | - | Paper ranges to print, e.g., '1-5, 8, 11-13'. Defaults to the empty string, which means print all pages.
 pdf.format | string | `A4` | Paper format. If set, takes priority over width or height options.
@@ -169,6 +184,14 @@ pdf.margin.top | string | - | Top margin, accepts values labeled with units.
 pdf.margin.right | string | - | Right margin, accepts values labeled with units.
 pdf.margin.bottom | string | - | Bottom margin, accepts values labeled with units.
 pdf.margin.left | string | - | Left margin, accepts values labeled with units.
+screenshot.fullPage | boolean | `true` | When true, takes a screenshot of the full scrollable page.
+screenshot.type | string | `png` | Screenshot image type. Possible values: `png`, `jpeg`
+screenshot.quality | number | - | The quality of the JPEG image, between 0-100. Only applies when `screenshot.type` is `jpeg`.
+screenshot.omitBackground | boolean | `false` | Hides default white background and allows capturing screenshots with transparency.
+screenshot.clip.x | number | - | Specifies x-coordinate of top-left corner of clipping region of the page.
+screenshot.clip.y | number | - | Specifies y-coordinate of top-left corner of clipping region of the page.
+screenshot.clip.width | number | - | Specifies width of clipping region of the page.
+screenshot.clip.height | number | - | Specifies height of clipping region of the page.
 
 
 **Example:**
@@ -193,6 +216,9 @@ The only required parameter is `url`.
 {
   // Url to render. Either url or html is required
   url: "https://google.com",
+
+  // Either "pdf" or "screenshot"
+  output: "pdf",
 
   // HTML content to render. Either url or html is required
   html: "<html><head></head><body>Your content</body></html>",
@@ -220,7 +246,10 @@ The only required parameter is `url`.
   goto: { ... },
 
   // Passed to Puppeteer page.pdf()
-  pdf: { ... }
+  pdf: { ... },
+
+  // Passed to Puppeteer page.screenshot()
+  screenshot: { ... },
 }
 ```
 
