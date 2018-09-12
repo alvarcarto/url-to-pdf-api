@@ -141,18 +141,20 @@ async function render(_opts = {}) {
     }
 
     if (opts.output === 'pdf') {
+      await page.once('load', () => '');
       if (opts.url.indexOf('report-generate') !== -1) {
-        let reportPagesCount = 1;
         let reportCountPrev;
         const currentTime = new Date().getTime();
         let timeDif = 0;
-        while (reportPagesCount > 0) {
+        let reportPagesCount = 1;
+        do {
           reportCountPrev = reportPagesCount;
-          reportPagesCount = await page.evaluate(function() {
-            if (typeof reportGenerateHelper !== 'undefined') {
-              return Object.keys(reportGenerateHelper.reportPages).length;
+          await sleep(1000);
+          reportPagesCount = await page.evaluate(() => {
+            if (typeof window.reportGenerateHelper !== 'undefined') {
+              return Object.keys(window.reportGenerateHelper.reportPages).length;
             }
-            return 0;
+            return -1;
           });
           if (reportCountPrev === reportPagesCount) { // IF we stack on reports drawing, check time
             timeDif = new Date().getTime() - currentTime;
@@ -161,12 +163,12 @@ async function render(_opts = {}) {
               break;
             }
           }
-          await sleep(1000);
-        }
+          logger.info(`reportPagesCount ${reportPagesCount}`);
+        } while (reportPagesCount > 0);
+        opts.pdf.height = await page.evaluate(() => document.body.offsetHeight);
+        opts.pdf.height += 'px';
+        logger.info(`PDF calculated Height: ${opts.pdf.height}`);
       }
-      opts.pdf.height = await page.evaluate(() => document.body.offsetHeight);
-      opts.pdf.height += 'px';
-      logger.info(`PDF calculated Height: ${opts.pdf.height}`);
 
       data = await page.pdf(opts.pdf);
     } else {
