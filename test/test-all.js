@@ -5,6 +5,7 @@ const fs = require('fs');
 const request = require('supertest');
 const BPromise = require('bluebird');
 const { getResource } = require('./util');
+const PDFParser = require('pdf2json');
 const createApp = require('../src/app');
 
 const DEBUG = false;
@@ -127,6 +128,50 @@ describe('POST /api/render', () => {
 
         const length = Number(response.headers['content-length']);
         chai.expect(length).to.be.above(30 * 1024 * 1);
+      })
+  );
+
+  it('cookies should exist on the page', () =>
+    request(app)
+      .post('/api/render')
+      .send({
+        url: 'http://www.html-kit.com/tools/cookietester/',
+        cookies:
+              [{
+                name: 'url-to-pdf-test',
+                value: 'test successful',
+                domain: 'www.html-kit.com',
+              }, {
+                name: 'url-to-pdf-test-2',
+                value: 'test successful 2',
+                domain: 'www.html-kit.com',
+              }],
+      })
+      .set('Connection', 'keep-alive')
+      .set('content-type', 'application/json')
+      .expect(200)
+      .expect('content-type', 'application/pdf')
+      .then((response) => {
+        if (DEBUG) {
+          console.log(response.headers);
+          console.log(response.body);
+          fs.writeFileSync('out.pdf', response.body, { encoding: null });
+        }
+
+        const pdfParser = new PDFParser(this, 1);
+
+        pdfParser.on('pdfParser_dataError', (errData) => {
+          console.error(errData.parserError);
+          chai.fail(errData.parserError);
+        });
+
+        pdfParser.on('pdfParser_dataReady', () => {
+          const rawContent = pdfParser.getRawTextContent();
+          chai.expect(rawContent.indexOf('Number of cookies received: 2')).to.be.above(0);
+          chai.expect(rawContent.indexOf('Cookie named "url­to­pdf­test"')).to.be.above(0);
+          chai.expect(rawContent.indexOf('Cookie named "url­to­pdf­test­2"')).to.be.above(0);
+          if (DEBUG) fs.writeFileSync('./content.txt', rawContent);
+        });
       })
   );
 });
