@@ -21,7 +21,7 @@ function createApp() {
     app.use(morgan('dev'));
   }
 
-  if (!config.ALLOW_HTTP) {
+  if (!config.ALLOW_HTTP && config.NODE_ENV === 'production') {
     logger.info('All requests require HTTPS.');
     app.use(requireHttps());
   } else {
