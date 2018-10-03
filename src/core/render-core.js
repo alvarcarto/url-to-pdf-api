@@ -81,10 +81,12 @@ async function render(_opts = {}) {
       await page.emulateMedia('screen');
     }
 
-    logger.info('Setting cookies..');
-    opts.cookies.map(async (cookie) => {
-      await page.setCookie(cookie);
-    });
+    if (opts.cookies && opts.cookies.length > 0) {
+      logger.info('Setting cookies..');
+      const client = await page.target().createCDPSession();
+      await client.send('Network.enable');
+      await client.send('Network.setCookies', { cookies: opts.cookies });
+    }
 
     if (opts.html) {
       logger.info('Set HTML ..');
@@ -142,7 +144,7 @@ async function render(_opts = {}) {
       const screenshotOpts = _.cloneDeep(_.omit(opts.screenshot, ['clip']));
       const clipContainsSomething = _.some(opts.screenshot.clip, val => !_.isUndefined(val));
       if (clipContainsSomething) {
-        screenshotOpts.clip = opts.screenshot.clip
+        screenshotOpts.clip = opts.screenshot.clip;
       }
 
       data = await page.screenshot(screenshotOpts);
