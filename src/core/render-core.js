@@ -148,7 +148,7 @@ async function render(_opts = {}) {
       }
 
       data = await page.screenshot(screenshotOpts);
-    }
+    };
 
   } catch (err) {
     logger.error(`Error when rendering page: ${err}`);
