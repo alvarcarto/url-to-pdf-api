@@ -4,25 +4,28 @@ const config = require('../config');
 const logger = require('../util/logger')(__filename);
 
 async function render(_opts = {}) {
-  const opts = _.merge({
-    cookies: [],
-    scrollPage: false,
-    emulateScreenMedia: true,
-    ignoreHttpsErrors: false,
-    html: null,
-    viewport: {
-      width: 1600,
-      height: 1200,
+  const opts = _.merge(
+    {
+      cookies: [],
+      scrollPage: false,
+      emulateScreenMedia: true,
+      ignoreHttpsErrors: false,
+      html: null,
+      viewport: {
+        width: 1600,
+        height: 1200,
+      },
+      goto: {
+        waitUntil: 'networkidle2',
+      },
+      pdf: {
+        format: 'A4',
+        printBackground: true,
+      },
+      failEarly: false,
     },
-    goto: {
-      waitUntil: 'networkidle2',
-    },
-    pdf: {
-      format: 'A4',
-      printBackground: true,
-    },
-    failEarly: false,
-  }, _opts);
+    _opts
+  );
 
   if (_.get(_opts, 'pdf.width') && _.get(_opts, 'pdf.height')) {
     // pdf.format always overrides width and height, so we must delete it
@@ -47,7 +50,6 @@ async function render(_opts = {}) {
     logger.error(err.stack);
     browser.close();
   });
-
 
   this.failedResponses = [];
   page.on('requestfailed', (request) => {
@@ -107,13 +109,17 @@ async function render(_opts = {}) {
       });
 
       if (opts.failEarly === 'all') {
-        const err = new Error(`${this.failedResponses.length} requests have failed. See server log for more details.`);
+        const err = new Error(
+          `${this.failedResponses.length} requests have failed. See server log for more details.`
+        );
         err.status = 412;
         throw err;
       }
     }
     if (opts.failEarly === 'page' && this.mainUrlResponse.status !== 200) {
-      const msg = `Request for ${opts.url} did not directly succeed and returned status ${this.mainUrlResponse.status}`;
+      const msg = `Request for ${opts.url} did not directly succeed and returned status ${
+        this.mainUrlResponse.status
+      }`;
       const err = new Error(msg);
       err.status = 412;
       throw err;
@@ -127,6 +133,11 @@ async function render(_opts = {}) {
         \n---------------------------------\n\n
       `;
       throw new Error(msg);
+    }
+
+    if (opts.pdf && opts.pdf.height && opts.pdf.height === 'auto') {
+      const height = await page.evaluate(() => document.body.scrollHeight);
+      opts.pdf.height = height;
     }
 
     data = await page.pdf(opts.pdf);
@@ -186,4 +197,3 @@ function logOpts(opts) {
 module.exports = {
   render,
 };
-

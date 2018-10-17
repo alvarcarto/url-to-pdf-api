@@ -7,7 +7,7 @@
     "node": "8.x.x"
   },
   "scripts": {
-    "start": "nodemon --watch ./src -e js src/index.js",
+    "start": "cross-env NODE_ENV=development ALLOW_HTTP=true PORT=9000 nodemon --watch ./src -e js src/index.js",
     "test": "mocha --timeout 10000 && npm run lint",
     "lint": "eslint ."
   },
@@ -26,6 +26,7 @@
     "body-parser": "^1.18.2",
     "compression": "^1.7.1",
     "cors": "^2.8.4",
+    "cross-env": "^5.2.0",
     "express": "^4.15.5",
     "express-validation": "^1.0.2",
     "joi": "^11.1.1",
