@@ -16,7 +16,23 @@ BPromise.config({
 
 const app = createApp();
 
-describe('GET /api/render', () => {
+function getPdfTextContent(buffer) {
+  return new BPromise((resolve, reject) => {
+    const pdfParser = new PDFParser();
+    pdfParser.on('pdfParser_dataError', (err) => {
+      reject(err);
+    });
+    pdfParser.on('pdfParser_dataReady', () => {
+      resolve(pdfParser.getRawTextContent());
+    });
+
+    pdfParser.parseBuffer(buffer);
+  });
+}
+
+describe('GET /api/render', function test() {
+  this.timeout(1000);
+
   it('request must have "url" query parameter', () =>
     request(app).get('/api/render').expect(400)
   );
@@ -155,23 +171,19 @@ describe('POST /api/render', () => {
         if (DEBUG) {
           console.log(response.headers);
           console.log(response.body);
-          fs.writeFileSync('out.pdf', response.body, { encoding: null });
+          fs.writeFileSync('cookies-pdf.pdf', response.body, { encoding: null });
         }
 
-        const pdfParser = new PDFParser(this, 1);
+        return getPdfTextContent(response.body);
+      })
+      .then((text) => {
+        if (DEBUG) {
+          fs.writeFileSync('./cookies-content.txt', text);
+        }
 
-        pdfParser.on('pdfParser_dataError', (errData) => {
-          console.error(errData.parserError);
-          chai.fail(errData.parserError);
-        });
-
-        pdfParser.on('pdfParser_dataReady', () => {
-          const rawContent = pdfParser.getRawTextContent();
-          chai.expect(rawContent.indexOf('Number of cookies received: 2')).to.be.above(0);
-          chai.expect(rawContent.indexOf('Cookie named "url­to­pdf­test"')).to.be.above(0);
-          chai.expect(rawContent.indexOf('Cookie named "url­to­pdf­test­2"')).to.be.above(0);
-          if (DEBUG) fs.writeFileSync('./content.txt', rawContent);
-        });
+        chai.expect(text).to.have.string('Number of cookies received: 2');
+        chai.expect(text).to.have.string('Cookie named "url­to­pdf­test"');
+        chai.expect(text).to.have.string('Cookie named "url­to­pdf­test­2"');
       })
   );
 });
