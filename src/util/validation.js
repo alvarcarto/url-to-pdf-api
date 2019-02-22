@@ -62,6 +62,9 @@ const sharedQuerySchema = Joi.object({
   'screenshot.clip.width': Joi.number(),
   'screenshot.clip.height': Joi.number(),
   'screenshot.omitBackground': Joi.boolean(),
+  // 'request.headers': Joi.object(), // any way to send an object?
+  'request.method': Joi.string().valid(['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH']),
+  'request.postData': Joi.string(),
 });
 
 const renderQuerySchema = Joi.object({
@@ -126,6 +129,11 @@ const renderBodyObject = Joi.object({
     omitBackground: Joi.boolean(),
   }),
   failEarly: Joi.string(),
+  request: Joi.object({
+    headers: Joi.object(),
+    method: Joi.string().valid(['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH']),
+    postData: Joi.string(),
+  }),
 });
 
 const renderBodySchema = Joi.alternatives([

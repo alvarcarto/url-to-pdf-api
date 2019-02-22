@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const _ = require('lodash');
+const qs = require('qs');
 const config = require('../config');
 const logger = require('../util/logger')(__filename);
 
@@ -71,6 +72,14 @@ async function render(_opts = {}) {
       this.mainUrlResponse = response;
     }
   });
+
+  if (opts.request) {
+    await page.setRequestInterception(true);
+    page.on('request', (request) => {
+      request.continue(opts.request);
+    });
+  }
+
 
   let data;
   try {

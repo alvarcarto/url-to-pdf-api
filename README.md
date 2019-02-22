@@ -192,6 +192,9 @@ screenshot.clip.x | number | - | Specifies x-coordinate of top-left corner of cl
 screenshot.clip.y | number | - | Specifies y-coordinate of top-left corner of clipping region of the page.
 screenshot.clip.width | number | - | Specifies width of clipping region of the page.
 screenshot.clip.height | number | - | Specifies height of clipping region of the page.
+request.headers | object | - | (POST only) Override request headers.
+request.method | string | - | Override request method.
+request.postData | string | - | Override request postData.
 
 
 **Example:**
@@ -250,6 +253,9 @@ The only required parameter is `url`.
 
   // Passed to Puppeteer page.screenshot()
   screenshot: { ... },
+  
+  // Intercepts and overrides request
+  request: { ...},
 }
 ```
 
