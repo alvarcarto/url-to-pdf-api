@@ -1,6 +1,5 @@
 const puppeteer = require('puppeteer');
 const _ = require('lodash');
-const qs = require('qs');
 const config = require('../config');
 const logger = require('../util/logger')(__filename);
 
