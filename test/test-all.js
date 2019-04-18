@@ -17,7 +17,8 @@ BPromise.config({
 const app = createApp();
 
 function getPdfTextContent(buffer) {
-  return pdf(buffer).then(data => data.text);
+  return pdf(buffer)
+    .then(data => data.text.replace(/\u00A0/g, ' ').replace(/\u00AD/g, '-'));
 }
 
 describe('GET /api/render', () => {
@@ -169,9 +170,9 @@ describe('POST /api/render', () => {
           fs.writeFileSync('./cookies-content.txt', text);
         }
 
-        chai.expect(text).to.have.string('Number of cookies received: 2');
-        chai.expect(text).to.have.string('Cookie named "url­to­pdf­test"');
-        chai.expect(text).to.have.string('Cookie named "url­to­pdf­test­2"');
+        chai.expect(text).to.have.string('cookies received: 2');
+        chai.expect(text).to.have.string('Cookie named "url-to-pdf-test"');
+        chai.expect(text).to.have.string('Cookie named "url-to-pdf-test-2"');
       })
   );
 });
