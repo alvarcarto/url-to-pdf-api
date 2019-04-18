@@ -5,7 +5,7 @@ const fs = require('fs');
 const request = require('supertest');
 const BPromise = require('bluebird');
 const { getResource } = require('./util');
-const PDFParser = require('pdf2json');
+const pdf = require('pdf-parse');
 const createApp = require('../src/app');
 
 const DEBUG = false;
@@ -17,17 +17,7 @@ BPromise.config({
 const app = createApp();
 
 function getPdfTextContent(buffer) {
-  return new BPromise((resolve, reject) => {
-    const pdfParser = new PDFParser();
-    pdfParser.on('pdfParser_dataError', (err) => {
-      reject(err);
-    });
-    pdfParser.on('pdfParser_dataReady', () => {
-      resolve(pdfParser.getRawTextContent());
-    });
-
-    pdfParser.parseBuffer(buffer);
-  });
+  return pdf(buffer).then(data => data.text);
 }
 
 describe('GET /api/render', function test() {
