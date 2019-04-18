@@ -20,9 +20,7 @@ function getPdfTextContent(buffer) {
   return pdf(buffer).then(data => data.text);
 }
 
-describe('GET /api/render', function test() {
-  this.timeout(1000);
-
+describe('GET /api/render', () => {
   it('request must have "url" query parameter', () =>
     request(app).get('/api/render').expect(400)
   );
