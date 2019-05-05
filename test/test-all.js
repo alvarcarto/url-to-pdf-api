@@ -1,11 +1,11 @@
 /* eslint-env mocha */
-
+require('dotenv').config();
 const chai = require('chai');
 const fs = require('fs');
 const request = require('supertest');
 const BPromise = require('bluebird');
 const { getResource } = require('./util');
-const PDFParser = require('pdf2json');
+const textract = require('textract');
 const createApp = require('../src/app');
 
 const DEBUG = false;
@@ -18,20 +18,19 @@ const app = createApp();
 
 function getPdfTextContent(buffer) {
   return new BPromise((resolve, reject) => {
-    const pdfParser = new PDFParser();
-    pdfParser.on('pdfParser_dataError', (err) => {
-      reject(err);
+    textract.fromBufferWithMime('application/pdf', buffer, (err, text) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+        return;
+      }
+      resolve(text);
     });
-    pdfParser.on('pdfParser_dataReady', () => {
-      resolve(pdfParser.getRawTextContent());
-    });
-
-    pdfParser.parseBuffer(buffer);
   });
 }
 
 describe('GET /api/render', function test() {
-  this.timeout(1000);
+  this.timeout(10000);
 
   it('request must have "url" query parameter', () =>
     request(app).get('/api/render').expect(400)
@@ -173,7 +172,6 @@ describe('POST /api/render', () => {
           console.log(response.body);
           fs.writeFileSync('cookies-pdf.pdf', response.body, { encoding: null });
         }
-
         return getPdfTextContent(response.body);
       })
       .then((text) => {
@@ -181,9 +179,9 @@ describe('POST /api/render', () => {
           fs.writeFileSync('./cookies-content.txt', text);
         }
 
-        chai.expect(text).to.have.string('Number of cookies received: 2');
-        chai.expect(text).to.have.string('Cookie named "url­to­pdf­test"');
-        chai.expect(text).to.have.string('Cookie named "url­to­pdf­test­2"');
+        chai.expect(text).to.have.string('Number of cookies received: 2');
+        chai.expect(text).to.have.string('Cookie named "url­to­pdf­test"');
+        chai.expect(text).to.have.string('Cookie named "url­to­pdf­test­2"');
       })
   );
 });
