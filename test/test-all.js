@@ -5,8 +5,8 @@ const fs = require('fs');
 const request = require('supertest');
 const BPromise = require('bluebird');
 const { getResource } = require('./util');
-const textract = require('textract');
 const createApp = require('../src/app');
+const pdf = require('pdf-parse');
 
 const DEBUG = false;
 
@@ -17,15 +17,8 @@ BPromise.config({
 const app = createApp();
 
 function getPdfTextContent(buffer) {
-  return new BPromise((resolve, reject) => {
-    textract.fromBufferWithMime('application/pdf', buffer, (err, text) => {
-      if (err) {
-        console.log(err);
-        reject(err);
-        return;
-      }
-      resolve(text);
-    });
+  return pdf(buffer).then(function(data) {
+    return data.text;
   });
 }
 
@@ -179,9 +172,9 @@ describe('POST /api/render', () => {
           fs.writeFileSync('./cookies-content.txt', text);
         }
 
-        chai.expect(text).to.have.string('Number of cookies received: 2');
-        chai.expect(text).to.have.string('Cookie named "url­to­pdf­test"');
-        chai.expect(text).to.have.string('Cookie named "url­to­pdf­test­2"');
+        chai.expect(text).to.have.string('Number of cookies received: 2');
+        chai.expect(text).to.have.string('Cookie named "url­to­pdf­test"');
+        chai.expect(text).to.have.string('Cookie named "url­to­pdf­test­2"');
       })
   );
 });

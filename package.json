@@ -43,7 +43,7 @@
     "eslint-plugin-import": "^2.7.0",
     "mocha": "^4.0.1",
     "nodemon": "^1.12.1",
-    "supertest": "^3.0.0",
-    "textract": "^2.4.0"
+    "pdf-parse": "^1.1.1",
+    "supertest": "^3.0.0"
   }
 }
