@@ -1,5 +1,4 @@
 /* eslint-disable no-process-env */
-
 // Env vars should be casted to correct types
 const config = {
   PORT: Number(process.env.PORT) || 9000,
