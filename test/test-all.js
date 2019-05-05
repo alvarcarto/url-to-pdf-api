@@ -17,8 +17,8 @@ BPromise.config({
 const app = createApp();
 
 function getPdfTextContent(buffer) {
-  // Fix for whitespace encoding issues
-  return pdf(buffer).then(data => data.text.replace(/\s/g, ' '));
+  // Fix for characters encoding issues
+  return pdf(buffer).then(data => data.text.replace(/[\W_]+/g, '-'));
 }
 
 describe('GET /api/render', function test() {
@@ -170,10 +170,9 @@ describe('POST /api/render', () => {
         if (DEBUG) {
           fs.writeFileSync('./cookies-content.txt', text);
         }
-
-        chai.expect(text).to.have.string('Number of cookies received: 2');
-        chai.expect(text).to.have.string('Cookie named "url­to­pdf­test"');
-        chai.expect(text).to.have.string('Cookie named "url­to­pdf­test­2"');
+        chai.expect(text).to.have.string('Number-of-cookies-received-2');
+        chai.expect(text).to.have.string('Cookie-named-url-to-pdf-test');
+        chai.expect(text).to.have.string('Cookie-named-url-to-pdf-test-2');
       })
   );
 });
