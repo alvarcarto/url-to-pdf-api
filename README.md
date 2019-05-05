@@ -301,9 +301,6 @@ First, clone the repository and cd into it.
 
 * `cp .env.sample .env`
 * Fill in the blanks in `.env`
-* `source .env` or `bash .env`
-
-  Or use [autoenv](https://github.com/kennethreitz/autoenv).
 
 * `npm install`
 * `npm start` Start express server locally
