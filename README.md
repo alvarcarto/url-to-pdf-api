@@ -127,7 +127,7 @@ is quite simple, check it out. Render flow:
 3. Render url **or** html.
 
     If `url` is defined, **`page.goto(url, options)`** is called and options match `goto.*`.
-    Otherwise **``page.goto(`data:text/html,${html}`, options)``** is called where html is taken from request body. This workaround was found from [Puppeteer issue](https://github.com/GoogleChrome/puppeteer/issues/728).
+    Otherwise **`page.setContent(html, options)`** is called where html is taken from request body, an options match `goto.*`.
 
 4. *Possibly* **`page.waitFor(numOrStr)`** if e.g. `waitFor=1000` is set.
 5. *Possibly* **Scroll the whole page** to the end before rendering if e.g. `scrollPage=true` is set.
