@@ -95,6 +95,11 @@ https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&pdf.margin
 
 https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=1000
 
+
+**Download the PDF with a given attachment name**
+
+https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&attachmentName=google.pdf
+
 **Wait for an element macthing the selector `input` appears.**
 
 https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=input
@@ -153,6 +158,7 @@ emulateScreenMedia | boolean | `true` | Emulates `@media screen` when rendering 
 ignoreHttpsErrors | boolean | `false` | Ignores possible HTTPS errors when navigating to a page.
 scrollPage | boolean | `false` | Scroll page down before rendering to trigger lazy loading elements.
 waitFor | number or string | - | Number in ms to wait before render or selector element to wait before render.
+attachmentName | string | - | When set, the `content-disposition` headers are set and browser will download the PDF instead of showing inline. The given string will be used as the name for the file.
 viewport.width | number | `1600` | Viewport width.
 viewport.height | number | `1200` | Viewport height.
 viewport.deviceScaleFactor | number | `1` | Device scale factor (could be thought of as dpr).
