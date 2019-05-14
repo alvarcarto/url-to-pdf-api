@@ -5,7 +5,7 @@ const fs = require('fs');
 const request = require('supertest');
 const BPromise = require('bluebird');
 const { getResource } = require('./util');
-const PDFParser = require('pdf2json');
+const pdf = require('pdf-parse');
 const createApp = require('../src/app');
 
 const DEBUG = false;
@@ -17,22 +17,11 @@ BPromise.config({
 const app = createApp();
 
 function getPdfTextContent(buffer) {
-  return new BPromise((resolve, reject) => {
-    const pdfParser = new PDFParser();
-    pdfParser.on('pdfParser_dataError', (err) => {
-      reject(err);
-    });
-    pdfParser.on('pdfParser_dataReady', () => {
-      resolve(pdfParser.getRawTextContent());
-    });
-
-    pdfParser.parseBuffer(buffer);
-  });
+  return pdf(buffer)
+    .then(data => data.text.replace(/\u00A0/g, ' ').replace(/\u00AD/g, '-'));
 }
 
-describe('GET /api/render', function test() {
-  this.timeout(1000);
-
+describe('GET /api/render', () => {
   it('request must have "url" query parameter', () =>
     request(app).get('/api/render').expect(400)
   );
@@ -181,9 +170,9 @@ describe('POST /api/render', () => {
           fs.writeFileSync('./cookies-content.txt', text);
         }
 
-        chai.expect(text).to.have.string('Number of cookies received: 2');
-        chai.expect(text).to.have.string('Cookie named "url­to­pdf­test"');
-        chai.expect(text).to.have.string('Cookie named "url­to­pdf­test­2"');
+        chai.expect(text).to.have.string('cookies received: 2');
+        chai.expect(text).to.have.string('Cookie named "url-to-pdf-test"');
+        chai.expect(text).to.have.string('Cookie named "url-to-pdf-test-2"');
       })
   );
 });
