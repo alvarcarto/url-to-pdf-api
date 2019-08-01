@@ -138,7 +138,43 @@ describe('POST /api/render', () => {
       })
   );
 
-  it('cookies should exist on the page', () =>
+  it('GET /api/render: cookies should exist on the page', () =>
+    request(app)
+      .get('/api/render')
+      .query({
+        url: 'http://www.html-kit.com/tools/cookietester/',
+        'cookies[0][name]': 'url-to-pdf-test',
+        'cookies[0][value]': 'test successful',
+        'cookies[0][domain]': 'www.html-kit.com',
+        'cookies[1][name]': 'url-to-pdf-test-2',
+        'cookies[1][value]': 'test successful 2',
+        'cookies[1][domain]': 'www.html-kit.com',
+      })
+      .set('Connection', 'keep-alive')
+      .set('content-type', 'application/json')
+      .expect(200)
+      .expect('content-type', 'application/pdf')
+      .then((response) => {
+        if (DEBUG) {
+          console.log(response.headers);
+          console.log(response.body);
+          fs.writeFileSync('cookies-pdf-http-get.pdf', response.body, { encoding: null });
+        }
+
+        return getPdfTextContent(response.body);
+      })
+      .then((text) => {
+        if (DEBUG) {
+          fs.writeFileSync('./cookies-content-http-get.txt', text);
+        }
+
+        chai.expect(text).to.have.string('Number-of-cookies-received-2');
+        chai.expect(text).to.have.string('Cookie-named-url-to-pdf-test');
+        chai.expect(text).to.have.string('Cookie-named-url-to-pdf-test-2');
+      })
+  );
+
+  it('POST /api/render: cookies should exist on the page', () =>
     request(app)
       .post('/api/render')
       .send({
@@ -162,14 +198,14 @@ describe('POST /api/render', () => {
         if (DEBUG) {
           console.log(response.headers);
           console.log(response.body);
-          fs.writeFileSync('cookies-pdf.pdf', response.body, { encoding: null });
+          fs.writeFileSync('cookies-pdf-http-post.pdf', response.body, { encoding: null });
         }
 
         return getPdfTextContent(response.body);
       })
       .then((text) => {
         if (DEBUG) {
-          fs.writeFileSync('./cookies-content.txt', text);
+          fs.writeFileSync('./cookies-content-http-post.txt', text);
         }
 
         chai.expect(text).to.have.string('Number-of-cookies-received-2');

@@ -62,6 +62,7 @@ const postRender = ex.createRoute((req, res) => {
 
 function getOptsFromQuery(query) {
   const opts = {
+    cookies: query.cookies,
     url: query.url,
     attachmentName: query.attachmentName,
     scrollPage: query.scrollPage,
