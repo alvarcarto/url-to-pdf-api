@@ -18,4 +18,5 @@ COPY . .
 
 EXPOSE 80
 
-CMD
+ADD ./docker/docker_start.sh /app/
+CMD /app/docker_start.sh

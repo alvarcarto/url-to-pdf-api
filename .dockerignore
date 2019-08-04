@@ -1,0 +1,8 @@
+node_modules
+build
+.dockerignore
+README.md
+.git
+.vscode
+.idea
+jsconfig.json
