@@ -3,6 +3,8 @@ const _ = require('lodash');
 const config = require('../config');
 const logger = require('../util/logger')(__filename);
 
+let browser
+
 async function render(_opts = {}) {
   const opts = _.merge({
     cookies: [],
@@ -37,12 +39,14 @@ async function render(_opts = {}) {
 
   logOpts(opts);
 
-  const browser = await puppeteer.launch({
-    headless: !config.DEBUG_MODE,
-    ignoreHTTPSErrors: opts.ignoreHttpsErrors,
-    args: ['--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'],
-    sloMo: config.DEBUG_MODE ? 250 : undefined,
-  });
+  if (!browser) {
+    browser = await puppeteer.launch({
+      headless: !config.DEBUG_MODE,
+      ignoreHTTPSErrors: opts.ignoreHttpsErrors,
+      args: ['--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'],
+      sloMo: config.DEBUG_MODE ? 250 : undefined,
+    });
+  }
   const page = await browser.newPage();
 
   page.on('console', (...args) => logger.info('PAGE LOG:', ...args));
@@ -138,6 +142,8 @@ async function render(_opts = {}) {
     }
 
     if (opts.output === 'pdf') {
+      console.log('OPTIONS')
+      console.log(opts.pdf)
       data = await page.pdf(opts.pdf);
     } else {
       // This is done because puppeteer throws an error if fullPage and clip is used at the same
@@ -156,8 +162,9 @@ async function render(_opts = {}) {
     throw err;
   } finally {
     logger.info('Closing browser..');
+    page.close();
     if (!config.DEBUG_MODE) {
-      await browser.close();
+      //await browser.close();
     }
   }
 

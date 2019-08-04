@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const ex = require('../util/express');
 const renderCore = require('../core/render-core');
+const url = require('url');
 
 function getMimeType(opts) {
   if (opts.output === 'pdf') {
@@ -15,7 +16,7 @@ function getMimeType(opts) {
 }
 
 const getRender = ex.createRoute((req, res) => {
-  const opts = getOptsFromQuery(req.query);
+  const opts = getOptsFromQuery(req);
   return renderCore.render(opts)
     .then((data) => {
       if (opts.attachmentName) {
@@ -46,7 +47,7 @@ const postRender = ex.createRoute((req, res) => {
       },
     }, req.body);
   } else {
-    opts = getOptsFromQuery(req.query);
+    opts = getOptsFromQuery(req);
     opts.html = req.body;
   }
 
@@ -60,9 +61,10 @@ const postRender = ex.createRoute((req, res) => {
     });
 });
 
-function getOptsFromQuery(query) {
+function getOptsFromQuery(req) {
+  const { query } = req;
   const opts = {
-    cookies: query.cookies,
+    cookies: query.forwardCookies ? parseCookies(req) : query.cookies,
     url: query.url,
     attachmentName: query.attachmentName,
     scrollPage: query.scrollPage,
@@ -116,6 +118,15 @@ function getOptsFromQuery(query) {
     },
   };
   return opts;
+}
+
+function parseCookies(req) {
+  const targetUrl = new url.URL(req.query.url);
+  return Object.entries(req.cookies).map(([name, value]) => ({
+    name,
+    value,
+    domain: targetUrl.host,
+  }));
 }
 
 module.exports = {

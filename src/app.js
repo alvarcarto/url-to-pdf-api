@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser')
 const compression = require('compression');
 const cors = require('cors');
 const logger = require('./util/logger')(__filename);
@@ -39,6 +40,7 @@ function createApp() {
   app.use(bodyParser.text({ limit: '10mb', type: 'text/html' }));
   app.use(bodyParser.json({ limit: '10mb' }));
 
+  app.use(cookieParser())
   app.use(compression({
     // Compress everything over 10 bytes
     threshold: 10,
