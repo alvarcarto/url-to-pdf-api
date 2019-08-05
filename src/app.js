@@ -40,7 +40,7 @@ function createApp() {
   app.use(bodyParser.text({ limit: '10mb', type: 'text/html' }));
   app.use(bodyParser.json({ limit: '10mb' }));
 
-  app.use(cookieParser())
+  app.use(cookieParser());
   app.use(compression({
     // Compress everything over 10 bytes
     threshold: 10,

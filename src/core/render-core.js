@@ -3,7 +3,8 @@ const _ = require('lodash');
 const config = require('../config');
 const logger = require('../util/logger')(__filename);
 
-let browser
+let browser;
+let context;
 
 async function render(_opts = {}) {
   const opts = _.merge({
@@ -40,21 +41,33 @@ async function render(_opts = {}) {
   logOpts(opts);
 
   if (!browser) {
+    logger.info('Creating browser instance...');
     browser = await puppeteer.launch({
+      executablePath: config.CHROME_EXECUTABLE || undefined,
       headless: !config.DEBUG_MODE,
-      ignoreHTTPSErrors: opts.ignoreHttpsErrors,
-      args: ['--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'],
+      ignoreHTTPSErrors: true,
+      args: ['--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
       sloMo: config.DEBUG_MODE ? 250 : undefined,
     });
+    logger.info('Browser instance successfully created!');
   }
-  const page = await browser.newPage();
 
-  page.on('console', (...args) => logger.info('PAGE LOG:', ...args));
+  if (!context) {
+    logger.info('Creating incognito context...');
+    context = await browser.createIncognitoBrowserContext();
+    logger.info('Incognito context successfully created!');
+  }
+
+  const page = await context.newPage();
+  const client = await page.target().createCDPSession();
+
+  // page.on('console', (...args) => logger.info('PAGE LOG:', ...args));
 
   page.on('error', (err) => {
     logger.error(`Error event emitted: ${err}`);
     logger.error(err.stack);
-    browser.close();
+    logger.info('Closing page.');
+    page.close();
   });
 
 
@@ -87,9 +100,6 @@ async function render(_opts = {}) {
 
     if (opts.cookies && opts.cookies.length > 0) {
       logger.info('Setting cookies..');
-
-      const client = await page.target().createCDPSession();
-
       await client.send('Network.enable');
       await client.send('Network.setCookies', { cookies: opts.cookies });
     }
@@ -142,8 +152,6 @@ async function render(_opts = {}) {
     }
 
     if (opts.output === 'pdf') {
-      console.log('OPTIONS')
-      console.log(opts.pdf)
       data = await page.pdf(opts.pdf);
     } else {
       // This is done because puppeteer throws an error if fullPage and clip is used at the same
@@ -161,11 +169,8 @@ async function render(_opts = {}) {
     logger.error(err.stack);
     throw err;
   } finally {
-    logger.info('Closing browser..');
+    logger.info('Closing page..');
     page.close();
-    if (!config.DEBUG_MODE) {
-      //await browser.close();
-    }
   }
 
   return data;
