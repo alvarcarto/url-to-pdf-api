@@ -24,6 +24,7 @@
     "compression": "^1.7.1",
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.4",
+    "dotenv": "^8.0.0",
     "express": "^4.15.5",
     "express-validation": "^1.0.2",
     "joi": "^11.1.1",

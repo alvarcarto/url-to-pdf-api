@@ -1,7 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 const compression = require('compression');
 const cors = require('cors');
 const logger = require('./util/logger')(__filename);
@@ -32,6 +32,7 @@ function createApp() {
   const corsOpts = {
     origin: config.CORS_ORIGIN,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH'],
+    credentials: true,
   };
   logger.info('Using CORS options:', corsOpts);
   app.use(cors(corsOpts));

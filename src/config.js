@@ -1,5 +1,11 @@
 /* eslint-disable no-process-env */
 
+if (process.env.NODE_ENV !== 'production') {
+  // eslint-disable-next-line global-require
+  console.log('hello?')
+  require('dotenv').config();
+}
+
 // Env vars should be casted to correct types
 const config = {
   PORT: Number(process.env.PORT) || 9000,

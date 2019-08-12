@@ -41,6 +41,9 @@ const postRender = ex.createRoute((req, res) => {
   let opts;
   if (isBodyJson) {
     opts = _.merge({
+      cookies: req.body.forwardCookies
+        ? parseCookies(req.cookies, req.body.url)
+        : req.body.cookies || [],
       output: 'pdf',
       screenshot: {
         type: 'png',
@@ -64,7 +67,7 @@ const postRender = ex.createRoute((req, res) => {
 function getOptsFromQuery(req) {
   const { query } = req;
   const opts = {
-    cookies: query.forwardCookies ? parseCookies(req) : query.cookies,
+    cookies: query.forwardCookies ? parseCookies(req.cookies, req.query.url) : query.cookies,
     url: query.url,
     attachmentName: query.attachmentName,
     scrollPage: query.scrollPage,
@@ -120,9 +123,9 @@ function getOptsFromQuery(req) {
   return opts;
 }
 
-function parseCookies(req) {
-  const targetUrl = new url.URL(req.query.url);
-  return Object.entries(req.cookies).map(([name, value]) => ({
+function parseCookies(cookies, reqUrl) {
+  const targetUrl = new url.URL(reqUrl);
+  return Object.entries(cookies).map(([name, value]) => ({
     name,
     value,
     domain: targetUrl.host,
