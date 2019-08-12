@@ -3,10 +3,9 @@ const _ = require('lodash');
 const config = require('../config');
 const logger = require('../util/logger')(__filename);
 
-let browser;
-let context;
-
 async function render(_opts = {}) {
+  let browser;
+  let context;
   const opts = _.merge({
     cookies: [],
     scrollPage: false,
@@ -152,6 +151,7 @@ async function render(_opts = {}) {
     }
 
     if (opts.output === 'pdf') {
+      await page.evaluateHandle('document.fonts.ready');
       data = await page.pdf(opts.pdf);
     } else {
       // This is done because puppeteer throws an error if fullPage and clip is used at the same
@@ -170,7 +170,8 @@ async function render(_opts = {}) {
     throw err;
   } finally {
     logger.info('Closing page..');
-    page.close();
+    browser.close();
+    browser = null;
   }
 
   return data;
