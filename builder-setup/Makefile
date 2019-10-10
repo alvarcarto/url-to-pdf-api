@@ -19,9 +19,9 @@ build: prepare
 
 .PHONY: deliver
 deliver:
-	jfrog rt upload "pdf_printer/*.rpm" acceptance-rpm-local/7/x86_64/ --build-name=${JOB_NAME} --build-number=${BUILD_NUMBER}
+	jfrog rt upload "pdf_printer_rpms/*.rpm" acceptance-rpm-local/7/x86_64/ --build-name=${JOB_NAME} --build-number=${BUILD_NUMBER}
 	jfrog rt build-publish ${JOB_NAME} ${BUILD_NUMBER}
-	sudo chmod -R 0777 pdf_printer
+	sudo chmod -R 0777 pdf_printer_rpms
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-25s\033[0m %s\n", $$1, $$2}'
