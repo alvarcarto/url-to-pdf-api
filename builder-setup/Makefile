@@ -12,21 +12,6 @@ prepare:
 	sudo yum groupinstall -y "Development Tools"
 	sudo yum install -y epel-release
 	sudo yum -y update || echo ''
-	
-# 	sudo yum install -y wget
-# 	sudo yum install -y centos-release-scl
-# 	sudo yum install -y python27
-	#sudo rpm -ivh https://packagecloud.io/github/git-lfs/packages/el/6/git-lfs-1.5.4-1.el6.x86_64.rpm/download || echo ''
-	#git lfs install
-	#sudo yum groupinstall -y "Development Tools"
-	#sudo yum install -y python-setuptools
-	#sudo yum install -y epel-release
-	#sudo yum install -y python-pip
-	#sudo pip install -U setuptools
-	#sudo pip install urllib3
-	#sudo pip install pyOpenSSL
-	#sudo pip install ndg-httpsclient
-	#sudo pip install pyasn1
 
 .PHONY: build
 build: prepare
