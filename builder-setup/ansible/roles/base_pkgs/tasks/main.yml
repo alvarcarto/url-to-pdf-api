@@ -1,0 +1,14 @@
+---
+# - name: Install corkscrew
+#   become: true
+#   shell: rpm -i http://ftp.altlinux.org/pub/distributions/ALTLinux/Sisyphus/x86_64/RPMS.classic//corkscrew-2.0-alt1.qa1.x86_64.rpm
+#   environment: "{{ proxy_env }}"
+#   ignore_errors: true
+
+- name: On Centos platform, install base packages
+  become: true
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items: "{{ centos_base_packages }}"

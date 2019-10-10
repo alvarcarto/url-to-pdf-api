@@ -1,0 +1,47 @@
+---
+language: 'python'
+python: '2.7'
+
+env:
+  - SITE_AND_INVENTORY='tests/test.yml -i tests/inventory'
+
+before_install:
+  - '__rvm_unload ; rm -rf ~/.rvm'
+
+install:
+  - 'pip install ansible==1.7.1'
+  - 'printf "[defaults]\nroles_path = ../" > ansible.cfg'
+
+script:
+  - >
+    ruby -v
+    | grep -q 'ruby'
+    && (echo 'No ruby test: pass' && exit 1)
+    || (echo 'No ruby test: fail' && exit 0)
+  - 'ansible-playbook $SITE_AND_INVENTORY --syntax-check'
+  - 'ansible-playbook $SITE_AND_INVENTORY --connection=local -vvvv'
+  - >
+    ansible-playbook $SITE_AND_INVENTORY --connection=local
+    | grep -q 'changed=0.*failed=0'
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (echo 'Idempotence test: fail' && exit 1)
+  - >
+    ~/.rvm/wrappers/default/ruby -v
+    | grep -q '2.1.2'
+    && (echo 'Default ruby test: pass' && exit 0)
+    || (echo 'Default ruby test: fail' && exit 1)
+  - >
+    ls ~/.rvm/rubies
+    | grep -q 'ruby-2.1.0'
+    && (echo 'Multiple rubies test: pass' && exit 0)
+    || (echo 'Multiple rubies test: fail' && exit 1)
+  - >
+    ansible-playbook $SITE_AND_INVENTORY --connection=local --extra-vars='rvm1_delete_ruby=ruby-2.1.0'
+    | grep -q 'ok=1.*failed=0'
+    && (echo 'Delete ruby test: pass' && exit 0)
+    || (echo 'Delete ruby test: fail' && exit 1)
+  - >
+    ls ~/.rvm/rubies/ | wc -l
+    | grep -q '2'
+    && (echo 'Really deleted ruby test: pass' && exit 0)
+    || (echo 'Really deleted ruby test: fail' && exit 1)

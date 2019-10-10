@@ -1,0 +1,43 @@
+---
+
+# Install 1 or more versions of ruby
+rvm1_rubies:
+  - "ruby-{{ ruby_version }}"
+
+# Delete a specific version of ruby (ie. ruby-2.1.0)
+rvm1_delete_ruby:
+
+# Install path for rvm (defaults to system wide)
+rvm1_install_path: '/home/{{ web_default_user }}/.rvm'
+
+# Add or remove any install flags
+# NOTE: If you are doing a USER BASED INSTALL then
+#       make sure you ADD the --user-install flag below
+rvm1_install_flags: '--auto-dotfiles --user-install'
+
+# Add additional ruby install flags
+rvm1_ruby_install_flags:
+
+# Set the owner for the rvm directory
+rvm1_user: '{{ web_default_user }}'
+
+# URL for the latest installer script
+rvm1_rvm_latest_installer: 'https://raw.githubusercontent.com/wayneeseguin/rvm/master/binscripts/rvm-installer'
+
+# rvm version to use
+rvm1_rvm_version: 'stable'
+
+# Check and update rvm, disabling this will force rvm to never update
+rvm1_rvm_check_for_updates: True
+
+# GPG key verification, use an empty string if you want to skip this
+# Note: Unless you know what you're doing, just keep it as is
+#           Identity proof: https://keybase.io/mpapis
+#           PGP message: https://rvm.io/mpapis.asc
+rvm1_gpg_keys: '409B6B1796C275462A1703113804BB82D39DC0E3'
+
+# The GPG key server
+rvm1_gpg_key_server: 'hkp://keys.gnupg.net'
+
+# autolib mode, see https://rvm.io/rvm/autolibs
+rvm1_autolib_mode: 3

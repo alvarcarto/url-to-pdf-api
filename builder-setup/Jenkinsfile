@@ -1,0 +1,80 @@
+pipeline {
+  agent {
+    label 'docker'
+  }
+  parameters {
+    string(name: 'BUILD_BRANCH', defaultValue: 'main_dev', description: 'Branch to build')
+  }
+  options {
+    timestamps()
+    ansiColor('xterm')
+    buildDiscarder(logRotator(numToKeepStr:'20'))
+    timeout(time: 50, unit: 'MINUTES')
+  }
+  stages {
+    stage('build') {
+      steps {
+        sh """
+          curl -X POST -H "Content-Type: application/json" -d '{"attachments": [{"color": "#FFFF00", "text":":rocket: STARTED: Job '"$JOB_NAME"' ['"$BUILD_NUMBER"'] ('"$BUILD_URL"')"}]}' "https://tetration.slack.com/services/hooks/jenkins-ci?token=l9Wym3dTxAzelbNZcmWZQTTy"
+        """
+
+        checkout([
+          $class: 'GitSCM',
+          branches: [[name: "*/${params.BUILD_BRANCH}"]],
+          doGenerateSubmoduleConfigurations: false,
+          extensions: [[$class: 'CleanBeforeCheckout']],
+          submoduleCfg: [],
+          userRemoteConfigs: [[
+            url: 'git@github.com:TetrationAnalytics/url-to-pdf-api.git',
+            refspec: '+refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/remotes/origin/tags/*'
+          ]]
+        ])
+
+        dir('builder-setup') {
+          sh """
+            make BUILD_BRANCH=${params.BUILD_BRANCH} -f Makefile.docker build
+            sudo chmod -R 0777 pdf_printer
+            ls pdf_printer
+          """
+        }
+      }
+    }
+    stage('deliver') {
+      steps {
+        dir('builder-setup') {
+          script {
+            echo "==> Publishing to Artifactory"
+            def jfrog_cli_conf = readJSON(file:"${env.HOME}/.jfrog/jfrog-cli.conf")
+            def server = Artifactory.newServer url: 'https://artifacts.tet.wtf', username: "${env.USER}", password: "${jfrog_cli_conf.artifactory[0].apiKey}"
+            def uploadSpec = """{
+              "files": [
+                {
+                  "pattern": "pdf_printer/*.rpm",
+                  "target": "acceptance-rpm-local/7/x86_64/"
+                }
+              ]
+            }"""
+            def buildInfo = Artifactory.newBuildInfo()
+
+            buildInfo.env.capture = true
+            buildInfo.retention maxBuilds: 20
+            server.upload spec: uploadSpec, buildInfo: buildInfo
+            server.publishBuildInfo buildInfo
+          }
+        }
+      }
+    }
+  }
+  post {
+    success {
+      sh """
+        curl -X POST -H "Content-Type: application/json" -d '{"attachments": [{"color": "#00FF00", "text":":sunny: SUCCESSFUL: Job '"$JOB_NAME"' ['"$BUILD_NUMBER"'] ('"$BUILD_URL"')"}]}' "https://tetration.slack.com/services/hooks/jenkins-ci?token=l9Wym3dTxAzelbNZcmWZQTTy"
+      """
+    }
+    failure {
+      sh """
+        curl -X POST -H "Content-Type: application/json" -d '{"attachments": [{"color": "#FF0000", "text":":bomb: FAILED: Job '"$JOB_NAME"' ['"$BUILD_NUMBER"'] ('"$BUILD_URL"')"}]}' "https://tetration.slack.com/services/hooks/jenkins-ci?token=l9Wym3dTxAzelbNZcmWZQTTy"
+      """
+    }
+  }
+}

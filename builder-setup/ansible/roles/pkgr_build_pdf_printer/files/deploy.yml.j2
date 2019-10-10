@@ -1,0 +1,5 @@
+# {{ ansible_managed }}
+
+commit_hash: "{{ deploy_hash.stdout }}"
+commit_timestamp: "{{ deploy_timestamp.stdout }}"
+version: "{{ build_version }}"
