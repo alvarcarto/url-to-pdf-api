@@ -33,8 +33,8 @@ pipeline {
         dir('builder-setup') {
           sh """
             make BUILD_BRANCH=${params.BUILD_BRANCH} -f Makefile.docker build
-            sudo chmod -R 0777 pdf_printer
-            ls pdf_printer
+            sudo chmod -R 0777 pdf_printer_rpms
+            ls pdf_printer_rpms
           """
         }
       }
@@ -49,7 +49,7 @@ pipeline {
             def uploadSpec = """{
               "files": [
                 {
-                  "pattern": "pdf_printer/*.rpm",
+                  "pattern": "pdf_printer_rpms/*.rpm",
                   "target": "acceptance-rpm-local/7/x86_64/"
                 }
               ]
