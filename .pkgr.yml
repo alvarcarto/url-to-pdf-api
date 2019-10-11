@@ -2,6 +2,3 @@ targets:
   centos-6:
 user: tetter
 group: tetter
-env:
-  - "HOME=/home/tetter"
-
