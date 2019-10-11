@@ -75,19 +75,19 @@
 #       }}
 #     state: present
 
-- name: Install nodejs rpm
-  # environment: "{{ proxy_env }}"
-  become: true
-  ignore_errors: true 
-  command: "rpm -i {{
-      nodejs_source_url_base +
-      nodejs_source_pub +
-      nodejs_source_path_parts[ansible_userspace_architecture]
-      }}"
+# - name: Install nodejs rpm
+#   environment: "{{ proxy_env }}"
+#   become: true
+#   ignore_errors: true 
+#   command: "rpm -i {{
+#       nodejs_source_url_base +
+#       nodejs_source_pub +
+#       nodejs_source_path_parts[ansible_userspace_architecture]
+#       }}"
 
 
 - name: Install nodejs
-  # environment: "{{ proxy_env }}"
+  environment: "{{ proxy_env }}"
   yum: name={{item}}
   become: true
   with_items:
