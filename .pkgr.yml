@@ -2,7 +2,6 @@ targets:
   centos-6:
 user: tetter
 group: tetter
-buildpack: https://github.com/heroku/heroku-buildpack-nodejs#v159
 env:
   - "HOME=/home/tetter"
 
