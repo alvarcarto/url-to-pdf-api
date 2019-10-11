@@ -1,0 +1,3 @@
+base_branch: main_dev
+default_git_num_retries: 2
+default_git_retry_delay: 10

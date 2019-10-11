@@ -1,0 +1,4 @@
+# use -k option to pass in the password
+
+[pdf_printer_builder]
+localhost

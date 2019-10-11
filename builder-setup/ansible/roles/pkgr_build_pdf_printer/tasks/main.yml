@@ -1,0 +1,224 @@
+- fail: msg="Cannot define both build_latest = true and build_hash = < hash >"
+  when: build_hash is defined and build_latest == true
+
+- debug:
+    msg: "---- Build Branch: {{ build_branch }} ----"
+
+- name: Checkout new code latest CL of a given branch
+  environment: "{{ proxy_env }}"
+  sudo: no
+  shell: '{{ item }}'
+  register: result
+  with_items:
+    - git fetch -p
+    - git reset --hard origin/{{ build_branch }} || git reset --hard {{ build_branch }}
+  args:
+    chdir: '{{ h4_repo_path }}'
+  until: result.rc == 0
+  retries: 5
+  delay: 10
+  when: build_branch is defined
+
+- name: Get hash from branch if branch name is provided
+  environment: "{{ proxy_env }}"
+  shell: 'git log -n 1 --pretty=format:"%H" '
+  register: commit_hash
+  args:
+    chdir: '{{ h4_repo_path }}'
+  when: build_branch is defined and build_hash is not defined
+
+- name: Set build version
+  set_fact:
+    build_version="{{ version }}-{{ commit_hash.stdout }}-{{ build_timestamp }}"
+  when: commit_hash is defined
+
+# - name: Get release tag from HEAD
+#   environment: "{{ proxy_env }}"
+#   shell: './ui/bin/rpm_version_namer.rb {{ build_branch }}'
+#   register: release_tag
+#   args:
+#     chdir: '{{ h4_repo_path }}'
+#   when: build_branch is defined
+
+# - name: Set release version if we have release_tag
+#   set_fact:
+#     build_version="{{ release_tag.stdout }}"
+#   when: release_tag.stdout != ""
+
+- name: Checkout code from a given commit hash
+  environment: "{{ proxy_env }}"
+  sudo: no
+  shell: '{{ item }}'
+  register: result
+  with_items:
+    - git fetch
+    - git checkout {{ build_hash }}
+  args:
+    chdir: '{{ h4_repo_path }}'
+  until: result.rc == 0
+  retries: 5
+  delay: 10
+  when: build_hash is defined and build_latest == false
+
+- debug:
+    msg: "---- Build Version: {{ build_version }} ----"
+
+# - name: Install nodejs rpm
+#   # environment: "{{ proxy_env }}"
+#   become: true
+#   yum:
+#     name: >
+#       {{
+#       nodejs_source_url_base +
+#       nodejs_source_pub +
+#       nodejs_source_path_parts[ansible_userspace_architecture]
+#       }}
+#     state: present
+
+# - name: Install nodejs rpm
+#   environment: "{{ proxy_env }}"
+#   become: true
+#   ignore_errors: true 
+#   command: "rpm -i {{
+#       nodejs_source_url_base +
+#       nodejs_source_pub +
+#       nodejs_source_path_parts[ansible_userspace_architecture]
+#       }}"
+
+
+- name: Install nodejs
+  environment: "{{ proxy_env }}"
+  yum: name={{item}}
+  become: true
+  with_items:
+    - nodejs
+
+- gem:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - bundler
+
+- name: Check if YARN repo is already configured.
+  stat: path={{ yarn_rhel_repofile_path }}
+  register: yarn_repofile_result
+
+- name: Install YARN YUM repo.
+  environment: "{{ proxy_env }}"
+  become: true
+  get_url:
+    url: "{{ yarn_rhel_repo_url }}"
+    dest: "{{ yarn_rhel_repofile_path }}"
+    mode: 0644
+  register: result
+  until: '"failed" not in result'
+  retries: 3
+  delay: 5
+  when: not yarn_repofile_result.stat.exists
+
+- name: Import YARN GPG key.
+  environment: "{{ proxy_env }}"
+  become: true
+  rpm_key:
+    key: "{{ yarn_rhel_repo_gpg_key_url }}"
+    state: present
+  when: not yarn_repofile_result.stat.exists
+
+- name: Install NodeJS package for yarn dependency
+  environment: "{{ proxy_env }}"
+  become: true
+  package: name=nodejs state=latest
+
+- name: Install YARN package manager
+  environment: "{{ proxy_env }}"
+  become: true
+  package: name=yarn-1.12.3 state=present
+
+# - name: set yarn https_proxy
+#   ignore_errors: true
+#   shell: yarn config set https-proxy http://proxy.esl.cisco.com:80
+
+# - name: set yarn http_proxy
+#   ignore_errors: true
+#   shell: yarn config set http-proxy http://proxy.esl.cisco.com:80
+
+- name: Install pkgr 1.5.1
+  environment: "{{ proxy_env }}"
+  command: "{{ rvm1_ruby_path }}/gem install pkgr --version=1.5.1"
+
+- name: Get deploy hash
+  environment: "{{ proxy_env }}"
+  shell: 'git log -n 1 --format=%h'
+  register: deploy_hash
+  args:
+    chdir: '{{ h4_repo_path }}'
+
+- name: Get deploy timestamp
+  environment: "{{ proxy_env }}"
+  shell: 'git log -n 1 --format=%ci'
+  register: deploy_timestamp
+  args:
+    chdir: '{{ h4_repo_path }}'
+
+# - name: Copy deploy.yml
+#   template:
+#     src=../files/deploy.yml.j2
+#     dest={{ h4_repo_path }}/ui/config/deploy.yml
+#     owner={{ web_default_user }}
+#     group={{ web_default_user }}
+#     mode=0600
+
+# - name: Trigger yarn install for ng build
+#   environment: "{{ proxy_env }}"
+#   command: bash -lc "yarn install"
+#   args:
+#     chdir: '{{ h4_repo_path }}'
+
+- name: Trigger pkgr to build pdf_printer.rpm
+  environment: "{{ proxy_env }}"
+  command: bash -lc "{{ rvm1_ruby_path }}/pkgr package . --name=pdf_printer --version={{ build_version }} --env 'no_proxy="tet.wtf,ocean.af,tetrationanalytics.com,localhost,127.0.0.1"' 'http_proxy=http://proxy.esl.cisco.com:80' 'https_proxy=http://proxy.esl.cisco.com:80'"
+  args:
+    chdir: '{{ h4_repo_path }}'
+  retries: '{{ default_pkgr_num_retries }}'
+  delay: '{{ default_pkgr_retry_delay }}'
+
+- name: Remove stale .rpm files potentially left from previous failed builds
+  file:
+    path='{{ dst_rpm_dir }}'
+    state=absent
+  ignore_errors: true
+
+- name: Create rpms directory
+  file:
+    path='{{ dst_rpm_dir }}'
+    state=directory
+
+- name: Grab the rpm file name
+  find:
+    paths: '{{ h4_repo_path }}'
+    patterns: '*.rpm'
+  register: rpm_filenames
+
+- set_fact: rpm_target="pdf_printer_{{ build_version }}.x86_64.rpm"
+- set_fact:
+    lastest_rpm: "{{ rpm_filenames.files | sort(attribute='mtime',reverse=true) | first }}"
+
+- name: Move and rename .rpm file to serving directory
+  become: true
+  shell: cp {{ lastest_rpm.path }} {{ dst_rpm_dir }}/{{ rpm_target }}
+
+- name: Remove old .rpm files - e.g. pdf_printer_0.14.1.160302.18.15.rpm
+  become: true
+  shell: find {{ dst_rpm_dir }} -type f -mtime +{{ remove_builds_before_days }} \
+    -name '*.*.*.*.*.*.rpm*' -print0 | xargs -r0 rm -v
+  ignore_errors: true
+
+- name: Create Checksum file
+  shell: cd {{ dst_rpm_dir }} &&
+    sha256sum {{ rpm_target }} > {{ rpm_target }}.sha256sum
+
+- name: Symlink latest
+  shell: ln -sf {{ dst_rpm_dir }}/{{ rpm_target }} {{ dst_rpm_dir }}/latest
+
+- debug:
+    msg: "---- Finished building {{ rpm_target }} ----"

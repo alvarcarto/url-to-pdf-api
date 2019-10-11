@@ -1,0 +1,22 @@
+rvm1_ruby: "ruby-{{ ruby_version }}"
+rvm1_ruby_version: "{{ ruby_version }}"
+rvm1_ruby_path: "{{ rvm1_install_path }}/wrappers/{{ rvm1_ruby }}"
+rvm1_install_path: '/home/{{ web_default_user }}/.rvm'
+
+nodejs_version: "10.15.2"
+
+nodejs_source_url_base: "https://rpm.nodesource.com"
+nodejs_source_pub: "/pub_10.x"
+nodejs_source_path_parts:
+  x86_64: /el/7/x86_64/nodejs-{{ nodejs_version }}-1nodesource.x86_64.rpm
+# https://rpm.nodesource.com/pub_10.x/el/7/x86_64/nodejs-10.15.2-1nodesource.x86_64.rpm
+
+yarn_rhel_repo_url: "https://dl.yarnpkg.com/rpm/yarn.repo"
+yarn_rhel_repo_gpg_key_url: "https://dl.yarnpkg.com/rpm/pubkey.gpg"
+yarn_rhel_repofile_path: "/etc/yum.repos.d/yarn.repo"
+
+dst_rpm_dir: "/home/{{ web_default_user }}/pdf_printer_rpms"
+remove_builds_before_days: 30
+
+default_pkgr_num_retries: 3
+default_pkgr_retry_delay: 10

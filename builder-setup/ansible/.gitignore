@@ -1,0 +1,4 @@
+ansible.cfg
+*.pyc
+*.swp
+*.retry

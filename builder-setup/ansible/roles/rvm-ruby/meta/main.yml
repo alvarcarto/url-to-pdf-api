@@ -1,0 +1,21 @@
+---
+galaxy_info:
+  author: Nick Janetakis
+  description: The official rvm role to install and manage your ruby versions.
+  company: 
+  license: license (MIT)
+  min_ansible_version: 1.5
+
+  platforms:
+  - name: EL
+    versions:
+    - all
+  - name: Ubuntu
+    versions:
+    - all
+
+  categories:
+  - development
+  - web
+
+dependencies: []

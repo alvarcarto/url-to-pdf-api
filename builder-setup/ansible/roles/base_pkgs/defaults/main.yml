@@ -1,0 +1,28 @@
+centos_base_packages:
+  - ansible
+  - autoconf
+  - automake
+  - bison
+  - bzip2
+  - curl-devel
+  - epel-release
+  - git
+  # - git-lfs
+  - gcc-c++
+  - libffi-devel
+  - libtool
+  - libxml2
+  - libxml2-devel
+  - libxslt
+  - libxslt-devel
+  - libyaml-devel
+  - make
+  - openssl-devel
+  - patch
+  - readline
+  - readline-devel
+  - rpm-build
+  - ruby-devel
+  - sqlite-devel
+  - zlib
+  - zlib-devel
