@@ -2,7 +2,7 @@ all: build
 
 BUILD_USER = h4ci1
 BUILD_HOME = /home/h4ci1
-BUILD_BRANCH ?= main_dev
+BUILD_BRANCH ?= master
 DOCKER_REPOSITORY ?= artifacts.tet.wtf:6557
 DOCKER_USERNAME ?= h4re1
 DOCKER_PASSWORD := $$(cat ~/.jfrog/jfrog-cli.conf | jq -r '.artifactory | .[] | select(.serverId == "artifactory-sjc-b4") | .apiKey')
