@@ -127,7 +127,7 @@
 - name: Install NodeJS package for yarn dependency
   environment: "{{ proxy_env }}"
   become: true
-  package: name=nodejs state=latest
+  package: name=nodejs-10.15.2 state=present
 
 - name: Install YARN package manager
   environment: "{{ proxy_env }}"
