@@ -86,12 +86,12 @@
       }}"
 
 
-- name: Install nodejs
-  environment: "{{ proxy_env }}"
-  yum: name={{item}}
-  become: true
-  with_items:
-    - nodejs
+# - name: Install nodejs
+#   environment: "{{ proxy_env }}"
+#   yum: name={{item}}
+#   become: true
+#   with_items:
+#     - nodejs
 
 - gem:
     name: "{{item}}"

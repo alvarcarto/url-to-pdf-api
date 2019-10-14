@@ -26,3 +26,8 @@ centos_base_packages:
   - sqlite-devel
   - zlib
   - zlib-devel
+  - libevent-devel
+  - postgresql-devel
+  - mysql-devel
+  - kernel-devel
+  - rubygems
