@@ -75,15 +75,15 @@
 #       }}
 #     state: present
 
-# - name: Install nodejs rpm
-#   environment: "{{ proxy_env }}"
-#   become: true
-#   ignore_errors: true 
-#   command: "rpm -i {{
-#       nodejs_source_url_base +
-#       nodejs_source_pub +
-#       nodejs_source_path_parts[ansible_userspace_architecture]
-#       }}"
+- name: Install nodejs rpm
+  environment: "{{ proxy_env }}"
+  become: true
+  ignore_errors: true 
+  command: "rpm -i {{
+      nodejs_source_url_base +
+      nodejs_source_pub +
+      nodejs_source_path_parts[ansible_userspace_architecture]
+      }}"
 
 
 - name: Install nodejs
@@ -144,7 +144,7 @@
 
 - name: Install pkgr 1.5.1
   environment: "{{ proxy_env }}"
-  command: "{{ rvm1_ruby_path }}/gem install pkgr --version=1.5.1"
+  command: "gem install pkgr --version=1.5.1"
 
 - name: Get deploy hash
   environment: "{{ proxy_env }}"
@@ -176,7 +176,7 @@
 
 - name: Trigger pkgr to build pdf_printer.rpm
   environment: "{{ proxy_env }}"
-  command: bash -lc "{{ rvm1_ruby_path }}/pkgr package . --name=pdf_printer --version={{ build_version }} --env 'no_proxy="tet.wtf,ocean.af,tetrationanalytics.com,localhost,127.0.0.1"' 'http_proxy=http://proxy.esl.cisco.com:80' 'https_proxy=http://proxy.esl.cisco.com:80'"
+  command: bash -lc "pkgr package . --name=pdf_printer --version={{ build_version }} --env 'no_proxy="tet.wtf,ocean.af,tetrationanalytics.com,localhost,127.0.0.1"' 'http_proxy=http://proxy.esl.cisco.com:80' 'https_proxy=http://proxy.esl.cisco.com:80'"
   args:
     chdir: '{{ h4_repo_path }}'
   retries: '{{ default_pkgr_num_retries }}'

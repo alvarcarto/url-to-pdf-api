@@ -1,0 +1,18 @@
+targets:
+  centos-6.10:
+
+user: tetter
+group: tetter
+
+# pkgr's buildpack uses libyaml 0.1.6, which has started failing on build_curl
+# We forked and bumped to version 0.1.7
+# buildpack: https://github.com/TetrationAnalytics/heroku-buildpack-ruby#build_curl-libyaml-0.1.7
+# buildpack: https://github.com/heroku/heroku-buildpack-nodejs#v159
+# env:
+ # - BUILDCURL_URL=buildcurl-b4.tetrationanalytics.com
+
+# The rpm is built with a blank production.log, which will clobber existing logs on deploy
+# ditto for noisy.log
+# after:
+#   - rm -rf log/noisy.log
+#   - rm -rf log/production.log

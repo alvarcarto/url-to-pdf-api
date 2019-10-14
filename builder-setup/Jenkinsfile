@@ -3,7 +3,7 @@ pipeline {
     label 'docker'
   }
   parameters {
-    string(name: 'BUILD_BRANCH', defaultValue: 'main_dev', description: 'Branch to build')
+    string(name: 'BUILD_BRANCH', defaultValue: 'master', description: 'Branch to build')
   }
   options {
     timestamps()
