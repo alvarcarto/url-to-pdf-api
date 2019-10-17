@@ -4,6 +4,7 @@ pipeline {
   }
   parameters {
     string(name: 'BUILD_BRANCH', defaultValue: 'master', description: 'Branch to build')
+    string(name: 'VERSION', defaultValue: '0.0.0', description: 'version to name the rpm')
   }
   options {
     timestamps()
@@ -32,7 +33,7 @@ pipeline {
 
         dir('builder-setup') {
           sh """
-            make BUILD_BRANCH=${params.BUILD_BRANCH} -f Makefile.docker build
+            make BUILD_BRANCH=${params.BUILD_BRANCH} VERSION=${params.VERSION} -f Makefile.docker build
             sudo chmod -R 0777 pdf_printer_rpms
             ls pdf_printer_rpms
           """
