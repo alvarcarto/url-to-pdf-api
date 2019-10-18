@@ -47,9 +47,11 @@ pipeline {
       }
     }
     stage('Build') {
-     sh """
-        pwd && ls -a && cd url-to-pdf-api && ls -a
-      """
+      steps {
+        sh """
+          pwd && ls -a && cd url-to-pdf-api && ls -a
+        """
+      }
     }
   }
   post {
