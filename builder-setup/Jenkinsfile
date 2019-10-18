@@ -27,7 +27,7 @@ pipeline {
           pwd && ls -a
         """
 
-        dir(builddir) {
+        dir('${workspace}/${JOB_NAME}') {
          checkout([
            $class: 'GitSCM',
            branches: [[name: "*/${params.BUILD_BRANCH}"]],
