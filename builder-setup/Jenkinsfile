@@ -14,7 +14,7 @@ pipeline {
   }
   stages {
     stage('Notify') {
-      step {
+      steps {
         sh """
           curl -X POST -H "Content-Type: application/json" -d '{"attachments": [{"color": "#FFFF00", "text":":rocket: STARTED: Job '"$JOB_NAME"' ['"$BUILD_NUMBER"'] ('"$BUILD_URL"')"}]}' "https://tetration.slack.com/services/hooks/jenkins-ci?token=l9Wym3dTxAzelbNZcmWZQTTy"
         """
