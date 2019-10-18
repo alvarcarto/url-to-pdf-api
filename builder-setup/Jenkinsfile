@@ -13,57 +13,43 @@ pipeline {
     timeout(time: 50, unit: 'MINUTES')
   }
   stages {
-    stage('build') {
-      steps {
+    stage('Notify') {
+      step {
         sh """
           curl -X POST -H "Content-Type: application/json" -d '{"attachments": [{"color": "#FFFF00", "text":":rocket: STARTED: Job '"$JOB_NAME"' ['"$BUILD_NUMBER"'] ('"$BUILD_URL"')"}]}' "https://tetration.slack.com/services/hooks/jenkins-ci?token=l9Wym3dTxAzelbNZcmWZQTTy"
         """
-
-        checkout([
-          $class: 'GitSCM',
-          branches: [[name: "*/${params.BUILD_BRANCH}"]],
-          doGenerateSubmoduleConfigurations: false,
-          extensions: [[$class: 'CleanBeforeCheckout']],
-          submoduleCfg: [],
-          userRemoteConfigs: [[
-            url: 'git@github.com:TetrationAnalytics/url-to-pdf-api.git',
-            refspec: '+refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/remotes/origin/tags/*'
-          ]]
-        ])
-
-        dir('builder-setup') {
-          sh """
-            make BUILD_BRANCH=${params.BUILD_BRANCH} VERSION=${params.VERSION} -f Makefile.docker build
-            sudo chmod -R 0777 pdf_printer_rpms
-            ls pdf_printer_rpms
-          """
-        }
       }
     }
-    stage('deliver') {
+    stage('Checkout') {
       steps {
-        dir('builder-setup') {
-          script {
-            echo "==> Publishing to Artifactory"
-            def jfrog_cli_conf = readJSON(file:"${env.HOME}/.jfrog/jfrog-cli.conf")
-            def server = Artifactory.newServer url: 'https://artifacts.tet.wtf', username: "${env.USER}", password: "${jfrog_cli_conf.artifactory[0].apiKey}"
-            def uploadSpec = """{
-              "files": [
-                {
-                  "pattern": "pdf_printer_rpms/*.rpm",
-                  "target": "acceptance-rpm-local/7/x86_64/"
-                }
-              ]
-            }"""
-            def buildInfo = Artifactory.newBuildInfo()
+        def builddir =  "${workspace}/${JOB_NAME}"
+        sh """
+          pwd && ls -a
+        """
 
-            buildInfo.env.capture = true
-            buildInfo.retention maxBuilds: 20
-            server.upload spec: uploadSpec, buildInfo: buildInfo
-            server.publishBuildInfo buildInfo
-          }
-        }
+        dir(builddir) {
+         checkout([
+           $class: 'GitSCM',
+           branches: [[name: "*/${params.BUILD_BRANCH}"]],
+           doGenerateSubmoduleConfigurations: false,
+           extensions: [[$class: 'CleanBeforeCheckout']],
+           submoduleCfg: [],
+           userRemoteConfigs: [[
+             url: 'git@github.com:TetrationAnalytics/url-to-pdf-api.git',
+             refspec: '+refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/remotes/origin/tags/*'
+           ]]
+         ])
+       }
+
+       sh """
+        pwd && ls -a
+       """
       }
+    }
+    stage('Build') {
+     sh """
+        pwd && ls -a && cd url-to-pdf-api && ls -a
+      """
     }
   }
   post {
