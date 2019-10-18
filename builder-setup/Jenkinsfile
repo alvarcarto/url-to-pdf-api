@@ -27,7 +27,7 @@ pipeline {
           pwd && ls -a
         """
 
-        dir(builddir) {
+        dir('${workspace}/${JOB_NAME}') {
          checkout([
            $class: 'GitSCM',
            branches: [[name: "*/${params.BUILD_BRANCH}"]],
@@ -47,9 +47,11 @@ pipeline {
       }
     }
     stage('Build') {
-     sh """
-        pwd && ls -a && cd url-to-pdf-api && ls -a
-      """
+      steps {
+        sh """
+          pwd && ls -a && cd url-to-pdf-api && ls -a
+        """
+      }
     }
   }
   post {
