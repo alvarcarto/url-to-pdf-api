@@ -22,7 +22,7 @@
     h4_repo_path: /home/{{ web_default_user }}/url-to-pdf-api
     h4_source_repo: 'https://github.com/TetrationAnalytics/url-to-pdf-api.git'
     h4_repo_name: url-to-pdf-api
-    version: '0.0.0'
+#    version: '0.0.0'
     build_branch: master
     build_latest: false
     build_force: true
@@ -33,15 +33,15 @@
     notify: false
 
   pre_tasks:
-  - name: Set build version with tag when given hash
-    set_fact:
-      build_version="{{ version }}-{{ build_hash }}-{{ build_timestamp }}"
-    when: build_version is not defined and build_hash is defined
+ # - name: Set build version with tag when given hash
+ #   set_fact:
+ #     build_version="{{ version }}-{{ build_hash }}-{{ build_timestamp }}"
+ #   when: build_version is not defined and build_hash is defined
 
-  - name: Set build version with tag when given branch name
-    set_fact:
-      build_version="{{ version }}-{{ build_branch | replace('/', '-') }}-{{ build_timestamp }}"
-    when:  build_version is not defined and build_hash is not defined
+ # - name: Set build version with tag when given branch name
+ #   set_fact:
+ #     build_version="{{ version }}-{{ build_branch | replace('/', '-') }}-{{ build_timestamp }}"
+ #   when:  build_version is not defined and build_hash is not defined
 
   - stat: path={{ lock_file }}
     register: lock

@@ -27,10 +27,10 @@
     chdir: '{{ h4_repo_path }}'
   when: build_branch is defined and build_hash is not defined
 
-- name: Set build version
-  set_fact:
-    build_version="{{ version }}-{{ commit_hash.stdout }}-{{ build_timestamp }}"
-  when: commit_hash is defined
+# - name: Set build version
+#   set_fact:
+#     build_version="{{ version }}-{{ commit_hash.stdout }}-{{ build_timestamp }}"
+#   when: commit_hash is defined
 
 # - name: Get release tag from HEAD
 #   environment: "{{ proxy_env }}"
