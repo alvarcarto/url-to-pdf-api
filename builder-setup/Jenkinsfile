@@ -22,7 +22,6 @@ pipeline {
     }
     stage('Checkout') {
       steps {
-        def builddir =  "${workspace}/${JOB_NAME}"
         sh """
           pwd && ls -a
         """
