@@ -25,22 +25,20 @@ pipeline {
         sh """
           pwd && ls -a
         """
-        dir('code') {
-         checkout([
-           $class: 'GitSCM',
-           branches: [[name: "*/${params.BUILD_BRANCH}"]],
-           doGenerateSubmoduleConfigurations: false,
-           extensions: [
-             [$class: 'RelativeTargetDirectory', relativeTargetDir: 'code'],
-             [$class: 'CleanBeforeCheckout']
-            ],
-           submoduleCfg: [],
-           userRemoteConfigs: [[
-             url: 'git@github.com:TetrationAnalytics/url-to-pdf-api.git',
-             refspec: '+refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/remotes/origin/tags/*'
-           ]]
-         ])
-       }
+        checkout([
+          $class: 'GitSCM',
+          branches: [[name: "*/${params.BUILD_BRANCH}"]],
+          doGenerateSubmoduleConfigurations: false,
+          extensions: [
+            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'code'],
+            [$class: 'CleanBeforeCheckout']
+           ],
+          submoduleCfg: [],
+          userRemoteConfigs: [[
+            url: 'git@github.com:TetrationAnalytics/url-to-pdf-api.git',
+            refspec: '+refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/remotes/origin/tags/*'
+          ]]
+        ])
        sh """
         pwd && ls -a
        """
