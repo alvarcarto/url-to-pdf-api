@@ -47,7 +47,7 @@ pipeline {
     stage('Build') {
       steps {
         sh """
-          pwd && ls -a && cd code/url-to-pdf-api && ls -a
+          pwd && ls -a && cd code && ls -a
         """
       }
     }
