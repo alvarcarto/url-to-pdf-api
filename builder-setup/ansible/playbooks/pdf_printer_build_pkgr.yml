@@ -54,7 +54,7 @@
   roles:
     - ../roles/base_pkgs
     # - ../roles/rvm-ruby
-    - ../roles/h4_code_checkout
+    # - ../roles/h4_code_checkout
     - ../roles/pkgr_build_pdf_printer
 
   post_tasks:
