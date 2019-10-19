@@ -22,9 +22,6 @@ pipeline {
     }
     stage('Checkout') {
       steps {
-        sh """
-          pwd && ls -a
-        """
         checkout([
           $class: 'GitSCM',
           branches: [[name: "*/${params.BUILD_BRANCH}"]],
@@ -39,15 +36,14 @@ pipeline {
             refspec: '+refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/remotes/origin/tags/*'
           ]]
         ])
-       sh """
-        pwd && ls -a
-       """
       }
     }
     stage('Build') {
       steps {
         sh """
-          pwd && ls -a && cd code && ls -a
+          pwd && ls -a && cd code && make BUILD_BRANCH=${params.BUILD_BRANCH} VERSION=${params.VERSION} -f Makefile.docker build
+          sudo chmod -R 0777 pdf_printer_rpms
+          ls -a pdf_printer_rpms
         """
       }
     }
