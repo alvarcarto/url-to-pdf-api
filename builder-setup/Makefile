@@ -8,14 +8,14 @@ BUILD_BRANCH ?= master
 prepare:
 	sudo yum install -y ansible
 	sudo yum install -y which
-	sudo chown -R h4ci1:h4ci1 $(HOME_DIR)/builder-setup
+	sudo chown -R h4ci1:h4ci1 $(HOME_DIR)/pdf-printer-build
 	sudo yum groupinstall -y "Development Tools"
 	sudo yum install -y epel-release
 	sudo yum -y update || echo ''
 
 .PHONY: build
 build: prepare
-	ansible-playbook $(HOME_DIR)/builder-setup/ansible/playbooks/pdf_printer_build_pkgr.yml -i $(HOME_DIR)/builder-setup/ansible/inventory/builder -vvv -e "web_default_user=`whoami` build_branch=${BUILD_BRANCH} build_version=${VERSION}" -c local
+	ansible-playbook $(HOME_DIR)/pdf-printer-build/builder-setup/ansible/playbooks/pdf_printer_build_pkgr.yml -i $(HOME_DIR)/pdf-printer-build/builder-setup/ansible/inventory/builder -vvv -e "web_default_user=`whoami` build_branch=${BUILD_BRANCH} build_version=${VERSION}" -c local
 
 .PHONY: deliver
 deliver:
