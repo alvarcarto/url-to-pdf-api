@@ -102,8 +102,5 @@
   shell: cd {{ dst_rpm_dir }} &&
     sha256sum {{ rpm_target }} > {{ rpm_target }}.sha256sum
 
-- name: Symlink latest
-  shell: ln -sf {{ dst_rpm_dir }}/{{ rpm_target }} {{ dst_rpm_dir }}/latest
-
 - debug:
     msg: "---- Finished building {{ rpm_target }} ----"
