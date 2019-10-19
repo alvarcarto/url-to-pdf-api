@@ -12,7 +12,7 @@ DOCKER_PASSWORD := $$(cat ~/.jfrog/jfrog-cli.conf | jq -r '.artifactory | .[] | 
 build:
 	@echo "$(DOCKER_PASSWORD)" | sudo docker login $(DOCKER_REPOSITORY) -u="$(DOCKER_USERNAME)" --password-stdin
 	@sudo docker pull $(DOCKER_REPOSITORY)/package-centos6
-	$(eval ID := $(shell sudo docker create -i -u $(BUILD_USER) -w $(BUILD_HOME) $(DOCKER_REPOSITORY)/package-centos6 /bin/bash -l -c "export BUILD_BRANCH=$(BUILD_BRANCH) VERSION=$(VERSION) && cat /etc/centos-release && cd builder-setup && ls -a && make build))
+	$(eval ID := $(shell sudo docker create -i -u $(BUILD_USER) -w $(BUILD_HOME) $(DOCKER_REPOSITORY)/package-centos6 /bin/bash -l -c "export BUILD_BRANCH=$(BUILD_BRANCH) VERSION=$(VERSION)" && cat /etc/centos-release && cd builder-setup && ls -a && make build))
 	@echo Container ID is $(ID)
 	sudo docker cp ../code $(ID):$(BUILD_HOME)/
 	sudo docker start -ai $(ID)
