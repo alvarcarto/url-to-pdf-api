@@ -40,7 +40,7 @@ pipeline {
     stage('Build') {
       steps {
         sh """
-          pwd && ls -a && cd builder-setup && make BUILD_BRANCH=${params.BUILD_BRANCH} VERSION=${params.VERSION} -f Makefile.docker build && ls -a
+          pwd && ls -a && cd builder-setup && make BUILD_BRANCH=${params.BUILD_BRANCH} VERSION=${params.VERSION} -f Makefile.docker build && ls -a rpms/
         """
       }
     }
