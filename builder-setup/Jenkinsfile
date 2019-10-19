@@ -41,7 +41,7 @@ pipeline {
     stage('Build') {
       steps {
         sh """
-          pwd && ls -a && cd code && make BUILD_BRANCH=${params.BUILD_BRANCH} VERSION=${params.VERSION} -f Makefile.docker build
+          pwd && ls -a && cd code/builder-setup && make BUILD_BRANCH=${params.BUILD_BRANCH} VERSION=${params.VERSION} -f Makefile.docker build
           sudo chmod -R 0777 pdf_printer_rpms
           ls -a pdf_printer_rpms
         """
