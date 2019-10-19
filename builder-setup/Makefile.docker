@@ -19,4 +19,3 @@ build:
 	sudo docker stop $(ID)
 	sudo docker cp $(ID):$(BUILD_HOME)/pdf_printer_rpms/ ./
 	sudo docker rm $(ID)
-	sudo chmod -R 0777 pdf_printer_rpms
