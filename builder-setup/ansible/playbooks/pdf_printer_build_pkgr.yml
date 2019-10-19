@@ -19,7 +19,7 @@
 ---
 - hosts: pdf_printer_builder
   vars:
-    h4_repo_path: /home/{{ web_default_user }}/url-to-pdf-api
+    h4_repo_path: /home/h4ci1/pdf-printer-build/
     h4_source_repo: 'https://github.com/TetrationAnalytics/url-to-pdf-api.git'
     h4_repo_name: url-to-pdf-api
 #    version: '0.0.0'
