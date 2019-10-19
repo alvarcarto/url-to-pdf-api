@@ -11,7 +11,7 @@ CENTOS6_DOCKER_IMAGE = package-centos6:latest
 .PHONY: build
 .ONESHELL:
 build:
-    mkdir -p rpms
+    mkdir -p ./rpms
 	@echo "$(DOCKER_PASSWORD)" | sudo docker login $(DOCKER_REPOSITORY) -u="$(DOCKER_USERNAME)" --password-stdin
 	@sudo docker pull $(DOCKER_REPOSITORY)/$(CENTOS6_DOCKER_IMAGE)
 	id=$$(docker create -i -u $(BUILD_USER) -w $(BUILD_HOME) $(DOCKER_REPOSITORY)/$(CENTOS6_DOCKER_IMAGE) /bin/bash -l -c "export BUILD_BRANCH=$(BUILD_BRANCH) && export VERSION=$(VERSION) && ls -a && cd pdf-printer-build/builder-setup && make build && ls ../rpms/")
