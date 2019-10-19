@@ -1,7 +1,7 @@
 all: build
 
 BUILD_USER = h4ci1
-BUILD_HOME = /home/h4ci1/
+BUILD_HOME = /home/h4ci1
 BUILD_BRANCH ?= master
 DOCKER_REPOSITORY ?= artifacts.tet.wtf:6557
 DOCKER_USERNAME ?= h4re1
@@ -18,5 +18,5 @@ build:
 	sudo docker cp ../../pdf-printer-build $${id}:/$(BUILD_HOME)/
 	sudo docker start -ai $${id}
 	sudo docker stop $${id}
-	sudo docker cp $${id}:$(BUILD_HOME)/pdf_printer_build/rpms ./
+	sudo docker cp $${id}:/$(BUILD_HOME)/pdf_printer_build/rpms ./
 	sudo docker rm $${id}
