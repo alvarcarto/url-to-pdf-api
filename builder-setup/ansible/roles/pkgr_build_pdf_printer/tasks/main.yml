@@ -1,79 +1,8 @@
-- fail: msg="Cannot define both build_latest = true and build_hash = < hash >"
-  when: build_hash is defined and build_latest == true
-
 - debug:
     msg: "---- Build Branch: {{ build_branch }} ----"
 
-- name: Checkout new code latest CL of a given branch
-  environment: "{{ proxy_env }}"
-  sudo: no
-  shell: '{{ item }}'
-  register: result
-  with_items:
-    - git fetch -p
-    - git reset --hard origin/{{ build_branch }} || git reset --hard {{ build_branch }}
-  args:
-    chdir: '{{ h4_repo_path }}'
-  until: result.rc == 0
-  retries: 5
-  delay: 10
-  when: build_branch is defined
-
-- name: Get hash from branch if branch name is provided
-  environment: "{{ proxy_env }}"
-  shell: 'git log -n 1 --pretty=format:"%H" '
-  register: commit_hash
-  args:
-    chdir: '{{ h4_repo_path }}'
-  when: build_branch is defined and build_hash is not defined
-
-# - name: Set build version
-#   set_fact:
-#     build_version="{{ version }}-{{ commit_hash.stdout }}-{{ build_timestamp }}"
-#   when: commit_hash is defined
-
-# - name: Get release tag from HEAD
-#   environment: "{{ proxy_env }}"
-#   shell: './ui/bin/rpm_version_namer.rb {{ build_branch }}'
-#   register: release_tag
-#   args:
-#     chdir: '{{ h4_repo_path }}'
-#   when: build_branch is defined
-
-# - name: Set release version if we have release_tag
-#   set_fact:
-#     build_version="{{ release_tag.stdout }}"
-#   when: release_tag.stdout != ""
-
-- name: Checkout code from a given commit hash
-  environment: "{{ proxy_env }}"
-  sudo: no
-  shell: '{{ item }}'
-  register: result
-  with_items:
-    - git fetch
-    - git checkout {{ build_hash }}
-  args:
-    chdir: '{{ h4_repo_path }}'
-  until: result.rc == 0
-  retries: 5
-  delay: 10
-  when: build_hash is defined and build_latest == false
-
 - debug:
     msg: "---- Build Version: {{ build_version }} ----"
-
-# - name: Install nodejs rpm
-#   # environment: "{{ proxy_env }}"
-#   become: true
-#   yum:
-#     name: >
-#       {{
-#       nodejs_source_url_base +
-#       nodejs_source_pub +
-#       nodejs_source_path_parts[ansible_userspace_architecture]
-#       }}
-#     state: present
 
 - name: Install nodejs rpm
   environment: "{{ proxy_env }}"
@@ -84,14 +13,6 @@
       nodejs_source_pub +
       nodejs_source_path_parts[ansible_userspace_architecture]
       }}"
-
-
-# - name: Install nodejs
-#   environment: "{{ proxy_env }}"
-#   yum: name={{item}}
-#   become: true
-#   with_items:
-#     - nodejs
 
 - gem:
     name: "{{item}}"
@@ -134,45 +55,9 @@
   become: true
   package: name=yarn-1.12.3 state=present
 
-# - name: set yarn https_proxy
-#   ignore_errors: true
-#   shell: yarn config set https-proxy http://proxy.esl.cisco.com:80
-
-# - name: set yarn http_proxy
-#   ignore_errors: true
-#   shell: yarn config set http-proxy http://proxy.esl.cisco.com:80
-
 - name: Install pkgr 1.5.1
   environment: "{{ proxy_env }}"
   command: "gem install pkgr --version=1.5.1"
-
-- name: Get deploy hash
-  environment: "{{ proxy_env }}"
-  shell: 'git log -n 1 --format=%h'
-  register: deploy_hash
-  args:
-    chdir: '{{ h4_repo_path }}'
-
-- name: Get deploy timestamp
-  environment: "{{ proxy_env }}"
-  shell: 'git log -n 1 --format=%ci'
-  register: deploy_timestamp
-  args:
-    chdir: '{{ h4_repo_path }}'
-
-# - name: Copy deploy.yml
-#   template:
-#     src=../files/deploy.yml.j2
-#     dest={{ h4_repo_path }}/ui/config/deploy.yml
-#     owner={{ web_default_user }}
-#     group={{ web_default_user }}
-#     mode=0600
-
-# - name: Trigger yarn install for ng build
-#   environment: "{{ proxy_env }}"
-#   command: bash -lc "yarn install"
-#   args:
-#     chdir: '{{ h4_repo_path }}'
 
 - name: Trigger pkgr to build pdf_printer.rpm
   environment: "{{ proxy_env }}"
