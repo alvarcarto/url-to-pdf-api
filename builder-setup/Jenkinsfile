@@ -27,7 +27,6 @@ pipeline {
           branches: [[name: "*/${params.BUILD_BRANCH}"]],
           doGenerateSubmoduleConfigurations: false,
           extensions: [
-            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'code'],
             [$class: 'CleanBeforeCheckout']
            ],
           submoduleCfg: [],
@@ -41,7 +40,7 @@ pipeline {
     stage('Build') {
       steps {
         sh """
-          pwd && ls -a && cd code && cd builder-setup && make BUILD_BRANCH=${params.BUILD_BRANCH} VERSION=${params.VERSION} -f Makefile.docker build
+          pwd && ls -a cd builder-setup && make BUILD_BRANCH=${params.BUILD_BRANCH} VERSION=${params.VERSION} -f Makefile.docker build
         """
       }
     }
