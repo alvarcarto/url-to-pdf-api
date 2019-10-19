@@ -15,7 +15,7 @@ yarn_rhel_repo_url: "https://dl.yarnpkg.com/rpm/yarn.repo"
 yarn_rhel_repo_gpg_key_url: "https://dl.yarnpkg.com/rpm/pubkey.gpg"
 yarn_rhel_repofile_path: "/etc/yum.repos.d/yarn.repo"
 
-dst_rpm_dir: "{{ h4_repo_path }}/rpms/"
+dst_rpm_dir: "{{ h4_repo_path }}/rpms"
 remove_builds_before_days: 30
 
 default_pkgr_num_retries: 3
