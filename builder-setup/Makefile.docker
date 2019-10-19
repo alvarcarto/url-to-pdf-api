@@ -18,5 +18,6 @@ build:
 	sudo docker cp ../../pdf-printer-build $${id}:/$(BUILD_HOME)/
 	sudo docker start -ai $${id}
 	sudo docker stop $${id}
-	sudo docker cp $${id}:/$(BUILD_HOME)/pdf_printer_build/rpms ./
+	ls -a
+	sudo docker cp $${id}:/$(BUILD_HOME)/pdf_printer_build/rpms/* ./
 	sudo docker rm $${id}
