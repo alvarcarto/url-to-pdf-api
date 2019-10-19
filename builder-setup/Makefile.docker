@@ -19,8 +19,8 @@ build:
 	sudo docker cp ../../pdf-printer-build $${id}:/$(BUILD_HOME)/
 	sudo docker start -ai $${id}
 	sudo docker stop $${id}
-	@echo `ls -a ../`
-	sudo docker cp $${id}:$(BUILD_HOME)/pdf_printer_build/rpms/ ./rpms/
+	@echo `ls -a`
+	sudo docker cp $${id}:$(BUILD_HOME)/pdf-printer-build/rpms/ ./rpms/
 	sudo docker rm $${id}
 	sudo chmod -R 0777 ./rpms
-	@echo `ls -a ../`
+	@echo `ls -a`
