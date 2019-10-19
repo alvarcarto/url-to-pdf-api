@@ -14,7 +14,7 @@ build:
 	@sudo docker pull $(DOCKER_REPOSITORY)/package-centos6
 	$(eval ID := $(shell sudo docker create -i -u $(BUILD_USER) -w $(BUILD_HOME) $(DOCKER_REPOSITORY)/package-centos6 /bin/bash -l -c "export BUILD_BRANCH=$(BUILD_BRANCH) VERSION=$(VERSION)" && ls -a && ls -a && make build))
 	@echo Container ID is $(ID)
-	sudo docker cp ../code $(ID):$(BUILD_HOME)/
+	sudo docker cp ../../code $(ID):$(BUILD_HOME)/
 	sudo docker start -ai $(ID)
 	sudo docker stop $(ID)
 	sudo docker cp $(ID):$(BUILD_HOME)/pdf_printer_rpms/ ./
