@@ -46,16 +46,16 @@ pipeline {
       }
     }
   }
-  post {
-    success {
-      // sh """
-      //   curl -X POST -H "Content-Type: application/json" -d '{"attachments": [{"color": "#00FF00", "text":":sunny: SUCCESSFUL: Job '"$JOB_NAME"' ['"$BUILD_NUMBER"'] ('"$BUILD_URL"')"}]}' "https://tetration.slack.com/services/hooks/jenkins-ci?token=l9Wym3dTxAzelbNZcmWZQTTy"
-      // """
-    }
-    failure {
-      // sh """
-      //   curl -X POST -H "Content-Type: application/json" -d '{"attachments": [{"color": "#FF0000", "text":":bomb: FAILED: Job '"$JOB_NAME"' ['"$BUILD_NUMBER"'] ('"$BUILD_URL"')"}]}' "https://tetration.slack.com/services/hooks/jenkins-ci?token=l9Wym3dTxAzelbNZcmWZQTTy"
-      // """
-    }
-  }
+  // post {
+  //   success {
+  //     sh """
+  //       curl -X POST -H "Content-Type: application/json" -d '{"attachments": [{"color": "#00FF00", "text":":sunny: SUCCESSFUL: Job '"$JOB_NAME"' ['"$BUILD_NUMBER"'] ('"$BUILD_URL"')"}]}' "https://tetration.slack.com/services/hooks/jenkins-ci?token=l9Wym3dTxAzelbNZcmWZQTTy"
+  //     """
+  //   }
+  //   failure {
+  //     sh """
+  //       curl -X POST -H "Content-Type: application/json" -d '{"attachments": [{"color": "#FF0000", "text":":bomb: FAILED: Job '"$JOB_NAME"' ['"$BUILD_NUMBER"'] ('"$BUILD_URL"')"}]}' "https://tetration.slack.com/services/hooks/jenkins-ci?token=l9Wym3dTxAzelbNZcmWZQTTy"
+  //     """
+  //   }
+  // }
 }
