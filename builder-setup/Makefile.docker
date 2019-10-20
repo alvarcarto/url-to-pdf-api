@@ -13,13 +13,11 @@ CENTOS6_DOCKER_IMAGE = package-centos6:latest
 build:
 	@echo "$(DOCKER_PASSWORD)" | sudo docker login $(DOCKER_REPOSITORY) -u="$(DOCKER_USERNAME)" --password-stdin
 	@sudo docker pull $(DOCKER_REPOSITORY)/$(CENTOS6_DOCKER_IMAGE)
-	id=$$(docker create -i -u $(BUILD_USER) -w $(BUILD_HOME) $(DOCKER_REPOSITORY)/$(CENTOS6_DOCKER_IMAGE) /bin/bash -l -c "export BUILD_BRANCH=$(BUILD_BRANCH) && export VERSION=$(VERSION) && ls -a && cd pdf-printer-build/builder-setup && make build && ls ../rpms/")
+	id=$$(docker create -i -u $(BUILD_USER) -w $(BUILD_HOME) $(DOCKER_REPOSITORY)/$(CENTOS6_DOCKER_IMAGE) /bin/bash -l -c "export BUILD_BRANCH=$(BUILD_BRANCH) && export VERSION=$(VERSION) && ls -a && cd pdf-printer-build/builder-setup && make build")
 	@echo Container ID is $${id}
 	sudo docker cp ../../pdf-printer-build $${id}:/$(BUILD_HOME)/
 	sudo docker start -ai $${id}
 	sudo docker stop $${id}
-	@echo `ls -a rpms/`
 	sudo docker cp $${id}:$(BUILD_HOME)/pdf-printer-build/rpms/ ./
 	sudo docker rm $${id}
 	sudo chmod -R 0777 ./rpms
-	@echo `ls -a rpms/`
