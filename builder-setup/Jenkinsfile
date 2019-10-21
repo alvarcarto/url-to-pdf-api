@@ -54,7 +54,7 @@ pipeline {
             "files": [
               {
                 "pattern": "builder-setup/rpms/*.rpm",
-                "target": "acceptance-local/x86_64/url-to-pdf-api/"
+                "target": "acceptance-local/url-to-pdf-api/"
               }
              ]
           }"""
