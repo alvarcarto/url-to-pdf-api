@@ -2,6 +2,7 @@ all: build
 
 HOME_DIR=/home/h4ci1
 BUILD_BRANCH ?= master
+PROMOTE_BRANCH ?= master
 
 .PHONY: prepare
 .ONESHELL:
@@ -19,9 +20,12 @@ build: prepare
 
 .PHONY: deliver
 deliver:
-	jfrog rt upload "pdf_printer_rpms/*.rpm" acceptance-rpm-local/7/x86_64/ --build-name=${JOB_NAME} --build-number=${BUILD_NUMBER}
+	jfrog rt upload "rpms/pdf_printer_$(VERSION)*.rpm" acceptance-local/pdf_printer/ --build-name=${JOB_NAME} --build-number=${BUILD_NUMBER} --flat=true --fail-no-op=true
 	jfrog rt build-publish ${JOB_NAME} ${BUILD_NUMBER}
-	sudo chmod -R 0777 pdf_printer_rpms
+
+.PHONY: promote
+promote:
+	jfrog rt cp "acceptance-local/pdf_printer/pdf_printer_$(VERSION)*.rpm" union-local/pdf_printer/$(PROMOTE_BRANCH)/
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-25s\033[0m %s\n", $$1, $$2}'

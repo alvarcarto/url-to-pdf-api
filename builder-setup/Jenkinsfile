@@ -46,24 +46,9 @@ pipeline {
     }
     stage('Deliver') {
       steps {
-        script {
-          echo "==> Publishing to Artifactory"
-          def jfrog_cli_conf = readJSON(file:"${env.HOME}/.jfrog/jfrog-cli.conf")
-          def server = Artifactory.newServer url: 'https://artifacts.tet.wtf', username: "${env.USER}", password: "${jfrog_cli_conf.artifactory[0].apiKey}"
-          def uploadSpec = """{
-            "files": [
-              {
-                "pattern": "builder-setup/rpms/*.rpm",
-                "target": "acceptance-local/url-to-pdf-api/"
-              }
-             ]
-          }"""
-          def buildInfo = Artifactory.newBuildInfo()
-          buildInfo.env.capture = true
-          buildInfo.retention maxBuilds: 20
-          server.upload spec: uploadSpec, buildInfo: buildInfo
-          server.publishBuildInfo buildInfo
-        }
+        sh """
+          make deliver VERSION=${params.VERSION}
+        """
       }
     }
   }
