@@ -61,7 +61,7 @@
 
 - name: Trigger pkgr to build pdf_printer.rpm
   environment: "{{ proxy_env }}"
-  command: bash -lc "pkgr package . --name=pdf_printer --version={{ build_version }} --iteration=1 --env 'no_proxy="{{ prox_env['no_proxy'] }}"' 'http_proxy="{{ prox_env['http_proxy'] }}"' 'https_proxy="{{ prox_env['http_proxy'] }}"'"
+  command: bash -lc "pkgr package . --name=pdf_printer --version={{ build_version }} --iteration=1 --env 'no_proxy="{{ proxy_env['no_proxy'] }}"' 'http_proxy="{{ proxy_env['http_proxy'] }}"' 'https_proxy="{{ proxy_env['http_proxy'] }}"'"
   args:
     chdir: '{{ h4_repo_path }}'
   retries: '{{ default_pkgr_num_retries }}'
