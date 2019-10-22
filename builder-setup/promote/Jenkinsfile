@@ -3,7 +3,6 @@ pipeline {
     label 'docker'
   }
   parameters {
-    string(name: 'BUILD_BRANCH', defaultValue: 'master', description: 'Branch to build')
     string(name: 'VERSION', defaultValue: '0.0.0', description: 'version to name the rpm')
   }
   options {
@@ -33,7 +32,7 @@ pipeline {
     stage('Promote') {
       steps {
         sh """
-          make promote VERSION=${params.VERSION} PROMOTE_BRANCH=${params.PROMOTE_BRANCH}
+          make promote VERSION=${params.VERSION}
         """
       }
     }

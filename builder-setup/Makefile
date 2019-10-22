@@ -25,7 +25,7 @@ deliver:
 
 .PHONY: promote
 promote:
-	jfrog rt cp "acceptance-local/pdf_printer/pdf_printer_$(VERSION)*.rpm" union-local/pdf_printer/$(PROMOTE_BRANCH)/
+	jfrog rt cp "acceptance-local/pdf_printer/pdf_printer_$(VERSION)*.rpm" union-local/pdf_printer/
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-25s\033[0m %s\n", $$1, $$2}'
