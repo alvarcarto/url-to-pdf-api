@@ -78,7 +78,7 @@
     patterns: '*.rpm'
   register: rpm_filenames
 
-- set_fact: rpm_target="pdf_printer_{{ build_version }}.x86_64.rpm"
+- set_fact: rpm_target="pdf_printer-{{ build_version }}.x86_64.rpm"
 - set_fact:
     lastest_rpm: "{{ rpm_filenames.files | sort(attribute='mtime',reverse=true) | first }}"
 
