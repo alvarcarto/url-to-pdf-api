@@ -7,7 +7,7 @@
 - name: Install nodejs rpm
   environment: "{{ proxy_env }}"
   become: true
-  ignore_errors: true 
+  ignore_errors: true
   command: "rpm -i {{
       nodejs_source_url_base +
       nodejs_source_pub +
@@ -61,7 +61,7 @@
 
 - name: Trigger pkgr to build pdf_printer.rpm
   environment: "{{ proxy_env }}"
-  command: bash -lc "pkgr package . --name=pdf_printer --version={{ build_version }} --env 'no_proxy="tet.wtf,ocean.af,tetrationanalytics.com,localhost,127.0.0.1"' 'http_proxy=http://proxy.esl.cisco.com:80' 'https_proxy=http://proxy.esl.cisco.com:80'"
+  command: bash -lc "pkgr package . --name=pdf_printer --version={{ build_version }} --iteration=1 --env 'no_proxy="{{ prox_env['no_proxy'] }}"' 'http_proxy="{{ prox_env['http_proxy'] }}"' 'https_proxy="{{ prox_env['http_proxy'] }}"'"
   args:
     chdir: '{{ h4_repo_path }}'
   retries: '{{ default_pkgr_num_retries }}'
