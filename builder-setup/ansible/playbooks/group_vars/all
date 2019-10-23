@@ -4,6 +4,4 @@ proxy_env:
   https_proxy: http://proxy.esl.cisco.com:80
   no_proxy: tet.wtf,ocean.af,tetrationanalytics.com,localhost,127.0.0.1
 
-proxy_host: proxy.esl.cisco.com
-proxy_port: 80
 ruby_version: 2.5.3

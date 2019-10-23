@@ -19,9 +19,7 @@
 ---
 - hosts: pdf_printer_builder
   vars:
-    local_user: "{{ lookup('env', 'USER') }}"
-    local_hostname: "{{ lookup('pipe', 'hostname') }}"
-    notify: false
+    h4_repo_path: /home/h4ci1/pdf-printer-build
 
   roles:
     - ../roles/base_pkgs
