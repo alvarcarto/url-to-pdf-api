@@ -32,7 +32,7 @@ pipeline {
     stage('Promote') {
       steps {
         sh """
-          make promote VERSION=${params.VERSION}
+          cd builder-setup && make promote VERSION=${params.VERSION}
         """
       }
     }

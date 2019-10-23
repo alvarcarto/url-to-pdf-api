@@ -47,7 +47,7 @@ pipeline {
     stage('Deliver') {
       steps {
         sh """
-          make deliver VERSION=${params.VERSION}
+          cd builder-setup && make deliver VERSION=${params.VERSION}
         """
       }
     }
