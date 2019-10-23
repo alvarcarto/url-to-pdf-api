@@ -78,17 +78,9 @@
     patterns: '*.rpm'
   register: rpm_filenames
 
-- set_fact: rpm_target="pdf_printer-{{ build_version }}.x86_64.rpm"
 - set_fact:
     lastest_rpm: "{{ rpm_filenames.files | sort(attribute='mtime',reverse=true) | first }}"
 
 - name: Copy rpm file to serving directory
   become: true
-  shell: cp {{ lastest_rpm.path }} {{ dst_rpm_dir }}/{{ rpm_target }}
-
-- name: Create Checksum file
-  shell: cd {{ dst_rpm_dir }} &&
-    sha256sum {{ rpm_target }} > {{ rpm_target }}.sha256sum
-
-- debug:
-    msg: "---- Finished building {{ rpm_target }} ----"
+  shell: cp {{ lastest_rpm.path }} {{ dst_rpm_dir }}/

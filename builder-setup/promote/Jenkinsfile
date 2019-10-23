@@ -1,0 +1,40 @@
+pipeline {
+  agent {
+    label 'docker'
+  }
+  parameters {
+    string(name: 'VERSION', defaultValue: '0.0.0', description: 'version to name the rpm')
+  }
+  options {
+    timestamps()
+    ansiColor('xterm')
+    buildDiscarder(logRotator(numToKeepStr:'20'))
+    timeout(time: 50, unit: 'MINUTES')
+  }
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout([
+          $class: 'GitSCM',
+          branches: [[name: "*/${params.BUILD_BRANCH}"]],
+          doGenerateSubmoduleConfigurations: false,
+          extensions: [
+            [$class: 'CleanBeforeCheckout']
+           ],
+          submoduleCfg: [],
+          userRemoteConfigs: [[
+            url: 'git@github.com:TetrationAnalytics/url-to-pdf-api.git',
+            refspec: '+refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/remotes/origin/tags/*'
+          ]]
+        ])
+      }
+    }
+    stage('Promote') {
+      steps {
+        sh """
+          make promote VERSION=${params.VERSION}
+        """
+      }
+    }
+  }
+}
