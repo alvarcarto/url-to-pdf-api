@@ -1,8 +1,3 @@
-- debug:
-    msg: "---- Build Branch: {{ build_branch }} ----"
-
-- debug:
-    msg: "---- Build Version: {{ build_version }} ----"
 
 - name: Install nodejs rpm
   environment: "{{ proxy_env }}"

@@ -19,45 +19,10 @@
 ---
 - hosts: pdf_printer_builder
   vars:
-    h4_repo_path: /home/h4ci1/pdf-printer-build
-    h4_source_repo: 'https://github.com/TetrationAnalytics/url-to-pdf-api.git'
-    h4_repo_name: url-to-pdf-api
-#    version: '0.0.0'
-    build_branch: master
-    build_latest: false
-    build_force: true
-    build_timestamp: "{{ lookup('pipe','date +%Y%m%d%H%M') }}"
-    lock_file: "/tmp/pkgr_build_pdf_printer.lock"
     local_user: "{{ lookup('env', 'USER') }}"
     local_hostname: "{{ lookup('pipe', 'hostname') }}"
     notify: false
 
-  pre_tasks:
- # - name: Set build version with tag when given hash
- #   set_fact:
- #     build_version="{{ version }}-{{ build_hash }}-{{ build_timestamp }}"
- #   when: build_version is not defined and build_hash is defined
-
- # - name: Set build version with tag when given branch name
- #   set_fact:
- #     build_version="{{ version }}-{{ build_branch | replace('/', '-') }}-{{ build_timestamp }}"
- #   when:  build_version is not defined and build_hash is not defined
-
-  - stat: path={{ lock_file }}
-    register: lock
-  - fail: msg="Lock file found, someone else may be running this playbook. Override with build_force=true"
-    when: lock.stat.exists and build_force == false
-
-  - name: Set lock file
-    file: path={{ lock_file }} state=touch
-
   roles:
     - ../roles/base_pkgs
-    # - ../roles/rvm-ruby
-    # - ../roles/h4_code_checkout
     - ../roles/pkgr_build_pdf_printer
-
-  post_tasks:
-    - name: Remove lock file
-      file: path={{ lock_file }} state=absent
-

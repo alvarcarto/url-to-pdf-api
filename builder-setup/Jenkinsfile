@@ -4,7 +4,7 @@ pipeline {
   }
   parameters {
     string(name: 'BUILD_BRANCH', defaultValue: 'master', description: 'Branch to build')
-    string(name: 'VERSION', defaultValue: '0.0.0', description: 'version to name the rpm')
+    string(name: 'VERSION', defaultValue: '1.0.0', description: 'version to name the rpm')
   }
   options {
     timestamps()
@@ -40,7 +40,7 @@ pipeline {
     stage('Build') {
       steps {
         sh """
-          pwd && ls -a && cd builder-setup && make BUILD_BRANCH=${params.BUILD_BRANCH} VERSION=${params.VERSION} -f Makefile.docker build && ls -a rpms/
+          cd builder-setup && make BUILD_BRANCH=${params.BUILD_BRANCH} VERSION=${params.VERSION} -f Makefile.docker build && ls -a rpms/
         """
       }
     }

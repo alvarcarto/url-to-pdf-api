@@ -6,8 +6,4 @@ proxy_env:
 
 proxy_host: proxy.esl.cisco.com
 proxy_port: 80
-
-slack_domain: tetration.slack.com
-slack_web_token: T040SSKG9/B06QAFK08/naJDNlzGEEeez5lg12keBs1x
-
 ruby_version: 2.5.3

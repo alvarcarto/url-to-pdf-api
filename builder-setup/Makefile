@@ -1,8 +1,6 @@
 all: build
 
 HOME_DIR=/home/h4ci1
-BUILD_BRANCH ?= master
-PROMOTE_BRANCH ?= master
 
 .PHONY: prepare
 .ONESHELL:
@@ -16,16 +14,17 @@ prepare:
 
 .PHONY: build
 build: prepare
-	ansible-playbook $(HOME_DIR)/pdf-printer-build/builder-setup/ansible/playbooks/pdf_printer_build_pkgr.yml -i $(HOME_DIR)/pdf-printer-build/builder-setup/ansible/inventory/builder -vvv -e "web_default_user=`whoami` build_branch=${BUILD_BRANCH} build_version=${VERSION}" -c local
+	ansible-playbook $(HOME_DIR)/pdf-printer-build/builder-setup/ansible/playbooks/pdf_printer_build_pkgr.yml -i $(HOME_DIR)/pdf-printer-build/builder-setup/ansible/inventory/builder -v -e "build_version=${VERSION}" -c local
 
 .PHONY: deliver
 deliver:
-	jfrog rt upload "rpms/pdf_printer_$(VERSION)*.rpm" acceptance-local/pdf_printer/ --build-name=${JOB_NAME} --build-number=${BUILD_NUMBER} --flat=true --fail-no-op=true
+	sha=$(shell git rev-parse HEAD) \
+	&& jfrog rt upload "rpms/pdf_printer_$(VERSION)*.rpm" acceptance-local/pdf_printer/ --build-name=${JOB_NAME} --build-number=${BUILD_NUMBER} --flat=true --fail-no-op=true --props "commit=$${sha}"
 	jfrog rt build-publish ${JOB_NAME} ${BUILD_NUMBER}
 
 .PHONY: promote
 promote:
-	jfrog rt cp "acceptance-local/pdf_printer/pdf_printer_$(VERSION)*.rpm" union-local/pdf_printer/
+	jfrog rt cp "acceptance-local/pdf_printer/pdf_printer_$(VERSION)*.rpm" union-local/
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-25s\033[0m %s\n", $$1, $$2}'

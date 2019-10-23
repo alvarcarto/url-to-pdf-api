@@ -1,3 +1,0 @@
-base_branch: master
-default_git_num_retries: 2
-default_git_retry_delay: 10
