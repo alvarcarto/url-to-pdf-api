@@ -23,9 +23,15 @@ function normalisePdfText(text) {
   return text.replace(/[\W_]+/g, '-');
 }
 
-function getPdfTextContent(buffer) {
+function getPdfTextContent(buffer, opts = {}) {
   return pdf(buffer)
-    .then(data => normalisePdfText(data.text));
+    .then((data) => {
+      if (opts.raw) {
+        return data.text;
+      }
+
+      return normalisePdfText(data.text);
+    });
 }
 
 describe('GET /api/render', () => {
@@ -175,6 +181,32 @@ describe('POST /api/render', () => {
         chai.expect(text).to.have.string('Number-of-cookies-received-2');
         chai.expect(text).to.have.string('Cookie-named-url-to-pdf-test');
         chai.expect(text).to.have.string('Cookie-named-url-to-pdf-test-2');
+      })
+  );
+
+  it('special characters should be rendered correctly', () =>
+    request(app)
+      .post('/api/render')
+      .send({ html: getResource('special-chars.html') })
+      .set('Connection', 'keep-alive')
+      .set('content-type', 'application/json')
+      .expect(200)
+      .expect('content-type', 'application/pdf')
+      .then((response) => {
+        if (DEBUG) {
+          console.log(response.headers);
+          console.log(response.body);
+          fs.writeFileSync('special-chars.pdf', response.body, { encoding: null });
+        }
+
+        return getPdfTextContent(response.body, { raw: true });
+      })
+      .then((text) => {
+        if (DEBUG) {
+          fs.writeFileSync('./special-chars-content.txt', text);
+        }
+
+        chai.expect(text).to.have.string('special characters: ä ö ü');
       })
   );
 });
