@@ -83,11 +83,11 @@ def deployToFargateGeneric(String env_name, String version) {
                 aws ecs update-service --cluster \$AWS_FARGATE_CLUSTER --region \$AWS_REGION --service \$AWS_SERVICE_NAME --task-definition \$AWS_SERVICE_NAME:\$REVISION 
             else
                 echo "New Service"
-                aws ecs create-service --service-name \$AWS_SERVICE_NAME --cluster \$AWS_FARGATE_CLUSTER --task-definition \$AWS_SERVICE_NAME --launch-type FARGATE --cli-input-json file://\$AWS_SERVICEDEF_FILE_NAME --region \$AWS_REGION             
+                aws ecs create-service --service-name \$AWS_SERVICE_NAME --cluster \$AWS_FARGATE_CLUSTER --task-definition \$AWS_SERVICE_NAME --launch-type FARGATE --load-balancers \"targetGroupArn=\$AWS_TARGET_GROUP,containerName=\$AWS_SERVICE_NAME,containerPort=9000\" --cli-input-json file://\$AWS_SERVICEDEF_FILE_NAME --region \$AWS_REGION             
             fi  
         else
             echo "New Service"
-            aws ecs create-service --service-name \$AWS_SERVICE_NAME --cluster \$AWS_FARGATE_CLUSTER --task-definition \$AWS_SERVICE_NAME --launch-type FARGATE --cli-input-json file://\$AWS_SERVICEDEF_FILE_NAME --region \$AWS_REGION 
+            aws ecs create-service --service-name \$AWS_SERVICE_NAME --cluster \$AWS_FARGATE_CLUSTER --task-definition \$AWS_SERVICE_NAME --launch-type FARGATE --load-balancers \"targetGroupArn=\$AWS_TARGET_GROUP,containerName=\$AWS_SERVICE_NAME,containerPort=9000\" --cli-input-json file://\$AWS_SERVICEDEF_FILE_NAME --region \$AWS_REGION 
         fi
         
         echo "STEP: Wait for Deployment - Checking that the service is stable"
