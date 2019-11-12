@@ -39,7 +39,7 @@
       "memory": 2048,
       "portMappings": [
         {
-          "containerPort": 8080
+          "containerPort": 9000
         }
       ],
       "logConfiguration": {
