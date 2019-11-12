@@ -22,9 +22,6 @@ pipeline {
 
     stages {
         stage('PreProd') {
-            when {
-                expression { return BRANCH_NAME == 'master' && true }
-            }
             agent {
                 label 'ec2cloud'
             }
