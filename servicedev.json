@@ -1,0 +1,19 @@
+{
+  "desiredCount": 2,
+  "deploymentConfiguration": {
+    "maximumPercent": 200,
+    "minimumHealthyPercent": 75
+  },
+  "networkConfiguration": {
+    "awsvpcConfiguration": {
+      "subnets": [
+        "$AWS_SERVICE_SUBNET_1",
+        "$AWS_SERVICE_SUBNET_2"
+      ],
+      "securityGroups": [
+        "$AWS_TASK_SECURITY_GROUP"
+      ],
+      "assignPublicIp": "DISABLED"
+    }
+  }
+}

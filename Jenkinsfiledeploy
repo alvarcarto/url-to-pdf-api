@@ -1,0 +1,95 @@
+#!groovy
+@Library('step-jenkins-shared-library')_
+
+
+// Build Info
+def buildInfo
+
+pipeline {
+    agent {
+        label 'master'
+    }
+
+    options {
+        ansiColor('xterm')
+    }
+
+    parameters { string(name: 'IMAGE_VERSION', defaultValue: '0', description: 'Version of Pdfy to deploy') }
+
+    environment {
+        SLACK_TOKEN = getSlackToken()
+    }
+
+    stages {
+        stage('PreProd') {
+            when {
+                expression { return BRANCH_NAME == 'master' && true }
+            }
+            agent {
+                label 'ec2cloud'
+            }
+            steps {
+                script {
+                    withCredentials([[
+                             $class: 'AmazonWebServicesCredentialsBinding',
+                             credentialsId: 'aws-lolnotices-role-pre-jenkins'
+                     ]]) {
+                        sh deployToFargateGeneric("pre", params.IMAGE_VERSION)
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
+
+// return the Slack token from parameter store
+def getSlackToken() {
+    ex_withSTEPParamStore(path:'/LINZ/STEP/Enablement/') {
+        return SLACK_TOKEN
+    }
+}
+
+def deployToFargateGeneric(String env_name, String version) {
+    return """#!/bin/bash -xe
+        source ./infrastructure/jenkins.notice.pre.env
+        # Show some debugging information about our assumed role / account
+        aws ecs list-clusters --region \$AWS_REGION
+        export DOCKER_IMAGE_VERSION=${version}
+    
+        echo "STEP: Create Task Definition file"        
+        export AWS_TASKDEF_FILE_NAME=\$AWS_FAMILY-\$DOCKER_IMAGE_VERSION-taskdef.json
+        envsubst < taskdef.json > \$AWS_TASKDEF_FILE_NAME             
+        
+        echo "STEP: Register Task Definition"
+        aws ecs register-task-definition --family \$AWS_SERVICE_NAME --cli-input-json file://\$AWS_TASKDEF_FILE_NAME --region \$AWS_REGION
+        
+        echo "STEP: Describe Service"
+        SERVICES=`aws ecs describe-services --services \$AWS_SERVICE_NAME --cluster \$AWS_FARGATE_CLUSTER --region \$AWS_REGION | jq .failures[]`
+        STATUS=`aws ecs describe-services --services \$AWS_SERVICE_NAME --cluster \$AWS_FARGATE_CLUSTER --region \$AWS_REGION | jq .services[].status`        
+        
+        echo "STEP: Get Latest Revision"
+        REVISION=`aws ecs describe-task-definition --task-definition \$AWS_SERVICE_NAME --region \$AWS_REGION | jq .taskDefinition.revision`
+        
+        echo "STEP: Start Service"    
+        if [[ \$SERVICES == "" ]]; then
+            if [[ \$STATUS == '"ACTIVE"' ]]; then
+                echo "Existing Service"
+                aws ecs update-service --cluster \$AWS_FARGATE_CLUSTER --region \$AWS_REGION --service \$AWS_SERVICE_NAME --task-definition \$AWS_SERVICE_NAME:\$REVISION 
+            else
+                echo "New Service"
+                aws ecs create-service --service-name \$AWS_SERVICE_NAME --cluster \$AWS_FARGATE_CLUSTER --task-definition \$AWS_SERVICE_NAME --launch-type FARGATE --load-balancers \"targetGroupArn=\$AWS_TARGET_GROUP,containerName=\$AWS_SERVICE_NAME,containerPort=8080\" --cli-input-json file://\$AWS_SERVICEDEF_FILE_NAME --region \$AWS_REGION             
+            fi  
+        else
+            echo "New Service"
+            aws ecs create-service --service-name \$AWS_SERVICE_NAME --cluster \$AWS_FARGATE_CLUSTER --task-definition \$AWS_SERVICE_NAME --launch-type FARGATE --load-balancers \"targetGroupArn=\$AWS_TARGET_GROUP,containerName=\$AWS_SERVICE_NAME,containerPort=8080\" --cli-input-json file://\$AWS_SERVICEDEF_FILE_NAME --region \$AWS_REGION 
+        fi
+        
+        echo "STEP: Wait for Deployment - Checking that the service is stable"
+        aws ecs wait services-stable --services \$AWS_SERVICE_NAME --cluster \$AWS_FARGATE_CLUSTER --region ap-southeast-2        
+    """
+}

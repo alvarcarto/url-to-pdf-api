@@ -1,11 +1,7 @@
 const Joi = require('joi');
+const config = require('../config');
 
-const urlSchema = Joi.string().uri({
-  scheme: [
-    'http',
-    'https',
-  ],
-});
+const urlSchema = Joi.string().valid([config.BASE_URL]);
 
 const cookieSchema = Joi.object({
   name: Joi.string().required(),

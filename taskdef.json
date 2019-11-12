@@ -1,0 +1,58 @@
+{
+  "family": "$AWS_SERVICE_NAME",
+  "networkMode": "awsvpc",
+  "cpu": "1024",
+  "memory": "4096",
+  "executionRoleArn": "$AWS_FARGATE_ROLE",
+  "taskRoleArn": "$AWS_FARGATE_ROLE",
+  "requiresCompatibilities": ["FARGATE"],
+  "containerDefinitions": [
+    {
+      "name": "$AWS_SERVICE_NAME",
+      "cpu": 1024,
+      "image": "$ARTIFACTORY_REPOSITORY_URI:$DOCKER_IMAGE_VERSION",
+      "environment": [
+        {
+          "name": "ENVIRONMENT_PRODUCTION",
+          "value": "$ENVIRONMENT_PRODUCTION"
+        },
+        {
+          "name": "ENVIRONMENT_NAME",
+          "value": "$ENVIRONMENT_NAME"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "DB_CONNECTION_STRING",
+          "valueFrom": "$AWS_SSM_PARAMETER_PATH/DB_CONNECTION_STRING"
+        },
+        {
+          "name": "DB_USERNAME",
+          "valueFrom": "$AWS_SSM_PARAMETER_PATH/DB_USERNAME"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "$AWS_SSM_PARAMETER_PATH/DB_PASSWORD"
+        }
+      ],
+      "essential": true,
+      "memory": 2048,
+      "portMappings": [
+        {
+          "containerPort": 8080
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-region": "$AWS_REGION",
+          "awslogs-group": "$AWS_FARGATE_CLUSTER",
+          "awslogs-stream-prefix": "$AWS_SERVICE_NAME"
+        }
+      },
+      "repositoryCredentials": {
+        "credentialsParameter": "$ARTIFACTORY_SECRET_ARN"
+      }
+    }
+  ]
+}
