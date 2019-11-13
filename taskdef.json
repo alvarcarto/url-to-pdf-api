@@ -27,7 +27,7 @@
         {
           "name": "ALLOW_HTTP",
           "value": "true"
-        },
+        }
       ],
       "essential": true,
       "memory": 2048,
