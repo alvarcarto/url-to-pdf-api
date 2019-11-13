@@ -23,7 +23,11 @@
         {
           "name": "BASE_URL",
           "value": "$BASE_URL"
-        }
+        },
+        {
+          "name": "ALLOW_HTTP",
+          "value": "true"
+        },
       ],
       "essential": true,
       "memory": 2048,
