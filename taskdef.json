@@ -19,20 +19,10 @@
         {
           "name": "ENVIRONMENT_NAME",
           "value": "$ENVIRONMENT_NAME"
-        }
-      ],
-      "secrets": [
-        {
-          "name": "DB_CONNECTION_STRING",
-          "valueFrom": "$AWS_SSM_PARAMETER_PATH/DB_CONNECTION_STRING"
         },
         {
-          "name": "DB_USERNAME",
-          "valueFrom": "$AWS_SSM_PARAMETER_PATH/DB_USERNAME"
-        },
-        {
-          "name": "DB_PASSWORD",
-          "valueFrom": "$AWS_SSM_PARAMETER_PATH/DB_PASSWORD"
+          "name": "BASE_URL",
+          "value": "$BASE_URL"
         }
       ],
       "essential": true,

@@ -1,7 +1,8 @@
 const Joi = require('joi');
 const config = require('../config');
 
-const urlSchema = Joi.string().valid([config.BASE_URL]);
+const regExpStep = new RegExp(config.BASE_URL + '(.)*')
+const urlSchema = Joi.string().regex(regExpStep);
 
 const cookieSchema = Joi.object({
   name: Joi.string().required(),

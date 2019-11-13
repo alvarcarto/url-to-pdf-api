@@ -49,6 +49,11 @@ function createRouter() {
   };
   router.post('/api/render', validate(postRenderSchema), render.postRender);
 
+  //Health Check
+  router.get('/api/health', function (req, res) {
+    res.send('Ok')
+  })
+
   return router;
 }
 
