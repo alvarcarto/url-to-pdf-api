@@ -41,6 +41,7 @@ const sharedQuerySchema = Joi.object({
   'goto.networkIdleInflight': Joi.number().min(0).max(1000),
   'goto.networkIdleTimeout': Joi.number().min(0).max(1000),
   'pdf.scale': Joi.number().min(0).max(1000),
+  'pdf.fullPage': Joi.boolean(),
   'pdf.displayHeaderFooter': Joi.boolean(),
   'pdf.landscape': Joi.boolean(),
   'pdf.pageRanges': Joi.string().min(1).max(2000),
@@ -97,6 +98,7 @@ const renderBodyObject = Joi.object({
   }),
   pdf: Joi.object({
     scale: Joi.number().min(0).max(1000),
+    fullPage: Joi.boolean(),
     displayHeaderFooter: Joi.boolean(),
     landscape: Joi.boolean(),
     pageRanges: Joi.string().min(1).max(2000),

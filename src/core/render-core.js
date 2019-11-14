@@ -44,7 +44,7 @@ async function render(_opts = {}) {
     failEarly: false,
   }, _opts);
 
-  if (_.get(_opts, 'pdf.width') && _.get(_opts, 'pdf.height')) {
+  if (_.get(_opts, 'pdf.width') && _.get(_opts, 'pdf.height') || _.get(_opts, 'pdf.fullPage')) {
     // pdf.format always overrides width and height, so we must delete it
     // when user explicitly wants to set width and height
     opts.pdf.format = undefined;
@@ -148,6 +148,12 @@ async function render(_opts = {}) {
     }
 
     if (opts.output === 'pdf') {
+      if (opts.pdf.fullPage) {
+        const offsetHeight = await page.evaluate(() => document.documentElement.offsetHeight);
+        const scrollHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+        // For some reason offsetHeight equals to viewport height in local tests
+        opts.pdf.height = `${Math.max(offsetHeight, scrollHeight)}px`;
+      }
       data = await page.pdf(opts.pdf);
     } else {
       // This is done because puppeteer throws an error if fullPage and clip is used at the same
