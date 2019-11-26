@@ -7,7 +7,7 @@
     "node": "10.x.x"
   },
   "scripts": {
-    "start": "nodemon --watch ./src -e js src/index.js",
+    "start": "env-cmd nodemon --watch ./src -e js src/index.js",
     "test": "mocha --timeout 10000 && npm run lint",
     "lint": "eslint ."
   },
@@ -32,12 +32,13 @@
     "lodash": "^4.17.15",
     "morgan": "^1.9.1",
     "pdf-parse": "^1.1.1",
-    "puppeteer": "^1.14.0",
+    "puppeteer": "^2.0.0",
     "server-destroy": "^1.0.1",
     "winston": "^2.3.1"
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "env-cmd": "^9.0.1",
     "eslint": "^4.8.0",
     "eslint-config-airbnb-base": "^12.0.2",
     "eslint-plugin-import": "^2.7.0",

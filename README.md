@@ -54,7 +54,7 @@ and requests are direct connections to it.
 
 * Heavy pages may cause Chrome to crash if the server doesn't have enough RAM.
 
-* Docker wrapper for this can be found here: https://github.com/microbox/node-url-to-pdf-api
+* Docker image for this can be found here: https://github.com/restorecommerce/pdf-rendering-srv
 
 
 ## Examples
@@ -100,7 +100,7 @@ https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=10
 
 https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&attachmentName=google.pdf
 
-**Wait for an element macthing the selector `input` appears.**
+**Wait for an element matching the selector `input` appears.**
 
 https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=input
 
@@ -309,9 +309,6 @@ First, clone the repository and cd into it.
 
 * `cp .env.sample .env`
 * Fill in the blanks in `.env`
-* `source .env` or `bash .env`
-
-  Or use [autoenv](https://github.com/kennethreitz/autoenv).
 
 * `npm install`
 * `npm start` Start express server locally
