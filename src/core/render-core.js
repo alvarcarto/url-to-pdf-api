@@ -13,6 +13,9 @@ async function createBrowser(opts) {
     browserOpts.browserWSEndpoint = config.BROWSER_WS_ENDPOINT;
     return puppeteer.connect(browserOpts);
   }
+  if (config.BROWSER_EXECUTABLE_PATH) {
+    browserOpts.executablePath = config.BROWSER_EXECUTABLE_PATH;
+  }
   browserOpts.headless = !config.DEBUG_MODE;
   browserOpts.args = ['--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'];
   return puppeteer.launch(browserOpts);
