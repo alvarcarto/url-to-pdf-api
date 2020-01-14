@@ -9,6 +9,7 @@ const config = {
   DEBUG_MODE: process.env.DEBUG_MODE === 'true',
   CORS_ORIGIN: process.env.CORS_ORIGIN || '*',
   BROWSER_WS_ENDPOINT: process.env.BROWSER_WS_ENDPOINT,
+  BROWSER_EXECUTABLE_PATH: process.env.BROWSER_EXECUTABLE_PATH,
   API_TOKENS: [],
 };
 
