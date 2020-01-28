@@ -152,6 +152,8 @@ async function render(_opts = {}) {
 
     if (opts.output === 'pdf') {
       data = await page.pdf(opts.pdf);
+    } else if (opts.output === 'html') {
+      data = await page.evaluate(() => document.body.innerHTML);
     } else {
       // This is done because puppeteer throws an error if fullPage and clip is used at the same
       // time even though clip is just empty object {}

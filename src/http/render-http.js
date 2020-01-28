@@ -5,7 +5,10 @@ const renderCore = require('../core/render-core');
 function getMimeType(opts) {
   if (opts.output === 'pdf') {
     return 'application/pdf';
+  } else if (opts.output === 'html') {
+    return 'text/html';
   }
+
   const type = _.get(opts, 'screenshot.type');
   switch (type) {
     case 'png': return 'image/png';

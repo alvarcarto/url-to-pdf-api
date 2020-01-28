@@ -29,7 +29,7 @@ const sharedQuerySchema = Joi.object({
     Joi.string().min(1).max(2000),
   ]),
   cookies: Joi.array().items(cookieSchema),
-  output: Joi.string().valid(['pdf', 'screenshot']),
+  output: Joi.string().valid(['pdf', 'screenshot', 'html']),
   'viewport.width': Joi.number().min(1).max(30000),
   'viewport.height': Joi.number().min(1).max(30000),
   'viewport.deviceScaleFactor': Joi.number().min(0).max(100),
@@ -76,7 +76,7 @@ const renderBodyObject = Joi.object({
   ignoreHttpsErrors: Joi.boolean(),
   emulateScreenMedia: Joi.boolean(),
   cookies: Joi.array().items(cookieSchema),
-  output: Joi.string().valid(['pdf', 'screenshot']),
+  output: Joi.string().valid(['pdf', 'screenshot', 'html']),
   viewport: Joi.object({
     width: Joi.number().min(1).max(30000),
     height: Joi.number().min(1).max(30000),
