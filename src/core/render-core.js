@@ -103,6 +103,12 @@ async function render(_opts = {}) {
       await client.send('Network.setCookies', { cookies: opts.cookies });
     }
 
+	if (opts.setExtraHTTPHeaders) {
+      logger.info('Set setExtraHTTPHeaders ..');
+      await page.setExtraHTTPHeaders(opts.setExtraHTTPHeaders);
+    } 
+	
+	
     if (opts.html) {
       logger.info('Set HTML ..');
       await page.setContent(opts.html, opts.goto);

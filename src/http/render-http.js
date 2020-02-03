@@ -116,6 +116,7 @@ function getOptsFromQuery(query) {
       },
       omitBackground: query['screenshot.omitBackground'],
     },
+    setExtraHTTPHeaders:query['setExtraHTTPHeaders'],
   };
   return opts;
 }
