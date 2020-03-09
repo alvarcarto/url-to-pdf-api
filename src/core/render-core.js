@@ -18,7 +18,7 @@ async function createBrowser(opts) {
   }
   browserOpts.headless = !config.DEBUG_MODE;
   browserOpts.args = ['--no-sandbox', '--disable-setuid-sandbox'];
-  if (!opts.enableGPU || navigator.userAgent.indexOf("Win") != -1) {
+  if (!opts.enableGPU || navigator.userAgent.indexOf('Win') !== -1) {
     browserOpts.args.push('--disable-gpu');
   }
   return puppeteer.launch(browserOpts);
