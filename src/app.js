@@ -28,6 +28,14 @@ function createApp() {
     logger.info('ALLOW_HTTP=true, unsafe requests are allowed. Don\'t use this in production.');
   }
 
+  if (config.ALLOW_URLS) {
+    logger.info(`ALLOW_URLS set! Allowed urls patterns are: ${config.ALLOW_URLS.join(' ')}`);
+  }
+
+  if (config.DISABLE_HTML_INPUT) {
+    logger.info('DISABLE_HTML_INPUT=true! Input HTML is disabled!');
+  }
+
   const corsOpts = {
     origin: config.CORS_ORIGIN,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH'],

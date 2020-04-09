@@ -1,6 +1,10 @@
+const { URL } = require('url');
 const _ = require('lodash');
+const normalizeUrl = require('normalize-url');
 const ex = require('../util/express');
 const renderCore = require('../core/render-core');
+const logger = require('../util/logger')(__filename);
+const config = require('../config');
 
 function getMimeType(opts) {
   if (opts.output === 'pdf') {
@@ -19,6 +23,8 @@ function getMimeType(opts) {
 
 const getRender = ex.createRoute((req, res) => {
   const opts = getOptsFromQuery(req.query);
+
+  assertOptionsAllowed(opts);
   return renderCore.render(opts)
     .then((data) => {
       if (opts.attachmentName) {
@@ -53,6 +59,7 @@ const postRender = ex.createRoute((req, res) => {
     opts.html = req.body;
   }
 
+  assertOptionsAllowed(opts);
   return renderCore.render(opts)
     .then((data) => {
       if (opts.attachmentName) {
@@ -62,6 +69,70 @@ const postRender = ex.createRoute((req, res) => {
       res.send(data);
     });
 });
+
+function isHostMatch(host1, host2) {
+  return {
+    match: host1.toLowerCase() === host2.toLowerCase(),
+    type: 'host',
+    part1: host1.toLowerCase(),
+    part2: host2.toLowerCase(),
+  };
+}
+
+function isRegexMatch(urlPattern, inputUrl) {
+  const re = new RegExp(`${urlPattern}`);
+
+  return {
+    match: re.test(inputUrl),
+    type: 'regex',
+    part1: inputUrl,
+    part2: urlPattern,
+  };
+}
+
+function isNormalizedMatch(url1, url2) {
+  return {
+    match: normalizeUrl(url1) === normalizeUrl(url2),
+    type: 'normalized url',
+    part1: url1,
+    part2: url2,
+  };
+}
+
+function isUrlAllowed(inputUrl) {
+  const urlParts = new URL(inputUrl);
+
+  const matchInfos = _.map(config.ALLOW_URLS, (urlPattern) => {
+    if (_.startsWith(urlPattern, 'host:')) {
+      return isHostMatch(urlPattern.split(':')[1], urlParts.host);
+    } else if (_.startsWith(urlPattern, 'regex:')) {
+      return isRegexMatch(urlPattern.split(':')[1], inputUrl);
+    }
+
+    return isNormalizedMatch(urlPattern, inputUrl);
+  });
+
+  const isAllowed = _.some(matchInfos, info => info.match);
+  if (!isAllowed) {
+    logger.info('The url was not allowed because:');
+    _.forEach(matchInfos, (info) => {
+      logger.info(`${info.part1} !== ${info.part2} (with ${info.type} matching)`);
+    });
+  }
+
+  return isAllowed;
+}
+
+function assertOptionsAllowed(opts) {
+  const isDisallowedHtmlInput = !_.isString(opts.url) && config.DISABLE_HTML_INPUT;
+  if (isDisallowedHtmlInput) {
+    ex.throwStatus(403, 'Rendering HTML input is disabled.');
+  }
+
+  if (_.isString(opts.url) && config.ALLOW_URLS.length > 0 && !isUrlAllowed(opts.url)) {
+    ex.throwStatus(403, 'Url not allowed.');
+  }
+}
 
 function getOptsFromQuery(query) {
   const opts = {
