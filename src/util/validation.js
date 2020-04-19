@@ -36,7 +36,7 @@ const sharedQuerySchema = Joi.object({
   'viewport.isMobile': Joi.boolean(),
   'viewport.hasTouch': Joi.boolean(),
   'viewport.isLandscape': Joi.boolean(),
-  'goto.timeout': Joi.number().min(0).max(60000),
+  'goto.timeout': Joi.number().min(0).max(720000),
   'goto.waitUntil': Joi.string().min(1).max(2000),
   'goto.networkIdleInflight': Joi.number().min(0).max(1000),
   'goto.networkIdleTimeout': Joi.number().min(0).max(1000),
@@ -90,7 +90,7 @@ const renderBodyObject = Joi.object({
     Joi.string().min(1).max(2000),
   ]),
   goto: Joi.object({
-    timeout: Joi.number().min(0).max(60000),
+    timeout: Joi.number().min(0).max(720000),
     waitUntil: Joi.string().min(1).max(2000),
     networkIdleInflight: Joi.number().min(0).max(1000),
     networkIdleTimeout: Joi.number().min(0).max(1000),
