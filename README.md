@@ -155,7 +155,7 @@ Parameter | Type | Default | Description
 url | string | - | URL to render as PDF. (required)
 output | string | pdf | Specify the output format. Possible values: `pdf` or `screenshot`.
 emulateScreenMedia | boolean | `true` | Emulates `@media screen` when rendering the PDF.
-enableGPU | boolean | 'false' | When set, enables chrome GPU. For windows user, this will always return false.
+enableGPU | boolean | `false` | When set, enables chrome GPU. For windows user, this will always return false. See https://developers.google.com/web/updates/2017/04/headless-chrome
 ignoreHttpsErrors | boolean | `false` | Ignores possible HTTPS errors when navigating to a page.
 scrollPage | boolean | `false` | Scroll page down before rendering to trigger lazy loading elements.
 waitFor | number or string | - | Number in ms to wait before render or selector element to wait before render.
