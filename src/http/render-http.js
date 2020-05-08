@@ -185,6 +185,7 @@ function getOptsFromQuery(query) {
         width: query['screenshot.clip.width'],
         height: query['screenshot.clip.height'],
       },
+      selector: query['screenshot.selector'],
       omitBackground: query['screenshot.omitBackground'],
     },
   };

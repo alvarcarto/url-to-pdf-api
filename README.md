@@ -161,7 +161,7 @@ The only required parameter is `url`.
 Parameter | Type | Default | Description
 ----------|------|---------|------------
 url | string | - | URL to render as PDF. (required)
-output | string | pdf | Specify the output format. Possible values: `pdf` or `screenshot`.
+output | string | pdf | Specify the output format. Possible values: `pdf` , `screenshot` or `html`.
 emulateScreenMedia | boolean | `true` | Emulates `@media screen` when rendering the PDF.
 ignoreHttpsErrors | boolean | `false` | Ignores possible HTTPS errors when navigating to a page.
 scrollPage | boolean | `false` | Scroll page down before rendering to trigger lazy loading elements.
