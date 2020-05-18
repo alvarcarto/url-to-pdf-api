@@ -162,9 +162,9 @@ async function render(_opts = {}) {
       if (clipContainsSomething) {
         screenshotOpts.clip = opts.screenshot.clip;
       }
-      if(_.isNil(opts.screenshot.selector)) {
+      if (_.isNil(opts.screenshot.selector)) {
         data = await page.screenshot(screenshotOpts);
-      }else {
+      } else {
         const selElement = await page.$(opts.screenshot.selector);
         if (!_.isNull(selElement)) {
           data = await selElement.screenshot();
