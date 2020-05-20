@@ -165,8 +165,14 @@ async function render(_opts = {}) {
       if (clipContainsSomething) {
         screenshotOpts.clip = opts.screenshot.clip;
       }
-
-      data = await page.screenshot(screenshotOpts);
+      if (_.isNil(opts.screenshot.selector)) {
+        data = await page.screenshot(screenshotOpts);
+      } else {
+        const selElement = await page.$(opts.screenshot.selector);
+        if (!_.isNull(selElement)) {
+          data = await selElement.screenshot();
+        } 
+      }
     }
   } catch (err) {
     logger.error(`Error when rendering page: ${err}`);
@@ -178,7 +184,7 @@ async function render(_opts = {}) {
       await browser.close();
     }
   }
-
+  
   return data;
 }
 
