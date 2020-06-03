@@ -1,7 +1,7 @@
 const http = require('http');
 const _ = require('lodash');
 
-// This reponder is assuming that all <500 errors are safe to be responded
+// This responder is assuming that all <500 errors are safe to be responded
 // with their .message attribute.
 // DO NOT write sensitive data into error messages.
 function createErrorResponder(_opts) {
