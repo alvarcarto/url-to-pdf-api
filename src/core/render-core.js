@@ -24,6 +24,20 @@ async function createBrowser(opts) {
   return puppeteer.launch(browserOpts);
 }
 
+async function getFullPageHeight(page) {
+  const height = await page.evaluate(() => {
+    const { body, documentElement } = document;
+    return Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      documentElement.clientHeight,
+      documentElement.scrollHeight,
+      documentElement.offsetHeight
+    );
+  });
+  return height;
+}
+
 async function render(_opts = {}) {
   const opts = _.merge({
     cookies: [],
@@ -50,7 +64,7 @@ async function render(_opts = {}) {
     failEarly: false,
   }, _opts);
 
-  if (_.get(_opts, 'pdf.width') && _.get(_opts, 'pdf.height')) {
+  if ((_.get(_opts, 'pdf.width') && _.get(_opts, 'pdf.height')) || _.get(opts, 'pdf.fullPage')) {
     // pdf.format always overrides width and height, so we must delete it
     // when user explicitly wants to set width and height
     opts.pdf.format = undefined;
@@ -154,6 +168,10 @@ async function render(_opts = {}) {
     }
 
     if (opts.output === 'pdf') {
+      if (opts.pdf.fullPage) {
+        const height = await getFullPageHeight(page);
+        opts.pdf.height = height;
+      }
       data = await page.pdf(opts.pdf);
     } else if (opts.output === 'html') {
       data = await page.evaluate(() => document.body.innerHTML);
@@ -171,7 +189,7 @@ async function render(_opts = {}) {
         const selElement = await page.$(opts.screenshot.selector);
         if (!_.isNull(selElement)) {
           data = await selElement.screenshot();
-        } 
+        }
       }
     }
   } catch (err) {
@@ -184,7 +202,7 @@ async function render(_opts = {}) {
       await browser.close();
     }
   }
-  
+
   return data;
 }
 
