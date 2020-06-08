@@ -189,6 +189,11 @@ function getOptsFromQuery(query) {
       selector: query['screenshot.selector'],
       omitBackground: query['screenshot.omitBackground'],
     },
+    request: {
+      headers: query['request.headers'],
+      method: query['request.method'],
+      postData: query['request.postData'],
+    },
   };
   return opts;
 }

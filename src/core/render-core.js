@@ -88,6 +88,14 @@ async function render(_opts = {}) {
     }
   });
 
+  if (opts.request) {
+    await page.setRequestInterception(true);
+    page.on('request', (request) => {
+      request.continue(opts.request);
+    });
+  }
+
+
   let data;
   try {
     logger.info('Set browser viewport..');
