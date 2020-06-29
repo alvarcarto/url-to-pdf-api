@@ -4,7 +4,8 @@ WORKDIR /usr/src/app
 
 EXPOSE 9000
 
-RUN apk add -U --no-cache --allow-untrusted udev ttf-freefont chromium git
+RUN apk add -U --no-cache --allow-untrusted udev ttf-freefont chromium git \
+    && apk -U --no-cache upgrade
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 ENV CHROMIUM_PATH /usr/bin/chromium-browser
 ENV BROWSER_EXECUTABLE_PATH /usr/bin/chromium-browser
