@@ -27,7 +27,10 @@
         {
           "name": "ALLOW_HTTP",
           "value": "true"
-        }
+        },
+        {
+          "name": "BROWSER_WS_ENDPOINT",
+          "value": "/usr/bin/chromium-browser"
       ],
       "essential": true,
       "memory": 2048,
