@@ -59,8 +59,12 @@ and requests are direct connections to it.
 
 ## Examples
 
-*Note: the demo Heroku app runs on a free dyno which sleep after idle.
-A request to sleeping dyno may take even 30 seconds.*
+**⚠️ Restrictions ⚠️:**
+
+* For security reasons the urls have been restricted and HTML rendering is disabled. For full demo, run this app locally or deploy to Heroku.
+* The demo Heroku app runs on a free dyno which sleep after idle. A request to sleeping dyno may take even 30 seconds.
+
+
 
 **The most minimal example, render google.com**
 
@@ -106,14 +110,18 @@ https://url-to-pdf-api.herokuapp.com/api/render?url=http://google.com&waitFor=in
 
 **Render HTML sent in JSON body**
 
+*NOTE: Demo app has disabled html rendering for security reasons.*
+
 ```bash
-curl -o html.pdf -XPOST -d'{"html": "<body>test</body>"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/render
+curl -o html.pdf -XPOST -d'{"html": "<body>test</body>"}' -H"content-type: application/json" http://localhost:9000/api/render
 ```
 
 **Render HTML sent as text body**
 
+*NOTE: Demo app has disabled html rendering for security reasons.*
+
 ```bash
-curl -o html.pdf -XPOST -d@page.html -H"content-type: text/html" https://url-to-pdf-api.herokuapp.com/api/render
+curl -o html.pdf -XPOST -d@test/resources/large.html -H"content-type: text/html" http://localhost:9000/api/render
 ```
 
 ## API
@@ -153,8 +161,9 @@ The only required parameter is `url`.
 Parameter | Type | Default | Description
 ----------|------|---------|------------
 url | string | - | URL to render as PDF. (required)
-output | string | pdf | Specify the output format. Possible values: `pdf` or `screenshot`.
+output | string | pdf | Specify the output format. Possible values: `pdf` , `screenshot` or `html`.
 emulateScreenMedia | boolean | `true` | Emulates `@media screen` when rendering the PDF.
+enableGPU | boolean | `false` | When set, enables chrome GPU. For windows user, this will always return false. See https://developers.google.com/web/updates/2017/04/headless-chrome
 ignoreHttpsErrors | boolean | `false` | Ignores possible HTTPS errors when navigating to a page.
 scrollPage | boolean | `false` | Scroll page down before rendering to trigger lazy loading elements.
 waitFor | number or string | - | Number in ms to wait before render or selector element to wait before render.
@@ -264,11 +273,11 @@ The only required parameter is `url`.
 **Example:**
 
 ```bash
-curl -o google.pdf -XPOST -d'{"url": "http://google.com"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/render
+curl -o google.pdf -XPOST -d'{"url": "http://google.com"}' -H"content-type: application/json" http://localhost:9000/api/render
 ```
 
 ```bash
-curl -o html.pdf -XPOST -d'{"html": "<body>test</body>"}' -H"content-type: application/json" https://url-to-pdf-api.herokuapp.com/api/render
+curl -o html.pdf -XPOST -d'{"html": "<body>test</body>"}' -H"content-type: application/json" http://localhost:9000/api/render
 ```
 
 ### POST /api/render - (HTML)
@@ -283,7 +292,7 @@ paremeter.
 
 ```bash
 curl -o receipt.html https://rawgit.com/wildbit/postmark-templates/master/templates_inlined/receipt.html
-curl -o html.pdf -XPOST -d@receipt.html -H"content-type: text/html" https://url-to-pdf-api.herokuapp.com/api/render?pdf.scale=1
+curl -o html.pdf -XPOST -d@receipt.html -H"content-type: text/html" http://localhost:9000/api/render?pdf.scale=1
 ```
 
 ## Development
@@ -309,9 +318,6 @@ First, clone the repository and cd into it.
 
 * `cp .env.sample .env`
 * Fill in the blanks in `.env`
-* `source .env` or `bash .env`
-
-  Or use [autoenv](https://github.com/kennethreitz/autoenv).
 
 * `npm install`
 * `npm start` Start express server locally
