@@ -6,9 +6,7 @@
 def buildInfo
 
 pipeline {
-    agent {
-        label 'master'
-    }
+    agent none
 
     options {
         ansiColor('xterm')
@@ -20,6 +18,9 @@ pipeline {
 
     stages {
         stage('Initialize Build Info') {
+            agent {
+                label 'ec2cloud'
+            }           
             steps {
                 script {
                     def dockerImgVersion = ex_retrieveAppVersion()
