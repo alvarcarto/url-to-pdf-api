@@ -6,7 +6,7 @@
 def buildInfo
 
 pipeline {
-    agent none
+    agent { label 'ec2cloud' }
 
     options {
         ansiColor('xterm')
