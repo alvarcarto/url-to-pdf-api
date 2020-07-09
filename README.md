@@ -184,7 +184,7 @@ cookies[0][httpOnly] | boolean | - | Cookie httpOnly
 cookies[0][secure] | boolean | - | Cookie secure
 cookies[0][sameSite] | string | - | `Strict` or `Lax`
 goto.timeout | number | `30000` |  Maximum navigation time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
-goto.waitUntil | string | `networkidle2` | When to consider navigation succeeded. Options: `load`, `domcontentloaded`, `networkidle0`, `networkidle2`. `load` - consider navigation to be finished when the load event is fired. `domcontentloaded` - consider navigation to be finished when the `DOMContentLoaded` event is fired. `networkidle0` - consider navigation to be finished when there are no more than 0 network connections for at least `500` ms. `networkidle2` - consider navigation to be finished when there are no more than 2 network connections for at least `500` ms.
+goto.waitUntil | string | `networkidle0` | When to consider navigation succeeded. Options: `load`, `domcontentloaded`, `networkidle0`, `networkidle2`. `load` - consider navigation to be finished when the load event is fired. `domcontentloaded` - consider navigation to be finished when the `DOMContentLoaded` event is fired. `networkidle0` - consider navigation to be finished when there are no more than 0 network connections for at least `500` ms. `networkidle2` - consider navigation to be finished when there are no more than 2 network connections for at least `500` ms.
 pdf.scale | number | `1` | Scale of the webpage rendering.
 pdf.printBackground | boolean | `false`| Print background graphics.
 pdf.displayHeaderFooter | boolean | `false` | Display header and footer.

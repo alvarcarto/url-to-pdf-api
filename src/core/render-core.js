@@ -36,7 +36,7 @@ async function render(_opts = {}) {
       height: 1200,
     },
     goto: {
-      waitUntil: 'networkidle2',
+      waitUntil: 'networkidle0',
     },
     output: 'pdf',
     pdf: {
@@ -171,7 +171,7 @@ async function render(_opts = {}) {
         const selElement = await page.$(opts.screenshot.selector);
         if (!_.isNull(selElement)) {
           data = await selElement.screenshot();
-        } 
+        }
       }
     }
   } catch (err) {
@@ -184,7 +184,7 @@ async function render(_opts = {}) {
       await browser.close();
     }
   }
-  
+
   return data;
 }
 
