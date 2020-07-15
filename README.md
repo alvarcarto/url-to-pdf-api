@@ -195,6 +195,7 @@ pdf.pageRanges | string | - | Paper ranges to print, e.g., '1-5, 8, 11-13'. Defa
 pdf.format | string | `A4` | Paper format. If set, takes priority over width or height options.
 pdf.width | string | - | Paper width, accepts values labeled with units.
 pdf.height | string | - | Paper height, accepts values labeled with units.
+pdf.fullPage | boolean | - | Create PDF in a single page
 pdf.margin.top | string | - | Top margin, accepts values labeled with units.
 pdf.margin.right | string | - | Right margin, accepts values labeled with units.
 pdf.margin.bottom | string | - | Bottom margin, accepts values labeled with units.

@@ -157,6 +157,7 @@ function getOptsFromQuery(query) {
       waitUntil: query['goto.waitUntil'],
     },
     pdf: {
+      fullPage: query['pdf.fullPage'],
       scale: query['pdf.scale'],
       displayHeaderFooter: query['pdf.displayHeaderFooter'],
       footerTemplate: query['pdf.footerTemplate'],

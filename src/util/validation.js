@@ -46,6 +46,7 @@ const sharedQuerySchema = Joi.object({
   'pdf.format': Joi.string().min(1).max(2000),
   'pdf.width': Joi.string().min(1).max(2000),
   'pdf.height': Joi.string().min(1).max(2000),
+  'pdf.fullPage': Joi.boolean(),
   'pdf.footerTemplate': Joi.string(),
   'pdf.headerTemplate': Joi.string(),
   'pdf.margin.top': Joi.string().min(1).max(2000),
@@ -101,6 +102,7 @@ const renderBodyObject = Joi.object({
     format: Joi.string().min(1).max(2000),
     width: Joi.string().min(1).max(2000),
     height: Joi.string().min(1).max(2000),
+    fullPage: Joi.boolean(),
     footerTemplate: Joi.string(),
     headerTemplate: Joi.string(),
     margin: Joi.object({
