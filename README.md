@@ -207,6 +207,7 @@ screenshot.clip.x | number | - | Specifies x-coordinate of top-left corner of cl
 screenshot.clip.y | number | - | Specifies y-coordinate of top-left corner of clipping region of the page.
 screenshot.clip.width | number | - | Specifies width of clipping region of the page.
 screenshot.clip.height | number | - | Specifies height of clipping region of the page.
+screenshot.selector | string | - | Specifies css selector to clip the screenshot to.
 
 
 **Example:**
