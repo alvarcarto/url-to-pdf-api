@@ -28,4 +28,7 @@ workflows:
   version: 2.1
   build-and-deploy:
     jobs:
-      - deploy-staging
+      - deploy-staging:
+          filters:
+            branches:
+              only: staging
