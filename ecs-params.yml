@@ -1,0 +1,5 @@
+version: 1
+task_definition:
+  services:
+    app:
+      mem_reservation: 300m
