@@ -22,13 +22,10 @@ jobs:
             cluster-name: "staging-cluster"
             service-name: "printer-staging-service"
             container-image-name-updates: "container=app,tag=staging"
-            force-new-deployment: false
+            force-new-deployment: true
 
 workflows:
   version: 2.1
   build-and-deploy:
     jobs:
-      - deploy-staging:
-          filters:
-            branches:
-              only: feat/migate_to_ecs
+      - deploy-staging
