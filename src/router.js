@@ -9,6 +9,8 @@ const { renderQuerySchema, renderBodySchema, sharedQuerySchema } = require('./ut
 function createRouter() {
   const router = express.Router();
 
+  router.get('/health', (req, res) => { res.send('ok') })
+
   if (!_.isEmpty(config.API_TOKENS)) {
     logger.info('x-api-key authentication required');
 
