@@ -19,7 +19,7 @@ jobs:
             setup-remote-docker: false
         - aws-ecs/update-service:
             family: "printer-service"
-            cluster-name: "staging-cluster"
+            cluster-name: "lexfox-production-cluster"
             service-name: "printer-service"
             container-image-name-updates: "container=app,tag=production"
             force-new-deployment: true
