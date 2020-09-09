@@ -1,0 +1,34 @@
+version: 2.1
+
+orbs:
+  aws-ecr: circleci/aws-ecr@6.12.2
+  aws-ecs: circleci/aws-ecs@1.3.0
+
+jobs:
+  deploy-staging:
+      docker:
+        - image: circleci/python:3.7.1
+      steps:
+        - setup_remote_docker:
+            docker_layer_caching: true
+        - aws-ecr/build-and-push-image:
+            account-url: AWS_ECR_ACCOUNT_URL
+            repo: "printer"
+            region: AWS_REGION
+            tag: "${CIRCLE_SHA1},staging"
+            setup-remote-docker: false
+        - aws-ecs/update-service:
+            family: "printer-staging-service"
+            cluster-name: "staging-cluster"
+            service-name: "printer-staging-service"
+            container-image-name-updates: "container=app,tag=staging"
+            force-new-deployment: true
+
+workflows:
+  version: 2.1
+  build-and-deploy:
+    jobs:
+      - deploy-staging:
+          filters:
+            branches:
+              only: staging

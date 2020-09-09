@@ -1,4 +1,6 @@
 .env
+.env.staging
+.env.production
 .DS_Store
 .idea
 package-lock.json
