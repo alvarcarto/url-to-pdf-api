@@ -18,7 +18,7 @@ jobs:
             tag: "${CIRCLE_SHA1},staging"
             setup-remote-docker: false
         - aws-ecs/update-service:
-            family: "printer"
+            family: "printer-staging-service"
             cluster-name: "staging-cluster"
             service-name: "printer-staging-service"
             container-image-name-updates: "container=app,tag=staging"
