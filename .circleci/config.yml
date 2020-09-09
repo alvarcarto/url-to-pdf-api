@@ -49,7 +49,7 @@ workflows:
       - deploy-production:
           filters:
             branches:
-              only: feat/add_production_to_ecs
+              only: master
       - deploy-staging:
           filters:
             branches:
