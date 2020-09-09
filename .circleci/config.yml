@@ -31,4 +31,4 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - feat/migate_to_ecs
