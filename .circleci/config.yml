@@ -5,6 +5,24 @@ orbs:
   aws-ecs: circleci/aws-ecs@1.3.0
 
 jobs:
+  deploy-production:
+      docker:
+        - image: circleci/python:3.7.1
+      steps:
+        - setup_remote_docker:
+            docker_layer_caching: true
+        - aws-ecr/build-and-push-image:
+            account-url: AWS_ECR_ACCOUNT_URL
+            repo: "printer"
+            region: AWS_REGION
+            tag: "${CIRCLE_SHA1},latest,production"
+            setup-remote-docker: false
+        - aws-ecs/update-service:
+            family: "printer-service"
+            cluster-name: "lexfox-production-cluster"
+            service-name: "printer-service"
+            container-image-name-updates: "container=app,tag=production"
+            force-new-deployment: true
   deploy-staging:
       docker:
         - image: circleci/python:3.7.1
@@ -28,6 +46,10 @@ workflows:
   version: 2.1
   build-and-deploy:
     jobs:
+      - deploy-production:
+          filters:
+            branches:
+              only: master
       - deploy-staging:
           filters:
             branches:

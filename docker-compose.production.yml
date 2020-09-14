@@ -1,0 +1,9 @@
+version: '3'
+services:
+  app:
+    image: "506075632353.dkr.ecr.eu-central-1.amazonaws.com/printer:production"
+    command: node dist/index.js
+    ports:
+      - "0:9000"
+    env_file:
+      - ".env.production"
