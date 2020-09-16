@@ -13,7 +13,7 @@ function createRouter() {
     logger.info('x-api-key authentication required');
 
     router.use('/*', (req, res, next) => {
-      const userToken = req.headers['x-api-key'];
+      const userToken = (req.method === 'GET') ? req.query.apiKey : req.headers['x-api-key'];
       if (!_.includes(config.API_TOKENS, userToken)) {
         const err = new Error('Invalid API token in x-api-key header.');
         err.status = 401;
