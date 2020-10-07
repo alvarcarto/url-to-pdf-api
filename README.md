@@ -54,7 +54,6 @@ and requests are direct connections to it.
 
 * Heavy pages may cause Chrome to crash if the server doesn't have enough RAM.
 
-* Docker image for this can be found here: https://github.com/restorecommerce/pdf-rendering-srv
 
 
 ## Examples
