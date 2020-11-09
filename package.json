@@ -26,6 +26,7 @@
     "body-parser": "^1.18.2",
     "compression": "^1.7.1",
     "cors": "^2.8.4",
+    "dd-trace": "^0.28.1",
     "express": "^4.15.5",
     "express-validation": "^1.0.2",
     "joi": "^11.1.1",

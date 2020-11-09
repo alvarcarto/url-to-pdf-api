@@ -7,6 +7,9 @@ const config = {
   LOG_LEVEL: process.env.LOG_LEVEL,
   ALLOW_HTTP: process.env.ALLOW_HTTP === 'true',
   DEBUG_MODE: process.env.DEBUG_MODE === 'true',
+  TRACING_ENABLED: process.env.TRACING_ENABLED === 'true',
+  DD_LOGS_INJECTION: process.env.DD_LOGS_INJECTION === 'true',
+  TRACING_ENV: '',
   API_TOKENS: [],
 };
 
