@@ -9,7 +9,7 @@ const config = {
   DEBUG_MODE: process.env.DEBUG_MODE === 'true',
   TRACING_ENABLED: process.env.TRACING_ENABLED === 'true',
   DD_LOGS_INJECTION: process.env.DD_LOGS_INJECTION === 'true',
-  TRACING_ENV: process.env.DD_LOGS_INJECTION,
+  TRACING_ENV: process.env.TRACING_ENV,
   API_TOKENS: [],
 };
 
