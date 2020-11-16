@@ -1,3 +1,6 @@
+// eslint-disable-next-line no-unused-vars
+import './util/tracer';
+
 const createApp = require('./app');
 const enableDestroy = require('server-destroy');
 const BPromise = require('bluebird');
