@@ -74,6 +74,13 @@ async function render(_opts = {}) {
 
   const browser = await createBrowser(opts);
   const page = await browser.newPage();
+  
+  if (opts.authenticate && opts.authenticate.username && opts.authenticate.password) {
+    await page.authenticate({
+      username: opts.authenticate.username,
+      password: opts.authenticate.password,
+    });  
+  }
 
   page.on('console', (...args) => logger.info('PAGE LOG:', ...args));
 

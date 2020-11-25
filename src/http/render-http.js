@@ -188,6 +188,10 @@ function getOptsFromQuery(query) {
       selector: query['screenshot.selector'],
       omitBackground: query['screenshot.omitBackground'],
     },
+    authenticate: {
+      username: query['authenticate.username'],
+      password: query['authenticate.password'],
+    }
   };
   return opts;
 }
