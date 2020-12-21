@@ -108,7 +108,7 @@ workflows:
       - deploy-production:
           filters:
             branches:
-              only: feat/add-eks-deployment
+              only: master
       - deploy-staging:
           filters:
             branches:
