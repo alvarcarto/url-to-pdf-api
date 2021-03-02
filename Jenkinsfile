@@ -49,25 +49,18 @@ pipeline {
                 }
             }
         }
-        stage("Push and Scan Image") {
+        stage("Push to ECR") {
             agent {
                 label 'ec2cloud'
             }
             steps {
                 script {
-                    def dockerImgVersion = ex_retrieveAppVersion()
-                    ex_rtPushImage(imgVersion:dockerImgVersion, exportFromFile: false, appName: 'step-enablement-pdfy', dockerImgName: 'pdfy', buildInfo: buildInfo)
-
-                    // Call shared library script for pushing to Artifactory
-                    ex_rtPublishBuildInfo(buildInfo)
-
-                    xrayScanResult = ex_rtScanImage(buildInfo: buildInfo, failBuild: false, disableResultUpload: false)
-                    print xrayScanResult
+                    ex_pushImageToECR(imgVersion: ex_retrieveAppVersion().toString(), exportFromFile: true, exportFile: "infrastructure/jenkins.notices.pre.env")
                 }
             }
             post {
                 failure {
-                    ex_sendTeamsNotification(msg:"Failed pushing/scanning of Docker image to Artifactory", status:"FAILURE")
+                    ex_sendSlackNotification(msg: "Push to ECR failed ${FAILURE_ICON} ${COMMIT_DETAILS} ${FAILURE_MSG}", status: "FAILURE")
                 }
             }
         }
