@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  report-printer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+    - "10000:10000"
+    environment:
+      PORT: 10000

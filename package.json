@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
-    "env-cmd": "^9.0.1",
+    "env-cmd": "^9.0.3",
     "eslint": "^4.8.0",
     "eslint-config-airbnb-base": "^12.0.2",
     "eslint-plugin-import": "^2.7.0",
