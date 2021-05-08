@@ -29,7 +29,7 @@
     "express": "^4.15.5",
     "express-validation": "^1.0.2",
     "joi": "^11.1.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "morgan": "^1.9.1",
     "normalize-url": "^5.0.0",
     "pdf-parse": "^1.1.1",
