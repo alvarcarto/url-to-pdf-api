@@ -188,7 +188,7 @@ async function render(_opts = {}) {
       } else {
         const selElement = await page.$(opts.screenshot.selector);
         if (!_.isNull(selElement)) {
-          data = await selElement.screenshot();
+          data = await selElement.screenshot(screenshotOpts);
         }
       }
     }
