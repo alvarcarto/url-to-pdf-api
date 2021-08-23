@@ -187,8 +187,9 @@ async function render(_opts = {}) {
         data = await page.screenshot(screenshotOpts);
       } else {
         const selElement = await page.$(opts.screenshot.selector);
+        const selectorScreenOpts = _.cloneDeep(_.omit(screenshotOpts, ['selector', 'fullPage']));
         if (!_.isNull(selElement)) {
-          data = await selElement.screenshot();
+          data = await selElement.screenshot(selectorScreenOpts);
         }
       }
     }
