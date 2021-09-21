@@ -4,7 +4,7 @@
   "description": "Web page PDF rendering done right. Packaged to an easy API.",
   "main": "src/index.js",
   "engines": {
-    "node": "8.x.x"
+    "node": "12.x.x"
   },
   "scripts": {
     "start": "nodemon --watch ./src -e js src/index.js",
@@ -47,8 +47,8 @@
     "eslint": "^4.8.0",
     "eslint-config-airbnb-base": "^12.0.2",
     "eslint-plugin-import": "^2.7.0",
-    "mocha": "^4.0.1",
-    "nodemon": "^1.12.1",
+    "mocha": "^9.1.1",
+    "nodemon": "^2.0.12",
     "supertest": "^3.0.0"
   }
 }

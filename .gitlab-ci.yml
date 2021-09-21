@@ -1,0 +1,73 @@
+---
+stages:
+  - build
+  - test
+  - coverage
+  - release
+  - tag
+  - deploy
+
+include:
+  - project: 'connylegal/mietright_deployments'
+    ref: main
+    file: '/.gitlab-ci/build-container.yaml'
+  - project: 'connylegal/mietright_deployments'
+    ref: main
+    file: '/.gitlab-ci/deploy.yaml'
+
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - /opt/gitlab/cache/image-cache
+
+variables:
+  FAILFASTCI_NAMESPACE: connylegal
+  OCI_REPO: img.conny.dev
+  IMAGE_NAME: $OCI_REPO/conny/printer
+  APPNAME: printer
+  APP: printer
+  DEFAULT_TAG: v.$CI_COMMIT_REF_SLUG
+  ### Printer
+  NODE_ENV: development
+  PORT: 9000
+  ALLOW_HTTP: 'true'
+
+
+# BUILD IMAGE
+build image:
+  extends: .build-container
+  variables:
+    TAG: v.$CI_COMMIT_REF_SLUG
+  stage: build
+
+# RUN TEST
+unit test:
+  image:
+    name: $IMAGE_NAME:v.$CI_COMMIT_REF_SLUG
+  needs:
+    - "build image"
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - cd /usr/src/app
+    - yarn test
+  allow_failure: true
+  tags:
+    - kubernetes
+
+
+# TAGS IMAGES
+image tag:
+  extends: .tag-main
+  variables:
+    SOURCE_TAG: v.$CI_COMMIT_REF_SLUG
+
+
+deploy-staging:
+  extends: .deploy-staging
+
+deploy-production:
+  extends: .deploy-production
