@@ -1,10 +1,7 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 const urlSchema = Joi.string().uri({
-  scheme: [
-    'http',
-    'https',
-  ],
+  scheme: ["http", "https"],
 });
 
 const cookieSchema = Joi.object({
@@ -30,39 +27,40 @@ const sharedQuerySchema = Joi.object({
     Joi.string().min(1).max(2000),
   ]),
   cookies: Joi.array().items(cookieSchema),
-  output: Joi.string().valid(['pdf', 'screenshot', 'html']),
-  'viewport.width': Joi.number().min(1).max(30000),
-  'viewport.height': Joi.number().min(1).max(30000),
-  'viewport.deviceScaleFactor': Joi.number().min(0).max(100),
-  'viewport.isMobile': Joi.boolean(),
-  'viewport.hasTouch': Joi.boolean(),
-  'viewport.isLandscape': Joi.boolean(),
-  'goto.timeout': Joi.number().min(0).max(60000),
-  'goto.waitUntil': Joi.string().min(1).max(2000),
-  'pdf.scale': Joi.number().min(0).max(1000),
-  'pdf.displayHeaderFooter': Joi.boolean(),
-  'pdf.landscape': Joi.boolean(),
-  'pdf.pageRanges': Joi.string().min(1).max(2000),
-  'pdf.format': Joi.string().min(1).max(2000),
-  'pdf.width': Joi.string().min(1).max(2000),
-  'pdf.height': Joi.string().min(1).max(2000),
-  'pdf.fullPage': Joi.boolean(),
-  'pdf.footerTemplate': Joi.string(),
-  'pdf.headerTemplate': Joi.string(),
-  'pdf.margin.top': Joi.string().min(1).max(2000),
-  'pdf.margin.right': Joi.string().min(1).max(2000),
-  'pdf.margin.bottom': Joi.string().min(1).max(2000),
-  'pdf.margin.left': Joi.string().min(1).max(2000),
-  'pdf.printBackground': Joi.boolean(),
-  'screenshot.fullPage': Joi.boolean(),
-  'screenshot.quality': Joi.number().integer().min(0).max(100),
-  'screenshot.type': Joi.string().valid(['png', 'jpeg']),
-  'screenshot.clip.x': Joi.number(),
-  'screenshot.clip.y': Joi.number(),
-  'screenshot.clip.width': Joi.number(),
-  'screenshot.clip.height': Joi.number(),
-  'screenshot.selector': Joi.string().regex(/(#|\.).*/),
-  'screenshot.omitBackground': Joi.boolean(),
+  output: Joi.string().valid(["pdf", "screenshot", "html"]),
+  "viewport.width": Joi.number().min(1).max(30000),
+  "viewport.height": Joi.number().min(1).max(30000),
+  "viewport.deviceScaleFactor": Joi.number().min(0).max(100),
+  "viewport.isMobile": Joi.boolean(),
+  "viewport.hasTouch": Joi.boolean(),
+  "viewport.isLandscape": Joi.boolean(),
+  "goto.timeout": Joi.number().min(0).max(60000),
+  "goto.waitUntil": Joi.string().min(1).max(2000),
+  "pdf.path": Joi.string(),
+  "pdf.scale": Joi.number().min(0).max(1000),
+  "pdf.displayHeaderFooter": Joi.boolean(),
+  "pdf.landscape": Joi.boolean(),
+  "pdf.pageRanges": Joi.string().min(1).max(2000),
+  "pdf.format": Joi.string().min(1).max(2000),
+  "pdf.width": Joi.string().min(1).max(2000),
+  "pdf.height": Joi.string().min(1).max(2000),
+  "pdf.fullPage": Joi.boolean(),
+  "pdf.footerTemplate": Joi.string(),
+  "pdf.headerTemplate": Joi.string(),
+  "pdf.margin.top": Joi.string().min(1).max(2000),
+  "pdf.margin.right": Joi.string().min(1).max(2000),
+  "pdf.margin.bottom": Joi.string().min(1).max(2000),
+  "pdf.margin.left": Joi.string().min(1).max(2000),
+  "pdf.printBackground": Joi.boolean(),
+  "screenshot.fullPage": Joi.boolean(),
+  "screenshot.quality": Joi.number().integer().min(0).max(100),
+  "screenshot.type": Joi.string().valid(["png", "jpeg"]),
+  "screenshot.clip.x": Joi.number(),
+  "screenshot.clip.y": Joi.number(),
+  "screenshot.clip.width": Joi.number(),
+  "screenshot.clip.height": Joi.number(),
+  "screenshot.selector": Joi.string().regex(/(#|\.).*/),
+  "screenshot.omitBackground": Joi.boolean(),
 });
 
 const renderQuerySchema = Joi.object({
@@ -77,7 +75,7 @@ const renderBodyObject = Joi.object({
   ignoreHttpsErrors: Joi.boolean(),
   emulateScreenMedia: Joi.boolean(),
   cookies: Joi.array().items(cookieSchema),
-  output: Joi.string().valid(['pdf', 'screenshot', 'html']),
+  output: Joi.string().valid(["pdf", "screenshot", "html"]),
   viewport: Joi.object({
     width: Joi.number().min(1).max(30000),
     height: Joi.number().min(1).max(30000),
@@ -116,7 +114,7 @@ const renderBodyObject = Joi.object({
   screenshot: Joi.object({
     fullPage: Joi.boolean(),
     quality: Joi.number().integer().min(0).max(100),
-    type: Joi.string().valid(['png', 'jpeg']),
+    type: Joi.string().valid(["png", "jpeg"]),
     clip: {
       x: Joi.number(),
       y: Joi.number(),
@@ -129,14 +127,10 @@ const renderBodyObject = Joi.object({
   failEarly: Joi.string(),
 });
 
-const renderBodySchema = Joi.alternatives([
-  Joi.string(),
-  renderBodyObject,
-]);
+const renderBodySchema = Joi.alternatives([Joi.string(), renderBodyObject]);
 
 module.exports = {
   renderQuerySchema,
   renderBodySchema,
   sharedQuerySchema,
 };
-
