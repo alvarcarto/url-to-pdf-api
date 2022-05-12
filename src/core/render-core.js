@@ -64,7 +64,7 @@ async function render(_opts = {}) {
     failEarly: false,
   }, _opts);
 
-  if ((_.get(_opts, 'pdf.width') && _.get(_opts, 'pdf.height')) || _.get(opts, 'pdf.fullPage')) {
+  if ((_.get(_opts, 'pdf.width') || _.get(_opts, 'pdf.height')) || _.get(opts, 'pdf.fullPage')) {
     // pdf.format always overrides width and height, so we must delete it
     // when user explicitly wants to set width and height
     opts.pdf.format = undefined;
