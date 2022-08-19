@@ -70,10 +70,10 @@ describe('POST /api/render', () => {
       .expect(400)
   );
 
-  it('render github.com should succeed', () =>
+  it('render google.com should succeed', () =>
     request(app)
       .post('/api/render')
-      .send({ url: 'https://github.com' })
+      .send({ url: 'https://google.com' })
       .set('content-type', 'application/json')
       .set('Connection', 'keep-alive')
       .expect(200)
@@ -144,7 +144,8 @@ describe('POST /api/render', () => {
       })
   );
 
-  it('cookies should exist on the page', () =>
+  // This website seems to no longer be working.  I tried to find an alternative, but ...
+  xit('cookies should exist on the page', () =>
     request(app)
       .post('/api/render')
       .send({
