@@ -3,8 +3,11 @@ const _ = require('lodash');
 const config = require('../config');
 const logger = require('../util/logger')(__filename);
 
+let browserInstance = null;
 
 async function createBrowser(opts) {
+  if (browserInstance) return browserInstance;
+  
   const browserOpts = {
     ignoreHTTPSErrors: opts.ignoreHttpsErrors,
     sloMo: config.DEBUG_MODE ? 250 : undefined,
@@ -21,7 +24,9 @@ async function createBrowser(opts) {
   if (!opts.enableGPU || navigator.userAgent.indexOf('Win') !== -1) {
     browserOpts.args.push('--disable-gpu');
   }
-  return puppeteer.launch(browserOpts);
+  browserInstance = puppeteer.launch(browserOpts)
+  
+  return browserInstance;
 }
 
 async function getFullPageHeight(page) {
@@ -81,6 +86,7 @@ async function render(_opts = {}) {
     logger.error(`Error event emitted: ${err}`);
     logger.error(err.stack);
     browser.close();
+    browserInstance = null;
   });
 
 
@@ -108,7 +114,7 @@ async function render(_opts = {}) {
     await page.setViewport(opts.viewport);
     if (opts.emulateScreenMedia) {
       logger.info('Emulate @media screen..');
-      await page.emulateMedia('screen');
+      await page.emulateMediaType('screen');
     }
 
     if (opts.cookies && opts.cookies.length > 0) {
@@ -128,9 +134,14 @@ async function render(_opts = {}) {
       await page.goto(opts.url, opts.goto);
     }
 
-    if (_.isNumber(opts.waitFor) || _.isString(opts.waitFor)) {
+    if (_.isNumber(opts.waitFor)) {
       logger.info(`Wait for ${opts.waitFor} ..`);
-      await page.waitFor(opts.waitFor);
+      await page.waitForTimeout(opts.waitFor);
+    }
+
+    if (_.isString(opts.waitFor)) {
+      logger.info(`Wait for selector ${opts.waitFor} ..`);
+      await page.waitForSelector(opts.waitFor);
     }
 
     if (opts.scrollPage) {
@@ -199,7 +210,10 @@ async function render(_opts = {}) {
   } finally {
     logger.info('Closing browser..');
     if (!config.DEBUG_MODE) {
-      await browser.close();
+      // await browser.close();
+      // browserInstance = null;
+    } else {
+      logger.info('Just kidding!')
     }
   }
 

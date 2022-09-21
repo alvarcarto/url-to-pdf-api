@@ -26,9 +26,9 @@ const sharedQuerySchema = Joi.object({
   enableGPU: Joi.boolean(),
   ignoreHttpsErrors: Joi.boolean(),
   waitFor: Joi.alternatives([
-    Joi.number().min(1).max(60000),
-    Joi.string().min(1).max(2000),
-  ]),
+    Joi.number().min(0).max(60000),
+    Joi.string()
+  ]).allow(null),
   cookies: Joi.array().items(cookieSchema),
   output: Joi.string().valid(['pdf', 'screenshot', 'html']),
   'viewport.width': Joi.number().min(1).max(30000),
@@ -87,9 +87,9 @@ const renderBodyObject = Joi.object({
     isLandscape: Joi.boolean(),
   }),
   waitFor: Joi.alternatives([
-    Joi.number().min(1).max(60000),
-    Joi.string().min(1).max(2000),
-  ]),
+    Joi.number().min(0).max(60000),
+    Joi.string()
+  ]).allow(null),
   goto: Joi.object({
     timeout: Joi.number().min(0).max(60000),
     waitUntil: Joi.string().min(1).max(2000),
