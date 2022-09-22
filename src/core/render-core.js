@@ -37,7 +37,7 @@ async function createBrowser(opts) {
 
 async function newBrowserInstance(browserOpts) {
   const browserInst = await puppeteer.launch(browserOpts);
-  browserInst.on('disconnected', () => newBrowserInstance(browserOpts));
+  browserInst.on('disconnected', async () => { await newBrowserInstance(browserOpts) });
 
   return browserInst;
 }
@@ -193,8 +193,7 @@ async function render(_opts = {}) {
 
     if (opts.output === 'pdf') {
       if (opts.pdf.fullPage) {
-        const height = await getFullPageHeight(page);
-        opts.pdf.height = height;
+        opts.pdf.height = await getFullPageHeight(page);
       }
       data = await page.pdf(opts.pdf);
     } else if (opts.output === 'html') {
@@ -224,7 +223,7 @@ async function render(_opts = {}) {
     browserCalls += 1;
     logger.info(`Current browser calls: ${browserCalls}`);
 
-    if (browserCalls > 50) {
+    if (browserCalls > 50 || config.TEST) {
       logger.info('Restarting browser!');
       await browser.close();
       browserInstance = null;
@@ -242,7 +241,7 @@ async function scrollPage(page) {
     const bottomThreshold = 400;
 
     function bottomPos() {
-      return window.pageYOffset + window.innerHeight;
+      return window.scrollY + window.innerHeight;
     }
 
     return new Promise((resolve, reject) => {
