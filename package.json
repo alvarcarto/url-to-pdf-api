@@ -34,6 +34,7 @@
     "normalize-url": "^5.0.0",
     "pdf-parse": "^1.1.1",
     "puppeteer": "^18.0.0",
+    "puppeteer-cluster": "^0.23.0",
     "server-destroy": "^1.0.1",
     "winston": "^2.3.1"
   },

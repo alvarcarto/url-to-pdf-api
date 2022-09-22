@@ -4,10 +4,16 @@ const config = require('../config');
 const logger = require('../util/logger')(__filename);
 
 let browserInstance = null;
+let browserCalls = 0;
 
 async function createBrowser(opts) {
-  if (browserInstance) return browserInstance;
-  
+  if (browserInstance) {
+    logger.info('Reusing browser');
+    return browserInstance;
+  }
+
+  logger.info('Creating new browser');
+
   const browserOpts = {
     ignoreHTTPSErrors: opts.ignoreHttpsErrors,
     sloMo: config.DEBUG_MODE ? 250 : undefined,
@@ -24,9 +30,16 @@ async function createBrowser(opts) {
   if (!opts.enableGPU || navigator.userAgent.indexOf('Win') !== -1) {
     browserOpts.args.push('--disable-gpu');
   }
-  browserInstance = puppeteer.launch(browserOpts)
-  
+  browserInstance = newBrowserInstance(browserOpts);
+
   return browserInstance;
+}
+
+async function newBrowserInstance(browserOpts) {
+  const browserInst = await puppeteer.launch(browserOpts);
+  browserInst.on('disconnected', () => newBrowserInstance(browserOpts));
+
+  return browserInst;
 }
 
 async function getFullPageHeight(page) {
@@ -208,12 +221,13 @@ async function render(_opts = {}) {
     logger.error(err.stack);
     throw err;
   } finally {
-    logger.info('Closing browser..');
-    if (!config.DEBUG_MODE) {
-      // await browser.close();
-      // browserInstance = null;
-    } else {
-      logger.info('Just kidding!')
+    browserCalls += 1;
+    logger.info(`Current browser calls: ${browserCalls}`);
+
+    if (browserCalls > 50) {
+      logger.info('Restarting browser!');
+      await browser.close();
+      browserInstance = null;
     }
   }
 
