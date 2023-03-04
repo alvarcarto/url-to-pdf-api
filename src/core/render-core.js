@@ -174,7 +174,7 @@ async function render(_opts = {}) {
       }
       data = await page.pdf(opts.pdf);
     } else if (opts.output === 'html') {
-      data = await page.evaluate(() => document.body.innerHTML);
+      data = await page.evaluate(() => document.documentElement.innerHTML);
     } else {
       // This is done because puppeteer throws an error if fullPage and clip is used at the same
       // time even though clip is just empty object {}
@@ -187,8 +187,9 @@ async function render(_opts = {}) {
         data = await page.screenshot(screenshotOpts);
       } else {
         const selElement = await page.$(opts.screenshot.selector);
+        const selectorScreenOpts = _.cloneDeep(_.omit(screenshotOpts, ['selector', 'fullPage']));
         if (!_.isNull(selElement)) {
-          data = await selElement.screenshot();
+          data = await selElement.screenshot(selectorScreenOpts);
         }
       }
     }
@@ -248,4 +249,3 @@ function logOpts(opts) {
 module.exports = {
   render,
 };
-
