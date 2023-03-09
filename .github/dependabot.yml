@@ -1,0 +1,9 @@
+version: 2
+updates:
+  - package-ecosystem: bundler
+    directory: "/"
+    schedule:
+      interval: monthly
+      time: "05:00"
+      timezone: "America/Montreal"
+    open-pull-requests-limit: 50
