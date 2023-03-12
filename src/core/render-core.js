@@ -108,7 +108,7 @@ async function render(_opts = {}) {
     await page.setViewport(opts.viewport);
     if (opts.emulateScreenMedia) {
       logger.info('Emulate @media screen..');
-      await page.emulateMedia('screen');
+      await page.emulateMediaType('screen');
     }
 
     if (opts.cookies && opts.cookies.length > 0) {
