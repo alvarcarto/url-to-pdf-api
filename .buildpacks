@@ -1,0 +1,3 @@
+https://github.com/jontewks/puppeteer-heroku-buildpack.git
+https://github.com/heroku/heroku-buildpack-nodejs.git
+https://github.com/debitoor/heroku-buildpack-converter-fonts.git
