@@ -32,7 +32,6 @@
     "lodash": "^4.17.15",
     "morgan": "^1.9.1",
     "normalize-url": "^5.0.0",
-    "pdf-parse": "^1.1.1",
     "puppeteer": "^2.0.0",
     "server-destroy": "^1.0.1",
     "winston": "^2.3.1"
@@ -45,6 +44,7 @@
     "eslint-plugin-import": "^2.7.0",
     "mocha": "^4.0.1",
     "nodemon": "^1.12.1",
+    "pdf-parse": "^1.1.1",
     "supertest": "^3.0.0"
   }
 }
