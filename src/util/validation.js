@@ -21,6 +21,8 @@ const cookieSchema = Joi.object({
 
 const sharedQuerySchema = Joi.object({
   attachmentName: Joi.string(),
+  basic_auth_username: Joi.string(),
+  basic_auth_password: Joi.string(),
   scrollPage: Joi.boolean(),
   emulateScreenMedia: Joi.boolean(),
   enableGPU: Joi.boolean(),
@@ -71,6 +73,8 @@ const renderQuerySchema = Joi.object({
 
 const renderBodyObject = Joi.object({
   url: urlSchema,
+  basic_auth_username: Joi.string(),
+  basic_auth_password: Joi.string(),
   html: Joi.string(),
   attachmentName: Joi.string(),
   scrollPage: Joi.boolean(),

@@ -57,6 +57,8 @@ const postRender = ex.createRoute((req, res) => {
   } else {
     opts = getOptsFromQuery(req.query);
     opts.html = req.body;
+    opts.basic_auth_username = req.body.basic_auth_username;
+    opts.basic_auth_password = req.body.basic_auth_password;
   }
 
   assertOptionsAllowed(opts);
@@ -137,6 +139,8 @@ function assertOptionsAllowed(opts) {
 function getOptsFromQuery(query) {
   const opts = {
     url: query.url,
+    basic_auth_username: query.basic_auth_username,
+    basic_auth_password: query.basic_auth_password,
     attachmentName: query.attachmentName,
     scrollPage: query.scrollPage,
     emulateScreenMedia: query.emulateScreenMedia,
