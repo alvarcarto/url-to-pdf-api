@@ -16,7 +16,7 @@ async function createBrowser(opts) {
   if (config.BROWSER_EXECUTABLE_PATH) {
     browserOpts.executablePath = config.BROWSER_EXECUTABLE_PATH;
   }
-  browserOpts.headless = !config.DEBUG_MODE;
+  browserOpts.headless = config.DEBUG_MODE ? true : 'new';
   browserOpts.args = ['--no-sandbox', '--disable-setuid-sandbox'];
   if (!opts.enableGPU || navigator.userAgent.indexOf('Win') !== -1) {
     browserOpts.args.push('--disable-gpu');
@@ -26,7 +26,10 @@ async function createBrowser(opts) {
 
 async function getFullPageHeight(page) {
   const height = await page.evaluate(() => {
-    const { body, documentElement } = document;
+    const {
+      body,
+      documentElement,
+    } = document;
     return Math.max(
       body.scrollHeight,
       body.offsetHeight,
@@ -108,7 +111,7 @@ async function render(_opts = {}) {
     await page.setViewport(opts.viewport);
     if (opts.emulateScreenMedia) {
       logger.info('Emulate @media screen..');
-      await page.emulateMedia('screen');
+      await page.emulateMediaType('screen');
     }
 
     if (opts.cookies && opts.cookies.length > 0) {
@@ -119,7 +122,12 @@ async function render(_opts = {}) {
       await client.send('Network.enable');
       await client.send('Network.setCookies', { cookies: opts.cookies });
     }
-
+    if (opts.basic_auth_username && opts.basic_auth_password) {
+      await page.authenticate({
+        username: opts.basic_auth_username,
+        password: opts.basic_auth_password,
+      });
+    }
     if (_.isString(opts.html)) {
       logger.info('Set HTML ..');
       await page.setContent(opts.html, opts.goto);
