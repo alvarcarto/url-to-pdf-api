@@ -158,57 +158,59 @@ expressed with the dot notation. E.g. `?pdf.scale=2` instead of `{ pdf: { scale:
 
 The only required parameter is `url`.
 
-Parameter | Type | Default | Description
-----------|------|---------|------------
-url | string | - | URL to render as PDF. (required)
-output | string | pdf | Specify the output format. Possible values: `pdf` , `screenshot` or `html`.
-emulateScreenMedia | boolean | `true` | Emulates `@media screen` when rendering the PDF.
-enableGPU | boolean | `false` | When set, enables chrome GPU. For windows user, this will always return false. See https://developers.google.com/web/updates/2017/04/headless-chrome
-ignoreHttpsErrors | boolean | `false` | Ignores possible HTTPS errors when navigating to a page.
-scrollPage | boolean | `false` | Scroll page down before rendering to trigger lazy loading elements.
+Parameter | Type             | Default | Description
+----------|------------------|---------|------------
+url | string           | - | URL to render as PDF. (required)
+basic_auth_username | string           | - | Username for basic auth.
+basic_auth_password | string           | - | Password for basic auth.
+output | string           | pdf | Specify the output format. Possible values: `pdf` , `screenshot` or `html`.
+emulateScreenMedia | boolean          | `true` | Emulates `@media screen` when rendering the PDF.
+enableGPU | boolean          | `false` | When set, enables chrome GPU. For windows user, this will always return false. See https://developers.google.com/web/updates/2017/04/headless-chrome
+ignoreHttpsErrors | boolean          | `false` | Ignores possible HTTPS errors when navigating to a page.
+scrollPage | boolean          | `false` | Scroll page down before rendering to trigger lazy loading elements.
 waitFor | number or string | - | Number in ms to wait before render or selector element to wait before render.
-attachmentName | string | - | When set, the `content-disposition` headers are set and browser will download the PDF instead of showing inline. The given string will be used as the name for the file.
-viewport.width | number | `1600` | Viewport width.
-viewport.height | number | `1200` | Viewport height.
-viewport.deviceScaleFactor | number | `1` | Device scale factor (could be thought of as dpr).
-viewport.isMobile | boolean | `false` | Whether the meta viewport tag is taken into account.
-viewport.hasTouch | boolean | `false` | Specifies if viewport supports touch events.
-viewport.isLandscape | boolean | `false` | Specifies if viewport is in landscape mode.
-cookies[0][name] | string | - | Cookie name (required)
-cookies[0][value] | string | - | Cookie value (required)
-cookies[0][url] | string | - | Cookie url
-cookies[0][domain] | string | - | Cookie domain
-cookies[0][path] | string | - | Cookie path
-cookies[0][expires] | number | - | Cookie expiry in unix time
-cookies[0][httpOnly] | boolean | - | Cookie httpOnly
-cookies[0][secure] | boolean | - | Cookie secure
-cookies[0][sameSite] | string | - | `Strict` or `Lax`
-goto.timeout | number | `30000` |  Maximum navigation time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
-goto.waitUntil | string | `networkidle0` | When to consider navigation succeeded. Options: `load`, `domcontentloaded`, `networkidle0`, `networkidle2`. `load` - consider navigation to be finished when the load event is fired. `domcontentloaded` - consider navigation to be finished when the `DOMContentLoaded` event is fired. `networkidle0` - consider navigation to be finished when there are no more than 0 network connections for at least `500` ms. `networkidle2` - consider navigation to be finished when there are no more than 2 network connections for at least `500` ms.
-pdf.scale | number | `1` | Scale of the webpage rendering.
-pdf.printBackground | boolean | `false`| Print background graphics.
-pdf.displayHeaderFooter | boolean | `false` | Display header and footer.
-pdf.headerTemplate | string | - | HTML template to use as the header of each page in the PDF. **Currently Puppeteer basically only supports a single line of text and you must use pdf.margins+CSS to make the header appear!** See https://github.com/alvarcarto/url-to-pdf-api/issues/77.
-pdf.footerTemplate | string | - | HTML template to use as the footer of each page in the PDF. **Currently Puppeteer basically only supports a single line of text and you must use pdf.margins+CSS to make the footer appear!** See https://github.com/alvarcarto/url-to-pdf-api/issues/77.
-pdf.landscape | boolean | `false` | Paper orientation.
-pdf.pageRanges | string | - | Paper ranges to print, e.g., '1-5, 8, 11-13'. Defaults to the empty string, which means print all pages.
-pdf.format | string | `A4` | Paper format. If set, takes priority over width or height options.
-pdf.width | string | - | Paper width, accepts values labeled with units.
-pdf.height | string | - | Paper height, accepts values labeled with units.
-pdf.fullPage | boolean | - | Create PDF in a single page
-pdf.margin.top | string | - | Top margin, accepts values labeled with units.
-pdf.margin.right | string | - | Right margin, accepts values labeled with units.
-pdf.margin.bottom | string | - | Bottom margin, accepts values labeled with units.
-pdf.margin.left | string | - | Left margin, accepts values labeled with units.
-screenshot.fullPage | boolean | `true` | When true, takes a screenshot of the full scrollable page.
-screenshot.type | string | `png` | Screenshot image type. Possible values: `png`, `jpeg`
-screenshot.quality | number | - | The quality of the JPEG image, between 0-100. Only applies when `screenshot.type` is `jpeg`.
-screenshot.omitBackground | boolean | `false` | Hides default white background and allows capturing screenshots with transparency.
-screenshot.clip.x | number | - | Specifies x-coordinate of top-left corner of clipping region of the page.
-screenshot.clip.y | number | - | Specifies y-coordinate of top-left corner of clipping region of the page.
-screenshot.clip.width | number | - | Specifies width of clipping region of the page.
-screenshot.clip.height | number | - | Specifies height of clipping region of the page.
-screenshot.selector | string | - | Specifies css selector to clip the screenshot to.
+attachmentName | string           | - | When set, the `content-disposition` headers are set and browser will download the PDF instead of showing inline. The given string will be used as the name for the file.
+viewport.width | number           | `1600` | Viewport width.
+viewport.height | number           | `1200` | Viewport height.
+viewport.deviceScaleFactor | number           | `1` | Device scale factor (could be thought of as dpr).
+viewport.isMobile | boolean          | `false` | Whether the meta viewport tag is taken into account.
+viewport.hasTouch | boolean          | `false` | Specifies if viewport supports touch events.
+viewport.isLandscape | boolean          | `false` | Specifies if viewport is in landscape mode.
+cookies[0][name] | string           | - | Cookie name (required)
+cookies[0][value] | string           | - | Cookie value (required)
+cookies[0][url] | string           | - | Cookie url
+cookies[0][domain] | string           | - | Cookie domain
+cookies[0][path] | string           | - | Cookie path
+cookies[0][expires] | number           | - | Cookie expiry in unix time
+cookies[0][httpOnly] | boolean          | - | Cookie httpOnly
+cookies[0][secure] | boolean          | - | Cookie secure
+cookies[0][sameSite] | string           | - | `Strict` or `Lax`
+goto.timeout | number           | `30000` |  Maximum navigation time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+goto.waitUntil | string           | `networkidle0` | When to consider navigation succeeded. Options: `load`, `domcontentloaded`, `networkidle0`, `networkidle2`. `load` - consider navigation to be finished when the load event is fired. `domcontentloaded` - consider navigation to be finished when the `DOMContentLoaded` event is fired. `networkidle0` - consider navigation to be finished when there are no more than 0 network connections for at least `500` ms. `networkidle2` - consider navigation to be finished when there are no more than 2 network connections for at least `500` ms.
+pdf.scale | number           | `1` | Scale of the webpage rendering.
+pdf.printBackground | boolean          | `false`| Print background graphics.
+pdf.displayHeaderFooter | boolean          | `false` | Display header and footer.
+pdf.headerTemplate | string           | - | HTML template to use as the header of each page in the PDF. **Currently Puppeteer basically only supports a single line of text and you must use pdf.margins+CSS to make the header appear!** See https://github.com/alvarcarto/url-to-pdf-api/issues/77.
+pdf.footerTemplate | string           | - | HTML template to use as the footer of each page in the PDF. **Currently Puppeteer basically only supports a single line of text and you must use pdf.margins+CSS to make the footer appear!** See https://github.com/alvarcarto/url-to-pdf-api/issues/77.
+pdf.landscape | boolean          | `false` | Paper orientation.
+pdf.pageRanges | string           | - | Paper ranges to print, e.g., '1-5, 8, 11-13'. Defaults to the empty string, which means print all pages.
+pdf.format | string           | `A4` | Paper format. If set, takes priority over width or height options.
+pdf.width | string           | - | Paper width, accepts values labeled with units.
+pdf.height | string           | - | Paper height, accepts values labeled with units.
+pdf.fullPage | boolean          | - | Create PDF in a single page
+pdf.margin.top | string           | - | Top margin, accepts values labeled with units.
+pdf.margin.right | string           | - | Right margin, accepts values labeled with units.
+pdf.margin.bottom | string           | - | Bottom margin, accepts values labeled with units.
+pdf.margin.left | string           | - | Left margin, accepts values labeled with units.
+screenshot.fullPage | boolean          | `true` | When true, takes a screenshot of the full scrollable page.
+screenshot.type | string           | `png` | Screenshot image type. Possible values: `png`, `jpeg`
+screenshot.quality | number           | - | The quality of the JPEG image, between 0-100. Only applies when `screenshot.type` is `jpeg`.
+screenshot.omitBackground | boolean          | `false` | Hides default white background and allows capturing screenshots with transparency.
+screenshot.clip.x | number           | - | Specifies x-coordinate of top-left corner of clipping region of the page.
+screenshot.clip.y | number           | - | Specifies y-coordinate of top-left corner of clipping region of the page.
+screenshot.clip.width | number           | - | Specifies width of clipping region of the page.
+screenshot.clip.height | number           | - | Specifies height of clipping region of the page.
+screenshot.selector | string           | - | Specifies css selector to clip the screenshot to.
 
 
 **Example:**
