@@ -210,3 +210,7 @@ describe('POST /api/render', () => {
       })
   );
 });
+
+describe('GET /healthcheck', () => {
+  it('should return ok', () => request(app).get('/healthcheck').expect(200));
+});

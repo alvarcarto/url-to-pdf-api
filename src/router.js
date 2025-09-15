@@ -49,6 +49,8 @@ function createRouter() {
   };
   router.post('/api/render', validate(postRenderSchema), render.postRender);
 
+  router.get('/healthcheck', (req, res) => res.status(200).send('OK'));
+
   return router;
 }
 

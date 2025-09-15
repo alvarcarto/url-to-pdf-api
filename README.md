@@ -295,6 +295,14 @@ curl -o receipt.html https://rawgit.com/wildbit/postmark-templates/master/templa
 curl -o html.pdf -XPOST -d@receipt.html -H"content-type: text/html" http://localhost:9000/api/render?pdf.scale=1
 ```
 
+### GET /healthcheck
+
+Health check endpoint used for monitoring if the service is still up and running.
+
+```bash
+curl -XGET http://localhost:9000/healthcheck
+```
+
 ## Development
 
 To get this thing running, you have two options: run it in Heroku, or locally.
